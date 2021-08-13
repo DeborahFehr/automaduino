@@ -30,17 +30,11 @@ class _HomePageState extends State<HomePage> {
               width: width,
               height: height,
               color: Colors.blue,
-              child: Center(child: Text("Drag", style: Theme
-                  .of(context)
-                  .textTheme
-                  .headline,),),
+              child: Center(child: Text("Drag"),),
             ),
             feedback: Container(
               child: Center(
-                child: Text("Drag", style: Theme
-                    .of(context)
-                    .textTheme
-                    .headline,),),
+                child: Text("Drag"),),
               color: Colors.blue[300],
               width: width,
               height: height,

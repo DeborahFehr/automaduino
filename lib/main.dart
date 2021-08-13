@@ -1,22 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:split_view/split_view.dart';
+import 'package:multi_split_view/multi_split_view.dart';
 import 'widgets/building_elements_drawer.dart';
-import 'widgets/generated_code.dart';
-
-// https://github.com/toshiaki-h/split_view/blob/master/lib/split_view.dart
+import 'widgets/code_area.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Automaduino Editor',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Automaduino Demo'),
     );
   }
 }
@@ -33,57 +30,55 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _flexDrawer = 1;
   int _flexSplitscreen = 4;
+  double _weightCodeArea = 0.5;
 
-  void updateWidth() {
-    // To Do: Think about a way to fix widths??
-    // expanded: 1 : 4
-    // not expanded: different ratio, e.g. 10%,
-    // pass 10% width to widget?
-    _flexSplitscreen = 25;
+  // TODO replace split view
+  // https://pub.dev/packages/multi_split_view
+  // https://medium.com/@leonar.d/how-to-create-a-flutter-split-view-7e2ac700ea12
+
+  void updateDrawerWidth(bool closedDrawer) {
+    // todo smooth according to animation of drawer
+    closedDrawer ? _flexSplitscreen = 4 : _flexSplitscreen = 19;
     setState(() {});
   }
 
-  // Somehow update the weight
-  //double updateSplitscreenWidth(bool expanded) {
-//  return expanded ? 75.0 : 25.0;
-  //}
+  void updateSplitWidth(bool closedDrawer) {
+    // todo smooth according to animation of drawer
+    // maybe add another animated contrainer?
+    closedDrawer ? _weightCodeArea = 0.5 : _weightCodeArea = 0.05;
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
       body: Row(
         children: [
-          // to do: fix Flex values
+          // todo: fix Flex values
           Flexible(
             flex: _flexDrawer,
-            child: BuildingElementsDrawer(flexWidth: 1,),
+            child: BuildingElementsDrawer(
+                expandedWidth: width * 0.2, updateWidth: updateDrawerWidth),
           ),
           Expanded(
             flex: _flexSplitscreen,
-            child: SplitView(
-              positionLimit: 50,
-              // TO DO:
-              // update weight with onWeightChanged?
-              onWeightChanged: (double w) {
-                print(w);
-              },
-              viewMode: SplitViewMode.Horizontal,
-              view1: Container(
-                child: Center(child: Text("View1")),
+            child: MultiSplitView(
+                children: [
+              Container(
+                child: Center(child: Text("State Machine Area")),
                 color: Colors.red,
               ),
-              view2: GeneratedCode(),
+              CodeArea(closedWidth: width * 0.05, updateWidth: updateSplitWidth,)
+            ],
+                minimalWeight: 0.2,
+                controller: MultiSplitViewController(weights: [1 - _weightCodeArea, _weightCodeArea]),
             ),
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          updateWidth();
-        },
       ),
     );
   }

@@ -1,22 +1,27 @@
 import 'package:flutter/material.dart';
 
-// TO DO: Vertical Text
+// TODO: Vertical Text
 // https://stackoverflow.com/questions/58310795/flutter-vertical-text-widget
 
 class BuildingElementsDrawer extends StatefulWidget {
-  final int flexWidth; // TO DO: unsure if this is needed...
-  void updateWidth;
+  final double expandedWidth;
+  Function(bool closed) updateWidth;
 
-  BuildingElementsDrawer({Key key, @required this.flexWidth, @required this.updateWidth}) : super(key: key);
+  BuildingElementsDrawer({Key key, @required this.expandedWidth, @required this.updateWidth}) : super(key: key);
 
   @override
   _BuildingElementsDrawerState createState() => _BuildingElementsDrawerState();
 }
 
 class _BuildingElementsDrawerState extends State<BuildingElementsDrawer> {
-  double _width = 500;
+  double _width;
   Color _color = Colors.green;
   bool closed = false;
+
+  void initState() {
+    super.initState();
+    _width = widget.expandedWidth;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +36,7 @@ class _BuildingElementsDrawerState extends State<BuildingElementsDrawer> {
           alignment: Alignment.bottomRight,
           child: SizedBox(
             // Alternate: Use Button Theme?
-            width: 50,
+            width: widget.expandedWidth / 4,
             child: Stack(
               children: [
                 AnimatedOpacity(
@@ -47,7 +52,7 @@ class _BuildingElementsDrawerState extends State<BuildingElementsDrawer> {
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: TextButton(
-                    child: Text('Ok'),
+                    child: Text('>'),
                     style: TextButton.styleFrom(
                       primary: Colors.white,
                       backgroundColor: Colors.yellow,
@@ -55,7 +60,8 @@ class _BuildingElementsDrawerState extends State<BuildingElementsDrawer> {
                     ),
                     onPressed: () {
                       setState(() {
-                        _width = (_width > 50) ? 50 : 500;
+                        _width = closed ? widget.expandedWidth : widget.expandedWidth / 4;
+                        widget.updateWidth(closed);
                         closed = !closed;
                       });
                     },
