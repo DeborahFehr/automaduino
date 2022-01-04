@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, this.title = ""}) : super(key: key);
 
   final String title;
 
@@ -69,7 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
             flex: _flexSplitscreen,
             child: MultiSplitView(
                 children: [
-              BuildingArea(),
+              BuildingArea(elements: [],),
               CodeArea(closedWidth: width * 0.05, updateWidth: updateSplitWidth,)
             ],
                 minimalWeight: 0.2,

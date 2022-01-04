@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class BuildingArea extends StatefulWidget {
   final List elements;
 
-  BuildingArea({Key key, @required this.elements}) : super(key: key);
+  BuildingArea({Key? key, required this.elements}) : super(key: key);
 
 
   @override
@@ -22,7 +22,7 @@ class BuildingArea extends StatefulWidget {
 class _BuildingAreaState extends State<BuildingArea> {
   double width = 100.0,
       height = 100.0;
-  Offset position;
+  Offset position = Offset(0.0, 80);
 
   @override
   void initState() {
@@ -51,7 +51,7 @@ class _BuildingAreaState extends State<BuildingArea> {
             ),
               childWhenDragging: Container(),
             onDragEnd: (details) {
-              RenderBox renderBox = context.findRenderObject();
+              RenderBox renderBox = context.findRenderObject() as RenderBox;
               setState(() => position = renderBox.globalToLocal(details.offset));
             }
           ),

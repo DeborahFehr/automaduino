@@ -7,14 +7,14 @@ class BuildingElementsDrawer extends StatefulWidget {
   final double expandedWidth;
   Function(bool closed) updateWidth;
 
-  BuildingElementsDrawer({Key key, @required this.expandedWidth, @required this.updateWidth}) : super(key: key);
+  BuildingElementsDrawer({Key? key, required this.expandedWidth, required this.updateWidth}) : super(key: key);
 
   @override
   _BuildingElementsDrawerState createState() => _BuildingElementsDrawerState();
 }
 
 class _BuildingElementsDrawerState extends State<BuildingElementsDrawer> {
-  double _width;
+  double _width = 0;
   Color _color = Colors.green;
   bool closed = false;
 

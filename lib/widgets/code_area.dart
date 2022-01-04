@@ -6,7 +6,7 @@ class CodeArea extends StatefulWidget {
   final double closedWidth;
   Function(bool closed) updateWidth;
 
-  CodeArea({Key key, @required this.closedWidth, @required this.updateWidth})
+  CodeArea({Key? key, required this.closedWidth, required this.updateWidth})
       : super(key: key);
 
   @override

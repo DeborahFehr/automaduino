@@ -7,12 +7,12 @@ import 'package:flutter/material.dart';
 /// Ideally, you would implement the `SyntaxHighlighterBase` interface as per your need of highlighting rules.
 class DummySyntaxHighlighter {//implements SyntaxHighlighterBase {
   @override
-  TextEditingValue addTextRemotely(TextEditingValue oldValue, String newText) {
+  TextEditingValue? addTextRemotely(TextEditingValue oldValue, String newText) {
     return null;
   }
 
   @override
-  TextEditingValue onBackSpacePress(
+  TextEditingValue? onBackSpacePress(
       TextEditingValue oldValue, TextSpan currentSpan) {
     return null;
   }
@@ -35,7 +35,7 @@ class DummySyntaxHighlighter {//implements SyntaxHighlighterBase {
   List<TextSpan> parseText(TextEditingValue tev) {
     var texts = tev.text.split(' ');
 
-    var lsSpans = List<TextSpan>();
+    var lsSpans = <TextSpan>[];
     texts.forEach((text) {
       if (text == 'class') {
         lsSpans

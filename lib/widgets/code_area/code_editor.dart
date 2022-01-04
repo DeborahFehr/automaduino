@@ -5,7 +5,7 @@ import '../../resources/syntax_Highlighter.dart';
 // TODO: add line numbers
 
 class CodeEditor extends StatefulWidget {
-  CodeEditor({Key key}) : super(key: key);
+  CodeEditor({Key? key}) : super(key: key);
 
   @override
   _CodeEditorState createState() => _CodeEditorState();
