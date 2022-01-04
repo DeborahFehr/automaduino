@@ -1,13 +1,25 @@
 import 'package:flutter/material.dart';
 
-class HomePage extends StatefulWidget {
+class BuildingArea extends StatefulWidget {
+  final List elements;
+
+  BuildingArea({Key key, @required this.elements}) : super(key: key);
+
+
   @override
   State<StatefulWidget> createState() {
-    return _HomePageState();
+    return _BuildingAreaState();
   }
 }
 
-class _HomePageState extends State<HomePage> {
+// ToDo: Zoom!
+// https://stackoverflow.com/questions/65977699/how-to-create-a-movable-widget-in-flutter-such-that-is-stays-at-the-position-it
+
+// ToDo: Drag stay in Area
+// https://stackoverflow.com/questions/61969660/flutter-how-to-set-boundaries-for-a-draggable-widget
+
+
+class _BuildingAreaState extends State<BuildingArea> {
   double width = 100.0,
       height = 100.0;
   Offset position;
@@ -24,7 +36,7 @@ class _HomePageState extends State<HomePage> {
       children: <Widget>[
         Positioned(
           left: position.dx,
-          top: position.dy - height + 20,
+          top: position.dy,
           child: Draggable(
             child: Container(
               width: width,
@@ -33,15 +45,15 @@ class _HomePageState extends State<HomePage> {
               child: Center(child: Text("Drag"),),
             ),
             feedback: Container(
-              child: Center(
-                child: Text("Drag"),),
-              color: Colors.blue[300],
+              color: Colors.blue,
               width: width,
               height: height,
             ),
-            onDraggableCanceled: (Velocity velocity, Offset offset) {
-              setState(() => position = offset);
-            },
+              childWhenDragging: Container(),
+            onDragEnd: (details) {
+              RenderBox renderBox = context.findRenderObject();
+              setState(() => position = renderBox.globalToLocal(details.offset));
+            }
           ),
         ),
       ],

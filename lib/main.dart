@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:multi_split_view/multi_split_view.dart';
 import 'widgets/building_elements_drawer.dart';
+import 'widgets/building_area.dart';
 import 'widgets/code_area.dart';
 
 void main() => runApp(MyApp());
@@ -68,10 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
             flex: _flexSplitscreen,
             child: MultiSplitView(
                 children: [
-              Container(
-                child: Center(child: Text("State Machine Area")),
-                color: Colors.red,
-              ),
+              BuildingArea(),
               CodeArea(closedWidth: width * 0.05, updateWidth: updateSplitWidth,)
             ],
                 minimalWeight: 0.2,
