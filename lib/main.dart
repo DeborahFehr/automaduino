@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:multi_split_view/multi_split_view.dart';
 import 'widgets/building_elements_drawer.dart';
-import 'widgets/building_area.dart';
-import 'widgets/code_area.dart';
+import 'widgets/splitscreen.dart';
 
 void main() => runApp(MyApp());
 
@@ -14,7 +12,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Automaduino Demo'),
+      home: MyHomePage(title: 'Automaduino Editor'),
     );
   }
 }
@@ -28,52 +26,56 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _flexDrawer = 1;
-  int _flexSplitscreen = 4;
-  double _weightCodeArea = 0.5;
+class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin {
+  bool _closedDrawer = false;
 
-  // TODO replace split view
-  // https://pub.dev/packages/multi_split_view
-  // https://medium.com/@leonar.d/how-to-create-a-flutter-split-view-7e2ac700ea12
+  late AnimationController controller;
+  late Animation drawerAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    controller =  AnimationController(vsync: this, duration: Duration(seconds: 1));
+    drawerAnimation = Tween<double>(begin: 20.0, end: 5.0).animate(controller);
+    // Rebuilding the screen when animation goes ahead
+    controller.addListener(() {
+      setState(() {});
+    });
+    controller.repeat(reverse: true);
+  }
 
   void updateDrawerWidth(bool closedDrawer) {
     // todo smooth according to animation of drawer
-    closedDrawer ? _flexSplitscreen = 4 : _flexSplitscreen = 19;
-    setState(() {});
-  }
-
-  void updateSplitWidth(bool closedDrawer) {
-    // todo smooth according to animation of drawer
-    // maybe add another animated contrainer?
-    closedDrawer ? _weightCodeArea = 0.5 : _weightCodeArea = 0.05;
+    _closedDrawer = closedDrawer;
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
       body: Row(
         children: [
-          // todo: fix Flex values
+
           Flexible(
-            flex: _flexDrawer,
-            child: BuildingElementsDrawer(
-                expandedWidth: width * 0.2, updateWidth: updateDrawerWidth),
+            flex: 1,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.green,
+              ),
+              child: BuildingElementsDrawer(
+                  updateWidth: updateDrawerWidth),
+            ),
           ),
           Expanded(
-            flex: _flexSplitscreen,
-            child: MultiSplitView(
-                children: [
-              BuildingArea(elements: [],),
-              CodeArea(closedWidth: width * 0.05, updateWidth: updateSplitWidth,)
-            ],
-                minimalWeight: 0.2,
-                controller: MultiSplitViewController(weights: [1 - _weightCodeArea, _weightCodeArea]),
+            flex: _closedDrawer ? 24 : 5,
+            child: Container(
+              child:SplitScreen(
+                width: 100,
+              ),
             ),
           ),
         ],
