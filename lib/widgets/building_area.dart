@@ -1,5 +1,7 @@
 import 'package:arduino_statemachines/resources/building_blocks.dart';
 import 'package:flutter/material.dart';
+import '../resources/positioned_block.dart';
+import 'building_area/draggable_block.dart';
 
 class BuildingArea extends StatefulWidget {
   final List elements;
@@ -19,13 +21,18 @@ class BuildingArea extends StatefulWidget {
 // https://stackoverflow.com/questions/61969660/flutter-how-to-set-boundaries-for-a-draggable-widget
 
 class _BuildingAreaState extends State<BuildingArea> {
-  double width = 100.0, height = 100.0;
-  Offset position = Offset(0.0, 80);
+  final _key = GlobalKey();
+  Offset _position = Offset(0.0, 80);
+  List<PositionedBlock> blocks = [PositionedBlock(BuildingBlock1('test'), Offset(0.0, 80))];
 
   @override
   void initState() {
     super.initState();
-    position = Offset(0.0, height - 20);
+  }
+
+  void updatePosition(PositionedBlock block, Offset position) {
+    block.position = block.position + position;
+    setState(() {});
   }
 
   @override
@@ -35,28 +42,20 @@ class _BuildingAreaState extends State<BuildingArea> {
           List<dynamic> rejectedData) {
         return Stack(
           children: <Widget>[
-            Positioned(
-              left: position.dx,
-              top: position.dy,
-              child: Draggable(
-                  data: [false, 'test'],
-                  child: BuildingBlock1('test'),
-                  feedback: BuildingBlock1('test'),
-                  childWhenDragging: Container(),
-                  onDragEnd: (details) {
-                    RenderBox renderBox = context.findRenderObject() as RenderBox;
-                    setState(
-                            () => position = renderBox.globalToLocal(details.offset));
-                  }),
-            ),
+            for (var block in blocks)
+              DraggableBlock(block, updatePosition)
           ],
         );
       },
       onWillAccept: (data) {
         return (data! as List)[0];
       },
-      onAccept: (data) {
-        // ToDo: Create new item
+      onAcceptWithDetails: (drag) {
+        RenderBox renderBox = context.findRenderObject() as RenderBox;
+        blocks.add(PositionedBlock(BuildingBlock1((drag.data! as List)[1]), renderBox.globalToLocal(drag.offset)));
+        setState(() {
+
+        });
       },
     );
 

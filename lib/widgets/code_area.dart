@@ -18,10 +18,6 @@ class _CodeAreaState extends State<CodeArea> {
   Color _color = Colors.green;
   bool closed = false;
 
-  //ToDo: Smooooth Animation!
-  // ToDo: Stack Children so that animated Container hides content
-  // ToDo: Remove ugly ass editor
-
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
@@ -37,22 +33,25 @@ class _CodeAreaState extends State<CodeArea> {
             children: [
               CodeEditor(),
               SizedBox(
-// Alternate: Use Button Theme?
-                width: widget.closedWidth,
+// ToDo: Alternate: Use Button Theme?
+
                 child: Stack(
                   children: [
-                    AnimatedOpacity(
-                      opacity: closed ? 1.0 : 0.0,
-                      duration: Duration(milliseconds: 750),
-                      child: Container(
-                        height: double.infinity,
-                        decoration: BoxDecoration(
-                          color: Colors.redAccent,
+                    IgnorePointer(
+                      ignoring: true,
+                      child: AnimatedOpacity(
+                        opacity: closed ? 1.0 : 0.0,
+                        duration: Duration(milliseconds: 250),
+                        child: Container(
+                          height: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.redAccent,
+                          ),
                         ),
                       ),
                     ),
                     Align(
-                      alignment: Alignment.bottomCenter,
+                      alignment: Alignment.bottomLeft,
                       child: TextButton(
                         child: Text('>'),
                         style: TextButton.styleFrom(
@@ -74,12 +73,8 @@ class _CodeAreaState extends State<CodeArea> {
                   ],
                 ),
               ),
-
             ],
           ),
-
-
-
         ));
   }
 }

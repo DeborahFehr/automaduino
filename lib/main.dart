@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'widgets/building_elements_drawer.dart';
-import 'widgets/splitscreen.dart';
+import 'package:multi_split_view/multi_split_view.dart';
+import 'widgets/building_area.dart';
+import 'widgets/code_area.dart';
 
 void main() => runApp(MyApp());
 
@@ -26,27 +28,25 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin {
+class _MyHomePageState extends State<MyHomePage> {
   bool _closedDrawer = false;
+  double _width = 0;
+  double _weightCodeArea = 0.5;
 
-  late AnimationController controller;
-  late Animation drawerAnimation;
 
   @override
   void initState() {
     super.initState();
-    controller =  AnimationController(vsync: this, duration: Duration(seconds: 1));
-    drawerAnimation = Tween<double>(begin: 20.0, end: 5.0).animate(controller);
-    // Rebuilding the screen when animation goes ahead
-    controller.addListener(() {
-      setState(() {});
-    });
-    controller.repeat(reverse: true);
   }
 
   void updateDrawerWidth(bool closedDrawer) {
     // todo smooth according to animation of drawer
     _closedDrawer = closedDrawer;
+    setState(() {});
+  }
+
+  void updateSplitWidth(bool closedDrawer) {
+    closedDrawer ? _weightCodeArea = 0.5 : _weightCodeArea = 0.05;
     setState(() {});
   }
 
@@ -73,8 +73,13 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
           Expanded(
             flex: _closedDrawer ? 24 : 5,
             child: Container(
-              child:SplitScreen(
-                width: 100,
+              child:MultiSplitView(
+                children: [
+                  BuildingArea(elements: [],),
+                  CodeArea(closedWidth: _width * 0.05, updateWidth: updateSplitWidth,)
+                ],
+                minimalWeight: 0.2,
+                controller: MultiSplitViewController(weights: [1 - _weightCodeArea, _weightCodeArea]),
               ),
             ),
           ),

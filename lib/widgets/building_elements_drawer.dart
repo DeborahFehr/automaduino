@@ -54,7 +54,6 @@ class _BuildingElementsDrawerState extends State<BuildingElementsDrawer> {
                       return Column(
                         children: [
                           Container(height: 5),
-
                           Draggable(
                             data: [true, 'pff'],
                             child: Container(

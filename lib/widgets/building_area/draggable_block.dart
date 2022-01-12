@@ -1,28 +1,26 @@
 import 'package:flutter/material.dart';
+import '../../resources/positioned_block.dart';
 
 class DraggableBlock extends StatelessWidget {
-  final Offset position;
-  final Widget block;
-  final Function(Offset position) updatePosition;
+  final PositionedBlock block;
+  final Function(PositionedBlock block, Offset position) updatePosition;
   // ToDo: pass Data? Save data in block?
 
-  const DraggableBlock(this.position, this.block, this.updatePosition);
+  const DraggableBlock(this.block, this.updatePosition);
 
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      left: position.dx,
-      top: position.dy,
+      left: block.position.dx,
+      top: block.position.dy,
       child: Draggable(
           data: [false, 'test'],
-          child: block,
-          feedback: block,
+          child: block.block,
+          feedback: block.block,
           childWhenDragging: Container(),
           onDragEnd: (details) {
             RenderBox renderBox = context.findRenderObject() as RenderBox;
-            // this needs to be passed above
-            //position = renderBox.globalToLocal(details.offset);
-            updatePosition(renderBox.globalToLocal(details.offset));
+            updatePosition(block, renderBox.globalToLocal(details.offset));
           }),
     );
   }

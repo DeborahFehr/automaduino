@@ -17,9 +17,7 @@ class _CodeEditorState extends State<CodeEditor> {
 
   void _countCodeLines() {
     numberLines = '\n'.allMatches(codeController.text).length + 1;
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   @override
@@ -48,22 +46,30 @@ class _CodeEditorState extends State<CodeEditor> {
       decoration: BoxDecoration(
           border: new Border.all(color: Colors.grey), color: Colors.white),
       child: Column(children: [
-        Text("here goes a menu!"),
+        Container(
+          width: double.infinity,
+          color: Colors.amber,
+          child: Wrap(
+            children: [
+                  ElevatedButton(onPressed: () => {}, child: Text("test")),
+                  ElevatedButton(onPressed: () => {}, child: Text("test")),
+                  ElevatedButton(onPressed: () => {}, child: Text("test"))
+                ],
+          ),
+        ),
         IntrinsicHeight(
-          child: Row(crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
-                  padding: EdgeInsets.all(10.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      for (var i in List.generate(numberLines, (i) => i + 1))
-                        Text(i.toString()),
-                    ],
-                  ),
-                ),
-
+          child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+            Container(
+              margin: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
+              padding: EdgeInsets.all(10.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  for (var i in List.generate(numberLines, (i) => i + 1))
+                    Text(i.toString()),
+                ],
+              ),
+            ),
             Expanded(
               child: TextField(
                   decoration: InputDecoration(
