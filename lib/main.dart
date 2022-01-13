@@ -29,10 +29,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _closedDrawer = false;
   double _width = 0;
   double _weightCodeArea = 0.5;
-
 
   @override
   void initState() {
@@ -52,34 +52,76 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text(widget.title),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              _scaffoldKey.currentState!.openEndDrawer();
+            },
+          ),
+        ],
       ),
+      endDrawer: Drawer(
+        // Add a ListView to the drawer. This ensures the user can scroll
+        // through the options in the drawer if there isn't enough vertical
+        // space to fit everything.
+        child: ListView(
+          // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text('Drawer Header'),
+            ),
+            ListTile(
+              title: const Text('Item 1'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Item 2'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
+      endDrawerEnableOpenDragGesture: false,
       body: Row(
         children: [
-
           Flexible(
             flex: 1,
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.green,
               ),
-              child: BuildingElementsDrawer(
-                  updateWidth: updateDrawerWidth),
+              child: BuildingElementsDrawer(updateWidth: updateDrawerWidth),
             ),
           ),
           Expanded(
             flex: _closedDrawer ? 24 : 5,
             child: Container(
-              child:MultiSplitView(
+              child: MultiSplitView(
                 children: [
-                  BuildingArea(elements: [],),
-                  CodeArea(closedWidth: _width * 0.05, updateWidth: updateSplitWidth,)
+                  BuildingArea(
+                    elements: [],
+                  ),
+                  CodeArea(
+                    closedWidth: _width * 0.05,
+                    updateWidth: updateSplitWidth,
+                  )
                 ],
                 minimalWeight: 0.2,
-                controller: MultiSplitViewController(weights: [1 - _weightCodeArea, _weightCodeArea]),
+                controller: MultiSplitViewController(
+                    weights: [1 - _weightCodeArea, _weightCodeArea]),
               ),
             ),
           ),

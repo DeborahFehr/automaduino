@@ -1,7 +1,8 @@
 import 'package:arduino_statemachines/resources/building_blocks.dart';
 import 'package:flutter/material.dart';
-import '../resources/positioned_block.dart';
+import '../resources/SupportClasses.dart';
 import 'building_area/draggable_block.dart';
+import 'building_area/line_painter.dart';
 
 class BuildingArea extends StatefulWidget {
   final List elements;
@@ -14,16 +15,18 @@ class BuildingArea extends StatefulWidget {
   }
 }
 
-// ToDo: Zoom!
-// https://stackoverflow.com/questions/65977699/how-to-create-a-movable-widget-in-flutter-such-that-is-stays-at-the-position-it
-
-// ToDo: Drag stay in Area
-// https://stackoverflow.com/questions/61969660/flutter-how-to-set-boundaries-for-a-draggable-widget
-
 class _BuildingAreaState extends State<BuildingArea> {
-  final _key = GlobalKey();
-  Offset _position = Offset(0.0, 80);
-  List<PositionedBlock> blocks = [PositionedBlock(BuildingBlock1('test'), Offset(0.0, 80))];
+  List<PositionedBlock> blocks = [
+    PositionedBlock(UniqueKey(), BuildingBlock1('test'), Offset(0.0, 80)),
+    PositionedBlock(UniqueKey(), BuildingBlock1('end'), Offset(200, 200))
+  ];
+  List<Connection> connections = [];
+
+  // Connection(UniqueKey(), UniqueKey(), "test")
+  bool drag = false;
+  late Key dragKey;
+
+  bool showButtons = true;
 
   @override
   void initState() {
@@ -35,6 +38,27 @@ class _BuildingAreaState extends State<BuildingArea> {
     setState(() {});
   }
 
+  void updateButtons() {
+    showButtons = !showButtons;
+    setState(() {});
+  }
+
+  dynamic Function(Key) addConnection(Key start) {
+    void addEndKey(Key end) {
+      connections.add(Connection(start, end, "test"));
+      print(connections.toString());
+      setState(() {});
+    }
+
+    return addEndKey;
+  }
+
+  void addArrow(Key key) {
+    dragKey = key;
+    drag = true;
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return DragTarget(
@@ -42,8 +66,20 @@ class _BuildingAreaState extends State<BuildingArea> {
           List<dynamic> rejectedData) {
         return Stack(
           children: <Widget>[
+            CustomPaint(
+              painter: LinePainter(blocks, connections),
+            ),
+            drag
+                ? Draggable(
+                    data: [false, dragKey],
+                    child: Icon(Icons.keyboard_arrow_down),
+                    feedback: Icon(Icons.keyboard_arrow_down),
+                    childWhenDragging: Container(),
+                  )
+                : Container(),
             for (var block in blocks)
-              DraggableBlock(block, updatePosition)
+              DraggableBlock(block, updatePosition, addArrow,
+                  addConnection(block.key), updateButtons, showButtons),
           ],
         );
       },
@@ -52,13 +88,12 @@ class _BuildingAreaState extends State<BuildingArea> {
       },
       onAcceptWithDetails: (drag) {
         RenderBox renderBox = context.findRenderObject() as RenderBox;
-        blocks.add(PositionedBlock(BuildingBlock1((drag.data! as List)[1]), renderBox.globalToLocal(drag.offset)));
-        setState(() {
-
-        });
+        blocks.add(PositionedBlock(
+            UniqueKey(),
+            BuildingBlock1((drag.data! as List)[1]),
+            renderBox.globalToLocal(drag.offset)));
+        setState(() {});
       },
     );
-
-
   }
 }
