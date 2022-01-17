@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../resources/SupportClasses.dart';
+import '../../resources/support_classes.dart';
 
 class DraggableBlock extends StatelessWidget {
   final PositionedBlock block;
@@ -30,7 +30,8 @@ class DraggableBlock extends StatelessWidget {
                 },
                 onWillAccept: (candidate) {
                   List data = (candidate as List);
-                  return data[0] ? false : true;
+                  return (data[0] ? false : true) &&
+                      block.key != (data as List)[1];
                 },
                 onAccept: (data) {
                   addConnection((data as List)[1]);

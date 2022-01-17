@@ -16,8 +16,12 @@ class BuildingElementsDrawer extends StatefulWidget {
 
 class _BuildingElementsDrawerState extends State<BuildingElementsDrawer> {
   bool closed = false;
-  final List<String> blocks = <String>['A', 'B', 'C'];
-  final List<int> colorCodes = <int>[600, 500, 100];
+  final List<String> blocks = ['Block 1', 'Block 2', 'Block 3'];
+  final List colors = [
+    Colors.greenAccent,
+    Colors.pinkAccent,
+    Colors.blueAccent
+  ];
 
   void initState() {
     super.initState();
@@ -38,8 +42,8 @@ class _BuildingElementsDrawerState extends State<BuildingElementsDrawer> {
                   children: [
                     new TabBar(
                       tabs: [
-                        new Tab(icon: new Icon(Icons.directions_car)),
-                        new Tab(icon: new Icon(Icons.directions_transit)),
+                        new Tab(icon: new Icon(Icons.lightbulb_outline)),
+                        new Tab(icon: new Icon(Icons.lock_outlined)),
                       ],
                     ),
                   ],
@@ -60,10 +64,9 @@ class _BuildingElementsDrawerState extends State<BuildingElementsDrawer> {
                               width: 100,
                               height: 100,
                               decoration: BoxDecoration(
-                                color: Colors.amber[colorCodes[index]],
+                                color: colors[index],
                               ),
-                              child:
-                                  Center(child: Text('Entry ${blocks[index]}')),
+                              child: Center(child: Text('${blocks[index]}')),
                             ),
                             feedback: Container(
                               width: 100,
@@ -78,7 +81,7 @@ class _BuildingElementsDrawerState extends State<BuildingElementsDrawer> {
                       );
                     },
                   ),
-                  Icon(Icons.directions_transit),
+                  Text("More blocks coming soon!"),
                 ],
               ),
             ),

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 import '../../resources/syntax_Highlighter.dart';
-
-// TODO: add line numbers
+import '../../resources/support_classes.dart';
+import '../../resources/code_generator.dart';
 
 class CodeEditor extends StatefulWidget {
-  CodeEditor({Key? key}) : super(key: key);
+  final String? code;
+
+  CodeEditor({Key? key, this.code}) : super(key: key);
 
   @override
   _CodeEditorState createState() => _CodeEditorState();
@@ -14,6 +16,7 @@ class CodeEditor extends StatefulWidget {
 class _CodeEditorState extends State<CodeEditor> {
   var codeController = TextEditingController();
   var numberLines = 9;
+  CodeGenerator codeGenerator = new CodeGenerator(null, null);
 
   void _countCodeLines() {
     numberLines = '\n'.allMatches(codeController.text).length + 1;
@@ -23,19 +26,15 @@ class _CodeEditorState extends State<CodeEditor> {
   @override
   void initState() {
     super.initState();
+    codeController.text = codeGenerator.getCode();
+    // ToDo: This throws an setstate during build error
+    //codeController.addListener(_countCodeLines);
+  }
 
-    codeController.text = '''void setup() {
-      // put your setup code here, to run once:
-
-    }
-
-    void loop() {
-      // put your main code here, to run repeatedly:
-
-    }''';
-
-    // Start listening to changes.
-    codeController.addListener(_countCodeLines);
+  @override
+  void dispose() {
+    codeController.dispose();
+    super.dispose();
   }
 
   @override
@@ -51,10 +50,10 @@ class _CodeEditorState extends State<CodeEditor> {
           color: Colors.amber,
           child: Wrap(
             children: [
-                  ElevatedButton(onPressed: () => {}, child: Text("test")),
-                  ElevatedButton(onPressed: () => {}, child: Text("test")),
-                  ElevatedButton(onPressed: () => {}, child: Text("test"))
-                ],
+              ElevatedButton(onPressed: () => {}, child: Text("test")),
+              ElevatedButton(onPressed: () => {}, child: Text("test")),
+              ElevatedButton(onPressed: () => {}, child: Text("test"))
+            ],
           ),
         ),
         IntrinsicHeight(
@@ -71,14 +70,21 @@ class _CodeEditorState extends State<CodeEditor> {
               ),
             ),
             Expanded(
-              child: TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: TextInputType.multiline,
-                  maxLines: null,
-                  minLines: 10,
-                  controller: codeController),
+              child: Consumer<StateModel>(
+                builder: (context, state, child) {
+                  codeGenerator =
+                      CodeGenerator(state.blocks, state.connections);
+                  codeController.text = codeGenerator.getCode();
+                  return TextField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
+                      minLines: 10,
+                      controller: codeController);
+                },
+              ),
             ),
           ]),
         ),

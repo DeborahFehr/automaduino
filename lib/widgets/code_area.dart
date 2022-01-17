@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'code_area/code_editor.dart';
+import '../resources/support_classes.dart';
+import '../resources/code_generator.dart';
 
 class CodeArea extends StatefulWidget {
   final double closedWidth;
-  Function(bool closed) updateWidth;
+  final Function(bool closed) updateWidth;
+  final List<Connection>? connections;
 
-  CodeArea({Key? key, required this.closedWidth, required this.updateWidth})
+  CodeArea(
+      {Key? key,
+      required this.closedWidth,
+      required this.updateWidth,
+      this.connections})
       : super(key: key);
 
   @override
@@ -17,6 +23,20 @@ class _CodeAreaState extends State<CodeArea> {
   double _width = 0;
   Color _color = Colors.green;
   bool closed = false;
+  String code = "";
+
+  @override
+  void initState() {
+    super.initState();
+    CodeGenerator codeGenerator = new CodeGenerator(null, widget.connections);
+    code = codeGenerator.getCode();
+  }
+
+  @override
+  void didUpdateWidget(Widget oldWidget) {
+    CodeGenerator codeGenerator = new CodeGenerator(null, widget.connections);
+    code = codeGenerator.getCode();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +51,7 @@ class _CodeAreaState extends State<CodeArea> {
           alignment: Alignment.bottomLeft,
           child: Stack(
             children: [
-              CodeEditor(),
+              CodeEditor(code: code),
               SizedBox(
 // ToDo: Alternate: Use Button Theme?
 

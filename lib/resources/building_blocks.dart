@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'support_classes.dart';
 
-class BuildingBlock1 extends StatelessWidget {
+class BuildingBlock extends StatelessWidget {
   final String name;
+  final Color color;
 
-  const BuildingBlock1(this.name);
+  const BuildingBlock(this.name, this.color);
 
   @override
   Widget build(BuildContext context) {

@@ -3,8 +3,17 @@ import 'widgets/building_elements_drawer.dart';
 import 'package:multi_split_view/multi_split_view.dart';
 import 'widgets/building_area.dart';
 import 'widgets/code_area.dart';
+import '../resources/support_classes.dart';
+import 'package:provider/provider.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => StateModel(),
+      child: MyApp(),
+    ),
+  );
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -33,6 +42,14 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _closedDrawer = false;
   double _width = 0;
   double _weightCodeArea = 0.5;
+  List<PositionedBlock> blocks = [];
+  List<Connection>? connections = null;
+
+  void setConnections(List<Connection> update) {
+    // todo smooth according to animation of drawer
+    connections = update;
+    setState(() {});
+  }
 
   @override
   void initState() {
@@ -112,11 +129,12 @@ class _MyHomePageState extends State<MyHomePage> {
               child: MultiSplitView(
                 children: [
                   BuildingArea(
-                    elements: [],
+                    update: setConnections,
                   ),
                   CodeArea(
                     closedWidth: _width * 0.05,
                     updateWidth: updateSplitWidth,
+                    connections: connections,
                   )
                 ],
                 minimalWeight: 0.2,

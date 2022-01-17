@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../resources/SupportClasses.dart';
+import '../../resources/support_classes.dart';
 
 class LinePainter extends CustomPainter {
   final List<PositionedBlock> blocks;
