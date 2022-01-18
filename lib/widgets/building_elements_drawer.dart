@@ -16,12 +16,6 @@ class BuildingElementsDrawer extends StatefulWidget {
 
 class _BuildingElementsDrawerState extends State<BuildingElementsDrawer> {
   bool closed = false;
-  final List<String> blocks = ['Block 1', 'Block 2', 'Block 3'];
-  final List colors = [
-    Colors.greenAccent,
-    Colors.pinkAccent,
-    Colors.blueAccent
-  ];
 
   void initState() {
     super.initState();
@@ -53,29 +47,19 @@ class _BuildingElementsDrawerState extends State<BuildingElementsDrawer> {
                 children: [
                   ListView.builder(
                     padding: const EdgeInsets.all(8),
-                    itemCount: blocks.length,
+                    itemCount: elementalBlocks.length,
                     itemBuilder: (BuildContext context, int index) {
+                      Widget buildingBlock = BuildingBlock(
+                          elementalBlocks[index].name,
+                          elementalBlocks[index].color as Color);
                       return Column(
                         children: [
                           Container(height: 5),
                           Draggable(
-                            data: [true, 'pff'],
-                            child: Container(
-                              width: 100,
-                              height: 100,
-                              decoration: BoxDecoration(
-                                color: colors[index],
-                              ),
-                              child: Center(child: Text('${blocks[index]}')),
-                            ),
-                            feedback: Container(
-                              width: 100,
-                              height: 100,
-                              decoration: BoxDecoration(
-                                color: Colors.pink,
-                              ),
-                            ),
-                            childWhenDragging: Container(),
+                            data: elementalBlocks[index],
+                            child: buildingBlock,
+                            feedback: buildingBlock,
+                            childWhenDragging: buildingBlock,
                           ),
                         ],
                       );

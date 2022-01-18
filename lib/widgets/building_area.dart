@@ -6,9 +6,7 @@ import 'building_area/line_painter.dart';
 import 'package:provider/provider.dart';
 
 class BuildingArea extends StatefulWidget {
-  final Function(List<Connection> target) update;
-
-  BuildingArea({Key? key, required this.update}) : super(key: key);
+  BuildingArea({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -17,17 +15,19 @@ class BuildingArea extends StatefulWidget {
 }
 
 class _BuildingAreaState extends State<BuildingArea> {
-  bool drag = false;
-  late Key dragKey;
-  bool showButtons = true;
+  DraggableConnection? drag;
 
   void updatePosition(PositionedBlock block, Offset position) {
     block.position = block.position + position;
     setState(() {});
   }
 
-  void updateButtons() {
-    showButtons = !showButtons;
+  void updateDrag(bool active, Offset start, Offset end) {
+    if (drag == null) {
+      drag = DraggableConnection(start, end);
+    } else {
+      drag = active ? DraggableConnection(start, drag!.end + end) : null;
+    }
     setState(() {});
   }
 
@@ -41,12 +41,6 @@ class _BuildingAreaState extends State<BuildingArea> {
     return addEndKey;
   }
 
-  void addArrow(Key key) {
-    dragKey = key;
-    drag = true;
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
     return Consumer<StateModel>(
@@ -57,30 +51,24 @@ class _BuildingAreaState extends State<BuildingArea> {
             return Stack(
               children: <Widget>[
                 CustomPaint(
-                  painter: LinePainter(state.blocks, state.connections),
+                  painter: LinePainter(state.blocks, state.connections, drag),
                 ),
-                drag
-                    ? Draggable(
-                        data: [false, dragKey],
-                        child: Icon(Icons.keyboard_arrow_down),
-                        feedback: Icon(Icons.keyboard_arrow_down),
-                        childWhenDragging: Container(),
-                      )
-                    : Container(),
                 for (var block in state.blocks)
-                  DraggableBlock(block, updatePosition, addArrow,
-                      addConnection(block.key), updateButtons, showButtons),
+                  DraggableBlock(block, updatePosition, updateDrag,
+                      addConnection(block.key)),
               ],
             );
           },
           onWillAccept: (data) {
-            return (data! as List)[0];
+            return (data! as BlockData).newBlock;
           },
           onAcceptWithDetails: (drag) {
             RenderBox renderBox = context.findRenderObject() as RenderBox;
+            BlockData data = drag.data as BlockData;
             state.addBlock(PositionedBlock(
                 UniqueKey(),
-                BuildingBlock((drag.data! as List)[1], Colors.blue),
+                BuildingBlock(data.name, data.color as Color),
+                data.added(),
                 renderBox.globalToLocal(drag.offset)));
             setState(() {});
           },

@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 import '../../resources/support_classes.dart';
+import 'add_connection_button.dart';
 
 class DraggableBlock extends StatelessWidget {
   final PositionedBlock block;
   final Function(PositionedBlock block, Offset position) updatePosition;
-  final Function(Key candidate) addArrow;
+  final Function(bool active, Offset start, Offset end) updateDrag;
   final Function(Key target) addConnection;
-  final Function() showButton;
-  final bool visibleButton;
 
-  // ToDo: pass Data? Save data in block?
-
-  const DraggableBlock(this.block, this.updatePosition, this.addArrow,
-      this.addConnection, this.showButton, this.visibleButton);
+  const DraggableBlock(
+      this.block, this.updatePosition, this.updateDrag, this.addConnection);
 
   @override
   Widget build(BuildContext context) {
@@ -22,40 +19,32 @@ class DraggableBlock extends StatelessWidget {
       child: Column(
         children: [
           Draggable(
-              data: [false, 'test'],
+              data: block.data,
               child: DragTarget(
                 builder: (context, List<dynamic> candidateData,
                     List<dynamic> rejectedData) {
                   return block.block;
                 },
                 onWillAccept: (candidate) {
-                  List data = (candidate as List);
-                  return (data[0] ? false : true) &&
-                      block.key != (data as List)[1];
+                  BlockData data = (candidate as BlockData);
+                  return !data.newBlock && data.newConnection;
                 },
                 onAccept: (data) {
-                  addConnection((data as List)[1]);
+                  addConnection((data as BlockData).key as Key);
                 },
               ),
               feedback: block.block,
               childWhenDragging: Container(),
-              onDragStarted: () => {showButton()},
+              onDragUpdate: (details) {
+                updatePosition(block, details.delta);
+              },
               onDragEnd: (details) {
-                showButton();
                 RenderBox renderBox = context.findRenderObject() as RenderBox;
                 updatePosition(block, renderBox.globalToLocal(details.offset));
+                //Provider.of<StateModel>(context, listen: false)
+                //.updateBlockPosition(block.key, details.offset);
               }),
-          Visibility(
-            visible: visibleButton,
-            child: TextButton(
-              style: TextButton.styleFrom(
-                padding: EdgeInsets.zero,
-                minimumSize: Size.zero,
-              ),
-              child: Icon(Icons.arrow_drop_down_circle),
-              onPressed: () => {addArrow(block.key)},
-            ),
-          )
+          AddConnectionButton(block.key, block.position, updateDrag),
         ],
       ),
     );

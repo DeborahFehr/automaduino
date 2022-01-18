@@ -42,14 +42,6 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _closedDrawer = false;
   double _width = 0;
   double _weightCodeArea = 0.5;
-  List<PositionedBlock> blocks = [];
-  List<Connection>? connections = null;
-
-  void setConnections(List<Connection> update) {
-    // todo smooth according to animation of drawer
-    connections = update;
-    setState(() {});
-  }
 
   @override
   void initState() {
@@ -94,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
               decoration: BoxDecoration(
                 color: Colors.blue,
               ),
-              child: Text('Drawer Header'),
+              child: Image(image: AssetImage('graphics/logo.png')),
             ),
             ListTile(
               title: const Text('Item 1'),
@@ -129,12 +121,10 @@ class _MyHomePageState extends State<MyHomePage> {
               child: MultiSplitView(
                 children: [
                   BuildingArea(
-                    update: setConnections,
                   ),
                   CodeArea(
                     closedWidth: _width * 0.05,
                     updateWidth: updateSplitWidth,
-                    connections: connections,
                   )
                 ],
                 minimalWeight: 0.2,
