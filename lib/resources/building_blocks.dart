@@ -4,7 +4,10 @@ import 'support_classes.dart';
 List<BlockData> elementalBlocks = [
   BlockData("Block 1", Colors.redAccent, true, false, null),
   BlockData("Block 2", Colors.blueAccent, true, false, null),
-  BlockData("Block 3", Colors.greenAccent, true, false, null)
+  BlockData("Block 3", Colors.greenAccent, true, false, null),
+  BlockData("Block 4", Colors.amberAccent, true, false, null),
+  BlockData("Block 5", Colors.pinkAccent, true, false, null),
+  BlockData("Block 6", Colors.yellowAccent, true, false, null)
 ];
 
 class BuildingBlock extends StatelessWidget {

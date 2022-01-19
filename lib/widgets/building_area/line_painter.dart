@@ -19,11 +19,20 @@ class LinePainter extends CustomPainter {
       ..strokeWidth = 3;
 
     for (var con in connections) {
+      // draw line to condition block
       Offset startPoint =
           blocks.firstWhere((el) => el.key == con.start).position + center;
-      Offset endPoint =
-          blocks.firstWhere((el) => el.key == con.end).position + center;
+      Offset endPoint = con.position + Offset(100, 50);
       canvas.drawLine(startPoint, endPoint, paint);
+
+      // draw lines from condition block to end block[s]
+      startPoint = con.position + Offset(100, 0);
+
+      for (var end in con.end) {
+        Offset endPoint =
+            blocks.firstWhere((el) => el.key == end).position + center;
+        canvas.drawLine(startPoint, endPoint, paint);
+      }
     }
 
     paint = Paint()

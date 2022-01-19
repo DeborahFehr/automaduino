@@ -5,6 +5,7 @@ import 'widgets/building_area.dart';
 import 'widgets/code_area.dart';
 import '../resources/support_classes.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(
@@ -89,14 +90,16 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Image(image: AssetImage('graphics/logo.png')),
             ),
             ListTile(
-              title: const Text('Item 1'),
+              title: const Text('Open Docs'),
               onTap: () {
+                launch('https://automaduino-docs.vercel.app/docs/');
                 Navigator.pop(context);
               },
             ),
             ListTile(
-              title: const Text('Item 2'),
+              title: const Text('Open Website'),
               onTap: () {
+                launch('https://automaduino-docs.vercel.app/');
                 Navigator.pop(context);
               },
             ),

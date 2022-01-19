@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class StateModel extends ChangeNotifier {
@@ -23,6 +24,22 @@ class StateModel extends ChangeNotifier {
   /// Adds [connection] between two blocks.
   void addConnection(Connection connection) {
     _connections.add(connection);
+    notifyListeners();
+  }
+
+  void updateConnectionType(Condition condition, conditionType type) {
+    _connections
+        .firstWhere((element) => element.condition.key == condition.key)
+        .condition
+        .type = type;
+    notifyListeners();
+  }
+
+  void updateConnectionValues(Condition condition, List<String> values) {
+    _connections
+        .firstWhere((element) => element.condition.key == condition.key)
+        .condition
+        .values = values;
     notifyListeners();
   }
 
@@ -73,22 +90,39 @@ class PositionedBlock {
   PositionedBlock(this.key, this.block, this.data, this.position);
 }
 
-// Connection describes the relationship between two blocks in the buildarea
+// Connection describes the relationship between a block and a condition
 class Connection {
   final Key start;
-  Key end;
-  String condition;
+  final Condition condition;
+  List<Key> end;
+  Offset position;
 
-  Connection(this.start, this.end, this.condition);
+  Connection(this.start, this.condition, this.end, this.position);
 
   @override
   String toString() {
     return "start: " +
         start.toString() +
+        ", connection: " +
+        condition.toString() +
         ", end: " +
-        end.toString() +
-        ", condition: " +
-        condition;
+        end.toString();
+  }
+}
+
+enum conditionType { iff, iffelse, cond, time, value }
+
+// Condition describes the connection
+class Condition {
+  final Key key;
+  conditionType type;
+  List<String> values;
+
+  Condition(this.key, this.type, this.values);
+
+  @override
+  String toString() {
+    return "type: " + type.toString() + ", with values: " + values.toString();
   }
 }
 

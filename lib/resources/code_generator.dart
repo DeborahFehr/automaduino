@@ -16,10 +16,12 @@ class CodeGenerator {
   String _connectionsDemo(Connection con) {
     return "Key " +
         con.start.toString() +
-        " connected to Key" +
+        " connected to Key " +
         con.end.toString() +
-        " via condition: " +
-        con.condition +
+        " by condition type " +
+        con.condition.type.toString() +
+        " with value " +
+        con.condition.values[0].toString() +
         "\n";
   }
 
