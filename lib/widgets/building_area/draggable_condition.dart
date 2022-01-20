@@ -21,10 +21,6 @@ class DraggableCondition extends StatefulWidget {
 }
 
 class _ConditionField extends State<DraggableCondition> {
-  String dropdownValue = 'iff';
-  List<String> items =
-      conditionType.values.map((e) => describeEnum(e)).toList();
-
   void test(Connection connection, Offset position) {}
 
   @override

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../resources/building_blocks.dart';
+import 'building_drawer/block_listview.dart';
 
 // TODO: Vertical Text
 // https://stackoverflow.com/questions/58310795/flutter-vertical-text-widget
@@ -28,16 +29,30 @@ class _BuildingElementsDrawerState extends State<BuildingElementsDrawer> {
         Padding(
           padding: const EdgeInsets.all(8),
           child: DefaultTabController(
-            length: 2,
+            length: 3,
             child: Scaffold(
               appBar: AppBar(
-                flexibleSpace: new Column(
+                flexibleSpace: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    new TabBar(
+                    TabBar(
                       tabs: [
-                        new Tab(icon: new Icon(Icons.lightbulb_outline)),
-                        new Tab(icon: new Icon(Icons.lock_outlined)),
+                        Tab(
+                          child: Tooltip(
+                            message: 'Input Sensors',
+                            child: Icon(Icons.input),
+                          ),
+                        ),
+                        Tab(
+                            child: Tooltip(
+                          message: 'User Input',
+                          child: Icon(Icons.touch_app),
+                        )),
+                        Tab(
+                            child: Tooltip(
+                          message: 'Output',
+                          child: Icon(Icons.lightbulb_outline),
+                        )),
                       ],
                     ),
                   ],
@@ -45,27 +60,9 @@ class _BuildingElementsDrawerState extends State<BuildingElementsDrawer> {
               ),
               body: TabBarView(
                 children: [
-                  ListView.builder(
-                    padding: const EdgeInsets.all(8),
-                    itemCount: elementalBlocks.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      Widget buildingBlock = BuildingBlock(
-                          elementalBlocks[index].name,
-                          elementalBlocks[index].color as Color);
-                      return Column(
-                        children: [
-                          Container(height: 5),
-                          Draggable(
-                            data: elementalBlocks[index],
-                            child: buildingBlock,
-                            feedback: buildingBlock,
-                            childWhenDragging: buildingBlock,
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                  Text("More blocks coming soon!"),
+                  BlockListView(sensorBlocks),
+                  BlockListView(userInputBlocks),
+                  BlockListView(outputBlocks),
                 ],
               ),
             ),
@@ -109,23 +106,3 @@ class _BuildingElementsDrawerState extends State<BuildingElementsDrawer> {
     );
   }
 }
-
-/*
-    Draggable(
-            child: Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                color: Colors.pink,
-              ),
-            ),
-            feedback: Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                color: Colors.pink,
-              ),
-            ),
-            childWhenDragging: Container(),
-          ),
- */

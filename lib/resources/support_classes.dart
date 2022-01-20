@@ -110,7 +110,7 @@ class Connection {
   }
 }
 
-enum conditionType { iff, iffelse, cond, time, value }
+enum conditionType { then, iff, iffelse, cond, time, value }
 
 // Condition describes the connection
 class Condition {

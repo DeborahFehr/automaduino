@@ -18,7 +18,7 @@ class ConditionField extends StatefulWidget {
 }
 
 class _ConditionField extends State<ConditionField> {
-  String dropdownValue = 'iff';
+  String dropdownValue = 'then';
   List<String> items =
       conditionType.values.map((e) => describeEnum(e)).toList();
 
