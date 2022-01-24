@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'code_area/code_editor.dart';
-import '../resources/support_classes.dart';
+import '../resources/transition.dart';
 import '../resources/code_generator.dart';
 
 class CodeArea extends StatefulWidget {
   final double closedWidth;
   final Function(bool closed) updateWidth;
-  final List<Connection>? connections;
+  final List<Transition>? connections;
 
   CodeArea(
       {Key? key,
@@ -21,7 +21,6 @@ class CodeArea extends StatefulWidget {
 
 class _CodeAreaState extends State<CodeArea> {
   double _width = 0;
-  Color _color = Colors.green;
   bool closed = false;
   String code = "";
 
@@ -43,7 +42,7 @@ class _CodeAreaState extends State<CodeArea> {
     return AnimatedContainer(
         width: _width,
         decoration: BoxDecoration(
-          color: _color,
+          color: Theme.of(context).colorScheme.secondary,
         ),
         duration: Duration(seconds: 1),
         curve: Curves.fastOutSlowIn,
@@ -51,7 +50,10 @@ class _CodeAreaState extends State<CodeArea> {
           alignment: Alignment.bottomLeft,
           child: Stack(
             children: [
-              CodeEditor(code: code),
+              SingleChildScrollView(
+                controller: ScrollController(),
+                child: CodeEditor(code: code),
+              ),
               SizedBox(
 // ToDo: Alternate: Use Button Theme?
 
@@ -64,8 +66,18 @@ class _CodeAreaState extends State<CodeArea> {
                         duration: Duration(milliseconds: 250),
                         child: Container(
                           height: double.infinity,
+                          width: double.infinity,
                           decoration: BoxDecoration(
-                            color: Colors.redAccent,
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Text(
+                              'C\no\nd\ne\n \nE\nd\ni\nt\no\nr',
+                              style: TextStyle(
+                                  fontSize: 20.0, color: Colors.white),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
                       ),
@@ -76,7 +88,8 @@ class _CodeAreaState extends State<CodeArea> {
                         child: Text('>'),
                         style: TextButton.styleFrom(
                           primary: Colors.white,
-                          backgroundColor: Colors.yellow,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primary,
                           elevation: 5,
                         ),
                         onPressed: () {

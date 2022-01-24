@@ -1,13 +1,13 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../../resources/support_classes.dart';
+import '../../resources/state.dart';
+import '../../resources/transition.dart';
 import 'condition_field.dart';
 
 class DraggableCondition extends StatefulWidget {
   final Key key;
-  final Connection connection;
+  final Transition connection;
   final Offset position;
-  final Function(Connection connection, Offset position) updatePosition;
+  final Function(Transition connection, Offset position) updatePosition;
   final Function(Condition condition, {String? type, List<String>? values})
       updateConnectionDetails;
 
@@ -21,7 +21,7 @@ class DraggableCondition extends StatefulWidget {
 }
 
 class _ConditionField extends State<DraggableCondition> {
-  void test(Connection connection, Offset position) {}
+  void test(Transition connection, Offset position) {}
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class _ConditionField extends State<DraggableCondition> {
       left: widget.position.dx,
       top: widget.position.dy,
       child: Draggable(
-          data: BlockData("", null, false, false, null),
+          data: StateSettings("", "then", false, false, null),
           child: ConditionField(widget.connection.condition, test,
               widget.updateConnectionDetails),
           feedback: Container(

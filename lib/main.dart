@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'widgets/building_elements_drawer.dart';
+import 'widgets/block_drawer.dart';
 import 'package:multi_split_view/multi_split_view.dart';
-import 'widgets/building_area.dart';
+import 'widgets/canvas.dart';
 import 'widgets/code_area.dart';
-import '../resources/support_classes.dart';
+import '../resources/automaduino_state.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../resources/color_map.dart';
 
 void main() {
   runApp(
     ChangeNotifierProvider(
-      create: (context) => StateModel(),
+      create: (context) => AutomaduinoState(),
       child: MyApp(),
     ),
   );
@@ -22,7 +23,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Automaduino Editor',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        colorScheme: ColorScheme.fromSwatch(
+          primarySwatch: MaterialColor(0xff19969C, primaryColor),
+          accentColor: MaterialColor(0xff15787d, secondaryColor),
+        ),
+        fontFamily: 'open sans',
+        textTheme: const TextTheme(
+            //headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+            //headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+            ),
       ),
       home: MyHomePage(title: 'Automaduino Editor'),
     );
@@ -65,6 +74,10 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
+        leading: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Image.asset('graphics/logo_icon.png', fit: BoxFit.contain),
+        ),
         title: Text(widget.title),
         actions: <Widget>[
           IconButton(
@@ -103,6 +116,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.pop(context);
               },
             ),
+            ListTile(
+              title: const Text('Image Sources'),
+              onTap: () {
+                // ToDo: Show sources from resources/image_sources.dart file
+                Navigator.pop(context);
+              },
+            ),
           ],
         ),
       ),
@@ -113,7 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
             flex: 1,
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.green,
+                color: Theme.of(context).colorScheme.secondary,
               ),
               child: BuildingElementsDrawer(updateWidth: updateDrawerWidth),
             ),
@@ -123,8 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Container(
               child: MultiSplitView(
                 children: [
-                  BuildingArea(
-                  ),
+                  BuildingArea(),
                   CodeArea(
                     closedWidth: _width * 0.05,
                     updateWidth: updateSplitWidth,

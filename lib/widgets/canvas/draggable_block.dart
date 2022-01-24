@@ -1,10 +1,11 @@
+import 'package:arduino_statemachines/resources/state.dart';
 import 'package:flutter/material.dart';
-import '../../resources/support_classes.dart';
+import '../../resources/canvas_layout.dart';
 import 'add_connection_button.dart';
 
 class DraggableBlock extends StatelessWidget {
-  final PositionedBlock block;
-  final Function(PositionedBlock block, Offset position) updatePosition;
+  final PositionedState block;
+  final Function(PositionedState block, Offset position) updatePosition;
   final Function(bool active, Offset start, Offset end) updateDrag;
   final Function(Key target) addConnection;
 
@@ -19,18 +20,18 @@ class DraggableBlock extends StatelessWidget {
       child: Column(
         children: [
           Draggable(
-              data: block.data,
+              data: block.settings,
               child: DragTarget(
                 builder: (context, List<dynamic> candidateData,
                     List<dynamic> rejectedData) {
                   return block.block;
                 },
                 onWillAccept: (candidate) {
-                  BlockData data = (candidate as BlockData);
+                  StateSettings data = (candidate as StateSettings);
                   return !data.newBlock && data.newConnection;
                 },
                 onAccept: (data) {
-                  addConnection((data as BlockData).key as Key);
+                  addConnection((data as StateSettings).key as Key);
                 },
               ),
               feedback: block.block,

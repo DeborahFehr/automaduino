@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../resources/syntax_Highlighter.dart';
-import '../../resources/support_classes.dart';
+import '../../resources/automaduino_state.dart';
 import '../../resources/code_generator.dart';
 
 class CodeEditor extends StatefulWidget {
@@ -47,7 +47,7 @@ class _CodeEditorState extends State<CodeEditor> {
       child: Column(children: [
         Container(
           width: double.infinity,
-          color: Colors.amber,
+          color: Theme.of(context).colorScheme.secondary,
           child: Wrap(
             children: [
               ElevatedButton(onPressed: () => {}, child: Text("test")),
@@ -70,7 +70,7 @@ class _CodeEditorState extends State<CodeEditor> {
               ),
             ),
             Expanded(
-              child: Consumer<StateModel>(
+              child: Consumer<AutomaduinoState>(
                 builder: (context, state, child) {
                   codeGenerator =
                       CodeGenerator(state.blocks, state.connections);

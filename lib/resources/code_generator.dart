@@ -1,10 +1,11 @@
-import 'support_classes.dart';
+import 'canvas_layout.dart';
+import 'transition.dart';
 
 class CodeGenerator {
-  List<PositionedBlock>? blocks = [];
-  List<Connection>? connections = [];
+  List<PositionedState>? blocks = [];
+  List<Transition>? connections = [];
 
-  CodeGenerator(List<PositionedBlock>? blocks, List<Connection>? connections) {
+  CodeGenerator(List<PositionedState>? blocks, List<Transition>? connections) {
     this.blocks = blocks;
     this.connections = connections;
   }
@@ -13,7 +14,7 @@ class CodeGenerator {
     return (connections == null) ? _defaultCode() : _generateCode();
   }
 
-  String _connectionsDemo(Connection con) {
+  String _connectionsDemo(Transition con) {
     return "Key " +
         con.start.toString() +
         " connected to Key " +
@@ -28,7 +29,7 @@ class CodeGenerator {
   String _generateCode() {
     String result = "";
     if (connections!.length > 0) {
-      for (Connection con in connections!.toList())
+      for (Transition con in connections!.toList())
         result = result + _connectionsDemo(con);
     } else {
       result = _defaultCode();

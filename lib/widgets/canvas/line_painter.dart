@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../resources/support_classes.dart';
+import '../../resources/canvas_layout.dart';
+import '../../resources/transition.dart';
 
 class LinePainter extends CustomPainter {
-  final List<PositionedBlock> blocks;
-  final List<Connection> connections;
+  final List<PositionedState> blocks;
+  final List<Transition> connections;
   final DraggableConnection? dragLine;
 
   const LinePainter(this.blocks, this.connections, this.dragLine);

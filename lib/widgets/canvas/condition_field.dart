@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../../resources/support_classes.dart';
+import '../../resources/transition.dart';
 
 class ConditionField extends StatefulWidget {
   final Condition condition;
-  final Function(Connection connection, Offset position) updateConditionType;
+  final Function(Transition connection, Offset position) updateConditionType;
   final Function(Condition condition, {String? type, List<String>? values})
       updateConnectionDetails;
 

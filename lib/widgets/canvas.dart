@@ -1,10 +1,14 @@
+import 'package:arduino_statemachines/resources/state.dart';
 import 'package:flutter/material.dart';
-import '../resources/support_classes.dart';
-import 'building_area/draggable_block.dart';
-import 'building_area/line_painter.dart';
+import 'canvas/draggable_block.dart';
+import 'canvas/line_painter.dart';
 import 'package:provider/provider.dart';
-import 'building_area/draggable_condition.dart';
-import 'building_area/state_block.dart';
+import 'canvas/draggable_condition.dart';
+import 'canvas/state_block.dart';
+import '../resources/automaduino_state.dart';
+import '../resources/canvas_layout.dart';
+import '../resources/transition.dart';
+import '../resources/states_data.dart';
 
 class BuildingArea extends StatefulWidget {
   BuildingArea({Key? key}) : super(key: key);
@@ -18,7 +22,8 @@ class BuildingArea extends StatefulWidget {
 class _BuildingAreaState extends State<BuildingArea> {
   DraggableConnection? drag;
 
-  void updateBlockPosition(PositionedBlock block, Offset position) {
+  void updateBlockPosition(PositionedState block, Offset position) {
+    // ToDo: We actually dont update the position in the datastructure
     block.position = block.position + position;
     setState(() {});
   }
@@ -32,7 +37,7 @@ class _BuildingAreaState extends State<BuildingArea> {
     setState(() {});
   }
 
-  void updateConnectionPosition(Connection connection, Offset position) {
+  void updateConnectionPosition(Transition connection, Offset position) {
     connection.position = connection.position + position;
     setState(() {});
   }
@@ -40,24 +45,25 @@ class _BuildingAreaState extends State<BuildingArea> {
   void updateConnectionDetails(Condition condition,
       {String? type, List<String>? values}) {
     if (type != null) {
-      Provider.of<StateModel>(context, listen: false).updateConnectionType(
-          condition,
-          conditionType.values
-              .firstWhere((e) => e.toString() == 'conditionType.' + type));
+      Provider.of<AutomaduinoState>(context, listen: false)
+          .updateConnectionType(
+              condition,
+              conditionType.values
+                  .firstWhere((e) => e.toString() == 'conditionType.' + type));
     }
     if (values != null) {
-      Provider.of<StateModel>(context, listen: false)
+      Provider.of<AutomaduinoState>(context, listen: false)
           .updateConnectionValues(condition, values);
     }
   }
 
   Offset calculateMidpoint(Key start, Key end) {
-    Offset startPoint = Provider.of<StateModel>(context, listen: false)
+    Offset startPoint = Provider.of<AutomaduinoState>(context, listen: false)
         .blocks
         .firstWhere((el) => el.key == start)
         .position;
 
-    Offset endPoint = Provider.of<StateModel>(context, listen: false)
+    Offset endPoint = Provider.of<AutomaduinoState>(context, listen: false)
         .blocks
         .firstWhere((el) => el.key == end)
         .position;
@@ -67,20 +73,36 @@ class _BuildingAreaState extends State<BuildingArea> {
 
   dynamic Function(Key) addConnection(Key start) {
     void addEndKey(Key end) {
-      Provider.of<StateModel>(context, listen: false).addConnection(Connection(
-          start,
-          Condition(UniqueKey(), conditionType.iff, [""]),
-          [end],
-          calculateMidpoint(start, end)));
+      Provider.of<AutomaduinoState>(context, listen: false).addConnection(
+          Transition(start, Condition(UniqueKey(), conditionType.then, [""]),
+              [end], calculateMidpoint(start, end)));
       setState(() {});
     }
 
     return addEndKey;
   }
 
+  dynamic Function(String, Widget) updateStateName(Key key) {
+    void update(String name, Widget block) {
+      Provider.of<AutomaduinoState>(context, listen: false)
+          .updateStateName(key, name, block);
+    }
+
+    return update;
+  }
+
+  dynamic Function(String, Widget) updateStateSelectedOption(Key key) {
+    void update(String option, Widget block) {
+      Provider.of<AutomaduinoState>(context, listen: false)
+          .updateStateSelectedOption(key, option, block);
+    }
+
+    return update;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Consumer<StateModel>(
+    return Consumer<AutomaduinoState>(
       builder: (context, state, child) {
         return DragTarget(
           builder: (BuildContext context, List<dynamic> candidateData,
@@ -104,15 +126,30 @@ class _BuildingAreaState extends State<BuildingArea> {
             );
           },
           onWillAccept: (data) {
-            return (data! as BlockData).newBlock;
+            return (data! as StateSettings).newBlock;
           },
           onAcceptWithDetails: (drag) {
             RenderBox renderBox = context.findRenderObject() as RenderBox;
-            BlockData data = drag.data as BlockData;
-            state.addBlock(PositionedBlock(
-                UniqueKey(),
-                StateBlock(data.name, data.color as Color),
+            StateSettings data = drag.data as StateSettings;
+            StateData blockData = returnData(data.name);
+            Key key = UniqueKey();
+            Color color = blockData.type == "sensor"
+                ? Colors.redAccent
+                : blockData.type == "userInput"
+                    ? Colors.blueAccent
+                    : Colors.greenAccent;
+            state.addBlock(PositionedState(
+                key,
+                StateBlock(
+                    data.name,
+                    color,
+                    blockData.imagePath,
+                    blockData.options,
+                    data.selectedOption,
+                    updateStateName(key),
+                    updateStateSelectedOption(key)),
                 data.added(),
+                blockData,
                 renderBox.globalToLocal(drag.offset)));
             setState(() {});
           },

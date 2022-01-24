@@ -50,6 +50,7 @@ flutter:
   # To add graphics to your application, add an graphics section, like this:
   assets:
     - graphics/
+    - graphics/state_icons/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

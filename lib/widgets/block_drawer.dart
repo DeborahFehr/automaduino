@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../resources/building_blocks.dart';
-import 'building_drawer/block_listview.dart';
+import '../resources/states_data.dart';
+import 'block_drawer/block_listview.dart';
 
 // TODO: Vertical Text
 // https://stackoverflow.com/questions/58310795/flutter-vertical-text-widget
@@ -60,9 +60,9 @@ class _BuildingElementsDrawerState extends State<BuildingElementsDrawer> {
               ),
               body: TabBarView(
                 children: [
-                  BlockListView(sensorBlocks),
-                  BlockListView(userInputBlocks),
-                  BlockListView(outputBlocks),
+                  BlockListView(sensorBlocks, Colors.redAccent),
+                  BlockListView(userInputBlocks, Colors.blueAccent),
+                  BlockListView(outputBlocks, Colors.greenAccent),
                 ],
               ),
             ),
@@ -77,8 +77,17 @@ class _BuildingElementsDrawerState extends State<BuildingElementsDrawer> {
                 duration: Duration(milliseconds: 250),
                 child: Container(
                   height: double.infinity,
+                  width: double.infinity,
                   decoration: BoxDecoration(
-                    color: Colors.redAccent,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Text(
+                      'S\nt\na\nt\ne\n \nB\nl\no\nc\nk\ns',
+                      style: TextStyle(fontSize: 20.0, color: Colors.white),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
               ),
@@ -89,7 +98,7 @@ class _BuildingElementsDrawerState extends State<BuildingElementsDrawer> {
                 child: Text('>'),
                 style: TextButton.styleFrom(
                   primary: Colors.white,
-                  backgroundColor: Colors.yellow,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
                   elevation: 5,
                 ),
                 onPressed: () {
