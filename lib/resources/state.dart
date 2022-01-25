@@ -23,7 +23,7 @@ class StateData {
   final String component;
   final String imagePath;
   final String link;
-  final List<String> options;
+  final String option;
 
-  StateData(this.type, this.component, this.imagePath, this.link, this.options);
+  StateData(this.type, this.component, this.imagePath, this.link, this.option);
 }

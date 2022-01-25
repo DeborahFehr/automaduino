@@ -144,7 +144,7 @@ class _BuildingAreaState extends State<BuildingArea> {
                     data.name,
                     color,
                     blockData.imagePath,
-                    blockData.options,
+                    blockData.option,
                     data.selectedOption,
                     updateStateName(key),
                     updateStateSelectedOption(key)),

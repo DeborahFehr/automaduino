@@ -60,9 +60,12 @@ class _BuildingElementsDrawerState extends State<BuildingElementsDrawer> {
               ),
               body: TabBarView(
                 children: [
-                  BlockListView(sensorBlocks, Colors.redAccent),
-                  BlockListView(userInputBlocks, Colors.blueAccent),
-                  BlockListView(outputBlocks, Colors.greenAccent),
+                  BlockListView(
+                      sensorBlocks, Colors.redAccent, ScrollController()),
+                  BlockListView(
+                      userInputBlocks, Colors.blueAccent, ScrollController()),
+                  BlockListView(
+                      outputBlocks, Colors.greenAccent, ScrollController()),
                 ],
               ),
             ),

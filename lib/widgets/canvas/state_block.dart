@@ -4,12 +4,12 @@ class StateBlock extends StatefulWidget {
   String name;
   final Color color;
   final String imagePath;
-  final List<String> options;
+  final String option;
   String selectedOption;
   final Function(String name, Widget block) updateName;
   final Function(String option, Widget block) updateOption;
 
-  StateBlock(this.name, this.color, this.imagePath, this.options,
+  StateBlock(this.name, this.color, this.imagePath, this.option,
       this.selectedOption, this.updateName, this.updateOption);
 
   @override
@@ -49,61 +49,41 @@ class _StateBlock extends State<StateBlock> {
         color: Color.fromRGBO(255, 255, 255, .8),
         shadowColor: widget.color,
         child: Padding(
-          padding: EdgeInsets.fromLTRB(5, 10, 5, 3),
+          padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Expanded(
-                child: TextField(
-                  controller: _titleController,
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.fromLTRB(5.0, 2.0, 5.0, 2.0),
-                    isDense: true,
-                  ),
-                  onChanged: (text) {
-                    widget.updateName(
-                        text,
-                        StateBlock(
-                            text,
-                            widget.color,
-                            widget.imagePath,
-                            widget.options,
-                            widget.selectedOption,
-                            widget.updateName,
-                            widget.updateOption));
-                  },
+              TextField(
+                controller: _titleController,
+                keyboardType: TextInputType.multiline,
+                maxLines: 2,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  contentPadding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
+                  isDense: true,
                 ),
+                onChanged: (text) {
+                  widget.updateName(
+                      text,
+                      StateBlock(
+                          text,
+                          widget.color,
+                          widget.imagePath,
+                          widget.option,
+                          widget.selectedOption,
+                          widget.updateName,
+                          widget.updateOption));
+                },
               ),
-              Expanded(
-                child: DropdownButton<String>(
-                  value: widget.selectedOption,
-                  isExpanded: true,
-                  underline: Container(
-                    height: 2,
-                    color: Colors.black54,
+              Container(
+                height: 30,
+                child: Text(
+                  widget.option,
+                  style: TextStyle(
+                    fontSize: 11.0,
                   ),
-                  onChanged: (String? newValue) {
-                    widget.updateName(
-                        newValue.toString(),
-                        StateBlock(
-                            widget.name,
-                            widget.color,
-                            widget.imagePath,
-                            widget.options,
-                            newValue.toString(),
-                            widget.updateName,
-                            widget.updateOption));
-
-                    //setState(() {
-                    //  dropdownValue = newValue!;
-                    //               });
-                  },
-                  items: widget.options
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
                 ),
               ),
             ],

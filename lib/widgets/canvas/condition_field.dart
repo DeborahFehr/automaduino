@@ -25,21 +25,29 @@ class _ConditionField extends State<ConditionField> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: 200,
-        height: 50,
-        decoration: BoxDecoration(
-          color: Colors.orangeAccent,
+      width: 200,
+      height: 50,
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+          side: BorderSide(
+            color: Colors.deepPurple,
+            width: 2,
+          ),
         ),
+        color: Colors.deepPurple.shade50,
         child: Padding(
-          padding: EdgeInsets.all(8),
+          padding: EdgeInsets.all(5),
           child: Row(
             children: [
               DropdownButton<String>(
                 value: dropdownValue,
                 elevation: 16,
+                style:
+                    const TextStyle(color: Colors.deepPurple, fontSize: 12.0),
                 underline: Container(
                   height: 2,
-                  color: Colors.grey,
+                  color: Colors.deepPurpleAccent,
                 ),
                 onChanged: (String? newValue) {
                   widget.updateConnectionDetails(widget.condition,
@@ -65,8 +73,15 @@ class _ConditionField extends State<ConditionField> {
               Flexible(
                 child: TextField(
                   decoration: InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.deepPurple),
+                    ),
                     border: OutlineInputBorder(),
+                    labelStyle: TextStyle(color: Colors.deepPurple),
                     labelText: 'Condition',
+                  ),
+                  style: TextStyle(
+                    fontSize: 12.0,
                   ),
                   onChanged: (text) {
                     widget.updateConnectionDetails(widget.condition,
@@ -76,6 +91,8 @@ class _ConditionField extends State<ConditionField> {
               ),
             ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

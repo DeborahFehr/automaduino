@@ -6,10 +6,11 @@ class BlockPreview extends StatelessWidget {
   final Color color;
   final bool button;
   final String imagePath;
+  final String option;
   final String link;
 
-  const BlockPreview(
-      this.name, this.color, this.button, this.imagePath, this.link);
+  const BlockPreview(this.name, this.color, this.button, this.imagePath,
+      this.option, this.link);
 
   @override
   Widget build(BuildContext context) {
@@ -33,32 +34,44 @@ class BlockPreview extends StatelessWidget {
         color: Color.fromRGBO(255, 255, 255, .8),
         shadowColor: color,
         child: Padding(
-          padding: EdgeInsets.fromLTRB(5, 10, 5, 3),
+          padding: EdgeInsets.fromLTRB(5, 10, 0, 3),
           child: Column(
             children: [
               Text(
                 name,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  decoration: TextDecoration.none,
                   fontSize: 14.0,
-                  color: Colors.black54,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Expanded(
-                child: button
-                    ? Align(
-                        alignment: Alignment.bottomRight,
-                        child: Tooltip(
-                          message: 'Open Documentation',
-                          child: IconButton(
-                            onPressed: () => {launch(link)},
-                            icon: Icon(Icons.open_in_new),
-                          ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      width: 45,
+                      child: Text(
+                        option,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 12.0,
                         ),
-                      )
-                    : Container(),
+                      ),
+                    ),
+                    button
+                        ? Tooltip(
+                            message: 'Open Documentation',
+                            child: IconButton(
+                              splashRadius: 15,
+                              splashColor: color,
+                              onPressed: () => {launch(link)},
+                              icon: Icon(Icons.open_in_new),
+                            ),
+                          )
+                        : Container(),
+                  ],
+                ),
               ),
             ],
           ),

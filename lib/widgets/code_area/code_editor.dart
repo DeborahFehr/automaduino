@@ -15,7 +15,7 @@ class CodeEditor extends StatefulWidget {
 
 class _CodeEditorState extends State<CodeEditor> {
   var codeController = TextEditingController();
-  var numberLines = 9;
+  var numberLines = 35;
   CodeGenerator codeGenerator = new CodeGenerator(null, null);
 
   void _countCodeLines() {

@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: MaterialColor(0xff19969C, primaryColor),
           accentColor: MaterialColor(0xff15787d, secondaryColor),
         ),
-        fontFamily: 'open sans',
+        fontFamily: 'Open Sans',
         textTheme: const TextTheme(
             //headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
             //headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
@@ -78,7 +78,11 @@ class _MyHomePageState extends State<MyHomePage> {
           padding: const EdgeInsets.all(5.0),
           child: Image.asset('graphics/logo_icon.png', fit: BoxFit.contain),
         ),
-        title: Text(widget.title),
+        title: Text(
+          "AUTOMADUINO Editor",
+          style: TextStyle(
+              fontFamily: 'Glacial Indifference', fontWeight: FontWeight.w700),
+        ),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.settings),
@@ -96,9 +100,9 @@ class _MyHomePageState extends State<MyHomePage> {
           // Important: Remove any padding from the ListView.
           padding: EdgeInsets.zero,
           children: [
-            const DrawerHeader(
+            DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: Theme.of(context).colorScheme.secondary,
               ),
               child: Image(image: AssetImage('graphics/logo.png')),
             ),
