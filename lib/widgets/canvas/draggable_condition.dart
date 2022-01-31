@@ -31,7 +31,7 @@ class _ConditionField extends State<DraggableCondition> {
       left: widget.position.dx,
       top: widget.position.dy,
       child: Draggable(
-          data: StateSettings("", "then", false, false, null),
+          data: StateSettings("", "then", null, false, false, null),
           child: conditionField,
           feedback: conditionField,
           childWhenDragging: Container(),

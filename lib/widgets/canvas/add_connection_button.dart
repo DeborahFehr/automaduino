@@ -12,7 +12,7 @@ class AddConnectionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Draggable(
-        data: StateSettings("", "", false, true, blockKey),
+        data: StateSettings("", "", null, false, true, blockKey),
         child: TextButton(
           style: TextButton.styleFrom(
             padding: EdgeInsets.zero,

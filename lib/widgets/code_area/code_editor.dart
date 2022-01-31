@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../resources/syntax_Highlighter.dart';
 import '../../resources/automaduino_state.dart';
-import '../../resources/code_generator.dart';
+import '../../resources/code_transpiler.dart';
 import 'init_dialogue.dart';
 
 class CodeEditor extends StatefulWidget {
@@ -17,7 +17,7 @@ class CodeEditor extends StatefulWidget {
 class _CodeEditorState extends State<CodeEditor> {
   var codeController = TextEditingController();
   var numberLines = 35;
-  CodeGenerator codeGenerator = new CodeGenerator(null, null);
+  CodeTranspiler codeGenerator = new CodeTranspiler(null, null);
 
   void _countCodeLines() {
     numberLines = '\n'.allMatches(codeController.text).length + 1;
@@ -78,7 +78,7 @@ class _CodeEditorState extends State<CodeEditor> {
               child: Consumer<AutomaduinoState>(
                 builder: (context, state, child) {
                   codeGenerator =
-                      CodeGenerator(state.blocks, state.connections);
+                      CodeTranspiler(state.blocks, state.connections);
                   codeController.text = codeGenerator.getCode();
                   return TextField(
                       decoration: InputDecoration(

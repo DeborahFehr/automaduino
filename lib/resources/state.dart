@@ -4,16 +4,17 @@ import 'package:flutter/material.dart';
 class StateSettings {
   String name;
   String selectedOption;
+  int? pin;
   final bool newBlock;
   final bool newConnection;
   final Key? key;
 
-  StateSettings(this.name, this.selectedOption, this.newBlock,
+  StateSettings(this.name, this.selectedOption, this.pin, this.newBlock,
       this.newConnection, this.key);
 
   StateSettings added() {
     return StateSettings(
-        this.name, this.selectedOption, false, false, this.key);
+        this.name, this.selectedOption, this.pin, false, false, this.key);
   }
 }
 

@@ -2,11 +2,11 @@ import 'canvas_layout.dart';
 import 'transition.dart';
 import 'arduino_functions.dart';
 
-class CodeGenerator {
+class CodeTranspiler {
   List<PositionedState>? blocks = [];
   List<Transition>? connections = [];
 
-  CodeGenerator(List<PositionedState>? blocks, List<Transition>? connections) {
+  CodeTranspiler(List<PositionedState>? blocks, List<Transition>? connections) {
     this.blocks = blocks;
     this.connections = connections;
   }

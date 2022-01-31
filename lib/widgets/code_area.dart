@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'code_area/code_editor.dart';
 import '../resources/transition.dart';
-import '../resources/code_generator.dart';
+import '../resources/code_transpiler.dart';
 import 'code_area/init_dialogue.dart';
 
 class CodeArea extends StatefulWidget {
@@ -29,13 +29,13 @@ class _CodeAreaState extends State<CodeArea> {
   @override
   void initState() {
     super.initState();
-    CodeGenerator codeGenerator = new CodeGenerator(null, widget.connections);
+    CodeTranspiler codeGenerator = new CodeTranspiler(null, widget.connections);
     code = codeGenerator.getCode();
   }
 
   @override
   void didUpdateWidget(Widget oldWidget) {
-    CodeGenerator codeGenerator = new CodeGenerator(null, widget.connections);
+    CodeTranspiler codeGenerator = new CodeTranspiler(null, widget.connections);
     code = codeGenerator.getCode();
   }
 
