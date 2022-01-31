@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../resources/canvas_layout.dart';
 import '../../resources/transition.dart';
+import "dart:math" as math;
 
 class LinePainter extends CustomPainter {
   final List<PositionedState> blocks;
@@ -23,16 +24,47 @@ class LinePainter extends CustomPainter {
       // draw line to condition block
       Offset startPoint =
           blocks.firstWhere((el) => el.key == con.start).position + center;
-      Offset endPoint = con.position + Offset(100, 50);
+      Offset endPoint = con.position + Offset(100, 25);
       canvas.drawLine(startPoint, endPoint, paint);
 
+      // draw Arrow
+      Offset midPoint = (startPoint + endPoint) / 2;
+      double angle = (endPoint - startPoint).direction;
+      canvas.drawLine(
+          midPoint,
+          midPoint -
+              Offset(10 * math.cos(angle - (math.pi / 6)),
+                  10 * math.sin(angle - (math.pi / 6))),
+          paint);
+      canvas.drawLine(
+          midPoint,
+          midPoint -
+              Offset(10 * math.cos(angle + (math.pi / 6)),
+                  10 * math.sin(angle + (math.pi / 6))),
+          paint);
+
       // draw lines from condition block to end block[s]
-      startPoint = con.position + Offset(100, 0);
+      startPoint = con.position + Offset(100, 25);
 
       for (var end in con.end) {
         Offset endPoint =
             blocks.firstWhere((el) => el.key == end).position + center;
         canvas.drawLine(startPoint, endPoint, paint);
+
+        Offset midPoint = (startPoint + endPoint) / 2;
+        double angle = (endPoint - startPoint).direction;
+        canvas.drawLine(
+            midPoint,
+            midPoint -
+                Offset(10 * math.cos(angle - (math.pi / 6)),
+                    10 * math.sin(angle - (math.pi / 6))),
+            paint);
+        canvas.drawLine(
+            midPoint,
+            midPoint -
+                Offset(10 * math.cos(angle + (math.pi / 6)),
+                    10 * math.sin(angle + (math.pi / 6))),
+            paint);
       }
     }
 

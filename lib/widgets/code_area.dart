@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'code_area/code_editor.dart';
 import '../resources/transition.dart';
 import '../resources/code_generator.dart';
+import 'code_area/init_dialogue.dart';
 
 class CodeArea extends StatefulWidget {
   final double closedWidth;
@@ -94,6 +95,33 @@ class _CodeAreaState extends State<CodeArea> {
                         children: [
                           closed
                               ? Tooltip(
+                                  message: 'Init',
+                                  child: Container(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    child: IconButton(
+                                      splashRadius: 15,
+                                      splashColor:
+                                          Theme.of(context).colorScheme.primary,
+                                      color: Colors.white,
+                                      onPressed: () => {
+                                        showDialog(
+                                            context: context,
+                                            builder: (_) => InitDialogue()),
+                                      },
+                                      icon: Icon(Icons.developer_board),
+                                    ),
+                                  ),
+                                )
+                              : Container(
+                                  width: 1,
+                                ),
+                          SizedBox(
+                            height: 25,
+                            width: 1,
+                          ),
+                          closed
+                              ? Tooltip(
                                   message: 'Copy Code',
                                   child: Container(
                                     color:
@@ -116,7 +144,7 @@ class _CodeAreaState extends State<CodeArea> {
                             width: 1,
                           ),
                           TextButton(
-                            child: Text('>'),
+                            child: Text(closed ? '<' : '>'),
                             style: TextButton.styleFrom(
                               primary: Colors.white,
                               backgroundColor:

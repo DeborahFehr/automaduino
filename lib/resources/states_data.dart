@@ -1,47 +1,72 @@
-import 'package:flutter/material.dart';
 import 'state.dart';
 
 List<StateData> sensorBlocks = [
-  StateData("sensor", "Motion Sensor", "graphics/state_icons/logo.png",
+  StateData("sensor", "Motion Sensor", "graphics/state_icons/motion-sensor.png",
       "https://automaduino-docs.vercel.app/", "Read Data"),
-  StateData("sensor", "Temperature Sensor", "graphics/state_icons/logo.png",
-      "https://automaduino-docs.vercel.app/", "Read Data"),
-  StateData("sensor", "Humidity Sensor", "graphics/state_icons/logo.png",
-      "https://automaduino-docs.vercel.app/", "Read Data"),
-  StateData("sensor", "Vibration Sensor", "graphics/state_icons/logo.png",
-      "https://automaduino-docs.vercel.app/", "Read Data"),
-  StateData("sensor", "Loudness Sensor", "graphics/state_icons/logo.png",
-      "https://automaduino-docs.vercel.app/", "Read Data"),
-  StateData("sensor", "Ultrasonic Ranger", "graphics/state_icons/logo.png",
-      "https://automaduino-docs.vercel.app/", "Read Data")
+  //StateData("sensor", "Temperature Sensor", "graphics/state_icons/temperature-sensor.png",
+  //    "https://automaduino-docs.vercel.app/", "Read Data"),
+  StateData(
+      "sensor",
+      "Humidity Sensor",
+      "graphics/state_icons/humidity-sensor.png",
+      "https://automaduino-docs.vercel.app/",
+      "Read Data"),
+  StateData(
+      "sensor",
+      "Vibration Sensor",
+      "graphics/state_icons/vibration-sensor.png",
+      "https://automaduino-docs.vercel.app/",
+      "Read Data"),
+  StateData(
+      "sensor",
+      "Loudness Sensor",
+      "graphics/state_icons/loudness-sensor.png",
+      "https://automaduino-docs.vercel.app/",
+      "Read Data"),
+  //StateData("sensor", "Ultrasonic Ranger", "graphics/state_icons/ultrasonic-ranger.png",
+  //    "https://automaduino-docs.vercel.app/", "Read Data")
 ];
 
 List<StateData> userInputBlocks = [
-  StateData("userInput", "Button", "graphics/state_icons/logo.png",
+  StateData("userInput", "Button", "graphics/state_icons/button.png",
       "https://automaduino-docs.vercel.app/", "Await Input"),
-  StateData("userInput", "Switch", "graphics/state_icons/logo.png",
+  StateData("userInput", "Switch", "graphics/state_icons/switch.png",
       "https://automaduino-docs.vercel.app/", "Await Input"),
-  StateData("userInput", "Keypad", "graphics/state_icons/logo.png",
+  StateData("userInput", "Keypad", "graphics/state_icons/keypad.png",
       "https://automaduino-docs.vercel.app/", "Await Input"),
-  StateData("userInput", "Tilt", "graphics/state_icons/logo.png",
+  StateData("userInput", "Tilt", "graphics/state_icons/tilt.png",
       "https://automaduino-docs.vercel.app/", "Await Input"),
-  StateData("userInput", "RFID", "graphics/state_icons/logo.png",
-      "https://automaduino-docs.vercel.app/", "Await Input")
+  //StateData("userInput", "RFID", "graphics/state_icons/demo.png",
+  //    "https://automaduino-docs.vercel.app/", "Await Input")
 ];
 
 List<StateData> outputBlocks = [
-  StateData("output", "LED", "graphics/state_icons/logo.png",
+  StateData("output", "LED", "graphics/state_icons/led_on.png",
       "https://automaduino-docs.vercel.app/", "On"),
-  StateData("output", "Buzzer", "graphics/state_icons/logo.png",
+  StateData("output", "LED", "graphics/state_icons/led_off.png",
+      "https://automaduino-docs.vercel.app/", "Off"),
+  StateData("output", "Buzzer", "graphics/state_icons/buzzer_on.png",
       "https://automaduino-docs.vercel.app/", "On"),
-  StateData("output", "Vibration Motor", "graphics/state_icons/logo.png",
+  StateData("output", "Buzzer", "graphics/state_icons/buzzer_off.png",
+      "https://automaduino-docs.vercel.app/", "Off"),
+  StateData(
+      "output",
+      "Vibration Motor",
+      "graphics/state_icons/vibration_on.png",
+      "https://automaduino-docs.vercel.app/",
+      "On"),
+  StateData(
+      "output",
+      "Vibration Motor",
+      "graphics/state_icons/vibration_off.png",
+      "https://automaduino-docs.vercel.app/",
+      "Off"),
+  StateData("output", "Relay", "graphics/state_icons/relay_on.png",
       "https://automaduino-docs.vercel.app/", "On"),
-  StateData("output", "Relay", "graphics/state_icons/logo.png",
-      "https://automaduino-docs.vercel.app/", "On"),
-  StateData("output", "Infrared Emitter", "graphics/state_icons/logo.png",
-      "https://automaduino-docs.vercel.app/", "On"),
-  StateData("output", "Servo", "graphics/state_icons/logo.png",
-      "https://automaduino-docs.vercel.app/", "On")
+  StateData("output", "Relay", "graphics/state_icons/relay_off.png",
+      "https://automaduino-docs.vercel.app/", "Off"),
+  //StateData("output", "Servo", "graphics/state_icons/demo.png",
+  //    "https://automaduino-docs.vercel.app/", "90 degree")
 ];
 
 StateData returnData(String name) {

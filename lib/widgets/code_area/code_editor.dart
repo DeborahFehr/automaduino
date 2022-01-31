@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../resources/syntax_Highlighter.dart';
 import '../../resources/automaduino_state.dart';
 import '../../resources/code_generator.dart';
+import 'init_dialogue.dart';
 
 class CodeEditor extends StatefulWidget {
   final String? code;
@@ -50,9 +51,13 @@ class _CodeEditorState extends State<CodeEditor> {
           color: Theme.of(context).colorScheme.secondary,
           child: Wrap(
             children: [
-              ElevatedButton(onPressed: () => {}, child: Text("test")),
-              ElevatedButton(onPressed: () => {}, child: Text("test")),
-              ElevatedButton(onPressed: () => {}, child: Text("test"))
+              ElevatedButton(
+                  onPressed: () => {
+                        showDialog(
+                            context: context, builder: (_) => InitDialogue()),
+                      },
+                  child: Text("Init Ports")),
+              ElevatedButton(onPressed: () => {}, child: Text("Copy"))
             ],
           ),
         ),

@@ -33,12 +33,15 @@ class _StateBlock extends State<StateBlock> {
       width: 100,
       height: 100,
       decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Theme.of(context).scaffoldBackgroundColor,
         image: DecorationImage(
-          image: AssetImage("graphics/state_icons/demo.png"),
-          scale: 8,
+          image: AssetImage(widget.imagePath),
+          scale: 2,
         ),
       ),
       child: Card(
+        margin: EdgeInsets.all(0.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
           side: BorderSide(
@@ -46,7 +49,7 @@ class _StateBlock extends State<StateBlock> {
             width: 2,
           ),
         ),
-        color: Color.fromRGBO(255, 255, 255, .8),
+        color: Color.fromRGBO(255, 255, 255, .7),
         shadowColor: widget.color,
         child: Padding(
           padding: EdgeInsets.fromLTRB(5, 0, 5, 0),

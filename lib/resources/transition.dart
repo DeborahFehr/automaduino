@@ -20,12 +20,12 @@ class Transition {
   }
 }
 
-enum conditionType { then, iff, iffelse, cond, time, value }
+List<String> conditionTypes = ["then", "if", "ifelse", "cond", "time"];
 
 /// Condition describes the connection
 class Condition {
   final Key key;
-  conditionType type;
+  String type;
   List<String> values;
 
   Condition(this.key, this.type, this.values);

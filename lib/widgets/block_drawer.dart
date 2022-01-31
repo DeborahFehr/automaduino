@@ -26,17 +26,19 @@ class _BuildingElementsDrawerState extends State<BuildingElementsDrawer> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: DefaultTabController(
-            length: 3,
-            child: Scaffold(
-              appBar: AppBar(
-                flexibleSpace: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TabBar(
-                      tabs: [
+        closed
+            ? Container()
+            : Padding(
+                padding: const EdgeInsets.all(8),
+                child: DefaultTabController(
+                  length: 3,
+                  child: Scaffold(
+                    appBar: AppBar(
+                      flexibleSpace: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TabBar(
+                            tabs: [
                         Tab(
                           child: Tooltip(
                             message: 'Input Sensors',
@@ -45,14 +47,14 @@ class _BuildingElementsDrawerState extends State<BuildingElementsDrawer> {
                         ),
                         Tab(
                             child: Tooltip(
-                          message: 'User Input',
-                          child: Icon(Icons.touch_app),
-                        )),
+                              message: 'User Input',
+                              child: Icon(Icons.touch_app),
+                            )),
                         Tab(
                             child: Tooltip(
-                          message: 'Output',
-                          child: Icon(Icons.lightbulb_outline),
-                        )),
+                              message: 'Output',
+                              child: Icon(Icons.lightbulb_outline),
+                            )),
                       ],
                     ),
                   ],
@@ -98,7 +100,7 @@ class _BuildingElementsDrawerState extends State<BuildingElementsDrawer> {
             Align(
               alignment: Alignment.bottomRight,
               child: TextButton(
-                child: Text('>'),
+                child: Text(closed ? '>' : '<'),
                 style: TextButton.styleFrom(
                   primary: Colors.white,
                   backgroundColor: Theme.of(context).colorScheme.primary,

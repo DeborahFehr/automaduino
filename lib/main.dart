@@ -65,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void updateSplitWidth(bool closedDrawer) {
-    closedDrawer ? _weightCodeArea = 0.5 : _weightCodeArea = 0.05;
+    closedDrawer ? _weightCodeArea = 0.5 : _weightCodeArea = 0.04;
     setState(() {});
   }
 
@@ -93,11 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       endDrawer: Drawer(
-        // Add a ListView to the drawer. This ensures the user can scroll
-        // through the options in the drawer if there isn't enough vertical
-        // space to fit everything.
         child: ListView(
-          // Important: Remove any padding from the ListView.
           padding: EdgeInsets.zero,
           children: [
             DrawerHeader(
@@ -149,7 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   BuildingArea(),
                   CodeArea(
-                    closedWidth: _width * 0.05,
+                    closedWidth: _width * 0.04,
                     updateWidth: updateSplitWidth,
                   )
                 ],

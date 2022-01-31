@@ -46,10 +46,7 @@ class _BuildingAreaState extends State<BuildingArea> {
       {String? type, List<String>? values}) {
     if (type != null) {
       Provider.of<AutomaduinoState>(context, listen: false)
-          .updateConnectionType(
-              condition,
-              conditionType.values
-                  .firstWhere((e) => e.toString() == 'conditionType.' + type));
+          .updateConnectionType(condition, type);
     }
     if (values != null) {
       Provider.of<AutomaduinoState>(context, listen: false)
@@ -71,15 +68,15 @@ class _BuildingAreaState extends State<BuildingArea> {
     return (startPoint + endPoint) / 2;
   }
 
-  dynamic Function(Key) addConnection(Key start) {
-    void addEndKey(Key end) {
+  dynamic Function(Key) addConnection(Key end) {
+    void addStartKey(Key start) {
       Provider.of<AutomaduinoState>(context, listen: false).addConnection(
-          Transition(start, Condition(UniqueKey(), conditionType.then, [""]),
-              [end], calculateMidpoint(start, end)));
+          Transition(start, Condition(UniqueKey(), "then", [""]), [end],
+              calculateMidpoint(start, end)));
       setState(() {});
     }
 
-    return addEndKey;
+    return addStartKey;
   }
 
   dynamic Function(String, Widget) updateStateName(Key key) {

@@ -19,11 +19,21 @@ class ConditionField extends StatefulWidget {
 
 class _ConditionField extends State<ConditionField> {
   String dropdownValue = 'then';
-  List<String> items =
-      conditionType.values.map((e) => describeEnum(e)).toList();
+  List<String> items = conditionTypes;
+
+  final conditionController = TextEditingController();
+
+  @override
+  void dispose() {
+    conditionController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    conditionController.text = widget.condition.values[0];
+    conditionController.selection = TextSelection.fromPosition(
+        TextPosition(offset: conditionController.text.length));
     return Container(
       width: 200,
       height: 50,
@@ -44,7 +54,7 @@ class _ConditionField extends State<ConditionField> {
                 value: dropdownValue,
                 elevation: 16,
                 style:
-                    const TextStyle(color: Colors.deepPurple, fontSize: 12.0),
+                    const TextStyle(color: Colors.deepPurple, fontSize: 14.0),
                 underline: Container(
                   height: 2,
                   color: Colors.deepPurpleAccent,
@@ -72,6 +82,8 @@ class _ConditionField extends State<ConditionField> {
               ),
               Flexible(
                 child: TextField(
+                  controller: conditionController,
+                  maxLines: 1,
                   decoration: InputDecoration(
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.deepPurple),
@@ -79,6 +91,8 @@ class _ConditionField extends State<ConditionField> {
                     border: OutlineInputBorder(),
                     labelStyle: TextStyle(color: Colors.deepPurple),
                     labelText: 'Condition',
+                    isDense: true,
+                    contentPadding: EdgeInsets.fromLTRB(5.0, 8.0, 5.0, 8.0),
                   ),
                   style: TextStyle(
                     fontSize: 12.0,

@@ -25,20 +25,15 @@ class _ConditionField extends State<DraggableCondition> {
 
   @override
   Widget build(BuildContext context) {
+    Widget conditionField = ConditionField(
+        widget.connection.condition, test, widget.updateConnectionDetails);
     return Positioned(
       left: widget.position.dx,
       top: widget.position.dy,
       child: Draggable(
           data: StateSettings("", "then", false, false, null),
-          child: ConditionField(widget.connection.condition, test,
-              widget.updateConnectionDetails),
-          feedback: Container(
-            width: 200,
-            height: 50,
-            decoration: BoxDecoration(
-              color: Colors.orangeAccent,
-            ),
-          ),
+          child: conditionField,
+          feedback: conditionField,
           childWhenDragging: Container(),
           onDragUpdate: (details) {
             widget.updatePosition(widget.connection, details.delta);

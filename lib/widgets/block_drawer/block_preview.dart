@@ -19,8 +19,8 @@ class BlockPreview extends StatelessWidget {
       height: 100,
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage("graphics/state_icons/demo.png"),
-          scale: 8,
+          image: AssetImage(imagePath),
+          scale: 2,
         ),
       ),
       child: Card(
@@ -31,7 +31,7 @@ class BlockPreview extends StatelessWidget {
             width: 2,
           ),
         ),
-        color: Color.fromRGBO(255, 255, 255, .8),
+        color: Color.fromRGBO(255, 255, 255, .7),
         shadowColor: color,
         child: Padding(
           padding: EdgeInsets.fromLTRB(5, 10, 0, 3),

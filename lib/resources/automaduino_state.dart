@@ -29,7 +29,7 @@ class AutomaduinoState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateConnectionType(Condition condition, conditionType type) {
+  void updateConnectionType(Condition condition, String type) {
     _connections
         .firstWhere((element) => element.condition.key == condition.key)
         .condition
