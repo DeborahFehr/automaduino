@@ -69,10 +69,23 @@ List<StateData> outputBlocks = [
   //    "https://automaduino-docs.vercel.app/", "90 degree")
 ];
 
-StateData returnData(String name) {
+List<StateData> returnAllData() {
+  return sensorBlocks + userInputBlocks + outputBlocks;
+}
+
+StateData returnDataByName(String name) {
   StateData result;
   List<StateData> searchList = sensorBlocks + userInputBlocks + outputBlocks;
   result = searchList.firstWhere((el) => el.component == name);
+
+  return result;
+}
+
+StateData returnDataByNameAndOption(String name, String option) {
+  StateData result;
+  List<StateData> searchList = sensorBlocks + userInputBlocks + outputBlocks;
+  result = searchList
+      .firstWhere((el) => el.component == name && el.option == option);
 
   return result;
 }

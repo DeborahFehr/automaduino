@@ -128,7 +128,8 @@ class _BuildingAreaState extends State<BuildingArea> {
           onAcceptWithDetails: (drag) {
             RenderBox renderBox = context.findRenderObject() as RenderBox;
             StateSettings data = drag.data as StateSettings;
-            StateData blockData = returnData(data.name);
+            StateData blockData =
+                returnDataByNameAndOption(data.name, data.selectedOption);
             Key key = UniqueKey();
             Color color = blockData.type == "sensor"
                 ? Colors.redAccent

@@ -8,7 +8,7 @@ import 'pin_assignment.dart';
 class AutomaduinoState extends ChangeNotifier {
   final List<PositionedState> _blocks = [];
   final List<Transition> _connections = [];
-  final List<PinAssignment> _pinAssignments = [];
+  List<PinAssignment> _pinAssignments = [];
 
   List<Transition> get connections => _connections;
 
@@ -64,13 +64,13 @@ class AutomaduinoState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addPin(PinAssignment pin) {
-    _pinAssignments.add(pin);
+  void addPinList(List<PinAssignment> pins) {
+    _pinAssignments = pins;
     notifyListeners();
   }
 
-  void removePin(PinAssignment pin) {
-    _pinAssignments.removeWhere((el) => el.pin == pin.pin);
+  void updatePin(Key key, int pin) {
+    _blocks.firstWhere((el) => el.key == key).settings.pin = pin;
     notifyListeners();
   }
 
