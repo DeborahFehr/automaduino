@@ -5,11 +5,12 @@ class StateBlock extends StatefulWidget {
   final Color color;
   final String imagePath;
   final String option;
+  final int? pin;
   String selectedOption;
   final Function(String name, Widget block) updateName;
   final Function(String option, Widget block) updateOption;
 
-  StateBlock(this.name, this.color, this.imagePath, this.option,
+  StateBlock(this.name, this.color, this.imagePath, this.option, this.pin,
       this.selectedOption, this.updateName, this.updateOption);
 
   @override
@@ -75,19 +76,39 @@ class _StateBlock extends State<StateBlock> {
                           widget.color,
                           widget.imagePath,
                           widget.option,
+                          widget.pin,
                           widget.selectedOption,
                           widget.updateName,
                           widget.updateOption));
                 },
               ),
-              Container(
-                height: 30,
-                child: Text(
-                  widget.option,
-                  style: TextStyle(
-                    fontSize: 11.0,
+              Column(
+                children: [
+                  Container(
+                    height: 20,
+                    child: Text(
+                      widget.option,
+                      style: TextStyle(
+                        fontSize: 13.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                ),
+                  Container(
+                      height: 20,
+                      child: Align(
+                        alignment: Alignment.bottomRight,
+                        child: Text(
+                          "Pin: " +
+                              (widget.pin == null
+                                  ? "unassigned"
+                                  : widget.pin.toString()),
+                          style: TextStyle(
+                            fontSize: 11.0,
+                          ),
+                        ),
+                      )),
+                ],
               ),
             ],
           ),

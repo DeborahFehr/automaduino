@@ -9,6 +9,8 @@ import '../resources/automaduino_state.dart';
 import '../resources/canvas_layout.dart';
 import '../resources/transition.dart';
 import '../resources/states_data.dart';
+import 'canvas/end_block.dart';
+import 'canvas/start_block.dart';
 
 class BuildingArea extends StatefulWidget {
   BuildingArea({Key? key}) : super(key: key);
@@ -21,6 +23,20 @@ class BuildingArea extends StatefulWidget {
 
 class _BuildingAreaState extends State<BuildingArea> {
   DraggableConnection? drag;
+  Offset startPosition = Offset(40, 40);
+  Offset endPosition = Offset(440, 440);
+
+  void updateStartPosition(Offset position) {
+    setState(() {
+      startPosition = position;
+    });
+  }
+
+  void updateEndPosition(Offset position) {
+    setState(() {
+      endPosition = position;
+    });
+  }
 
   void updateBlockPosition(PositionedState block, Offset position) {
     // ToDo: We actually dont update the position in the datastructure
@@ -109,6 +125,9 @@ class _BuildingAreaState extends State<BuildingArea> {
                 CustomPaint(
                   painter: LinePainter(state.blocks, state.connections, drag),
                 ),
+                StartBlock(
+                    startPosition, updateStartPosition, updateDragPosition),
+                EndBlock(endPosition, updateEndPosition),
                 for (var connection in state.connections)
                   DraggableCondition(
                       connection.condition.key,
@@ -143,6 +162,7 @@ class _BuildingAreaState extends State<BuildingArea> {
                     color,
                     blockData.imagePath,
                     blockData.option,
+                    data.pin,
                     data.selectedOption,
                     updateStateName(key),
                     updateStateSelectedOption(key)),

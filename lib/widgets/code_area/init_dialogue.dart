@@ -5,6 +5,7 @@ import '../../resources/pin_assignment.dart';
 import '../../resources/automaduino_state.dart';
 import '../../resources/states_data.dart';
 import 'package:provider/provider.dart';
+import '../canvas/state_block.dart';
 
 class InitDialogue extends StatefulWidget {
   InitDialogue({Key? key}) : super(key: key);
@@ -13,6 +14,7 @@ class InitDialogue extends StatefulWidget {
   _InitDialogueState createState() => _InitDialogueState();
 }
 
+/// This should srsly be refactored
 class _InitDialogueState extends State<InitDialogue> {
   final _formKey = GlobalKey<FormState>();
 
@@ -22,6 +24,24 @@ class _InitDialogueState extends State<InitDialogue> {
       returnAllData().map((e) => e.component).toSet().toList();
 
   List<PinAssignment> assignments = [];
+
+  dynamic Function(String, Widget) updateStateName(Key key) {
+    void update(String name, Widget block) {
+      Provider.of<AutomaduinoState>(context, listen: false)
+          .updateStateName(key, name, block);
+    }
+
+    return update;
+  }
+
+  dynamic Function(String, Widget) updateStateSelectedOption(Key key) {
+    void update(String option, Widget block) {
+      Provider.of<AutomaduinoState>(context, listen: false)
+          .updateStateSelectedOption(key, option, block);
+    }
+
+    return update;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,6 +115,15 @@ class _InitDialogueState extends State<InitDialogue> {
                                                         item.component ==
                                                             assignment
                                                                 .component);
+                                                state.blocks.forEach((block) {
+                                                  if (block.settings.pin ==
+                                                          assignment.pin &&
+                                                      block.data.component ==
+                                                          assignment
+                                                              .component) {
+                                                    block.settings.pin = null;
+                                                  }
+                                                });
                                               });
                                             },
                                           ),
@@ -211,16 +240,35 @@ class _InitDialogueState extends State<InitDialogue> {
                                                       assignment.pin != null &&
                                                       element.data.component ==
                                                           assignment.component))
-                                                InitChip(
-                                                    block.settings.name,
-                                                    block.data.type == "sensor"
-                                                        ? Colors.redAccent
-                                                        : block.data.type ==
-                                                                "userInput"
-                                                            ? Colors.blueAccent
-                                                            : Colors
-                                                                .greenAccent,
-                                                    block.data.imagePath),
+                                                Draggable(
+                                                  data: block,
+                                                  child: InitChip(
+                                                      block.settings.name,
+                                                      block.data.type ==
+                                                              "sensor"
+                                                          ? Colors.redAccent
+                                                          : block.data.type ==
+                                                                  "userInput"
+                                                              ? Colors
+                                                                  .blueAccent
+                                                              : Colors
+                                                                  .greenAccent,
+                                                      block.data.imagePath),
+                                                  feedback: InitChip(
+                                                      block.settings.name,
+                                                      block.data.type ==
+                                                              "sensor"
+                                                          ? Colors.redAccent
+                                                          : block.data.type ==
+                                                                  "userInput"
+                                                              ? Colors
+                                                                  .blueAccent
+                                                              : Colors
+                                                                  .greenAccent,
+                                                      block.data.imagePath),
+                                                  childWhenDragging:
+                                                      Container(),
+                                                ),
                                             ],
                                           ),
                                         );
@@ -256,52 +304,72 @@ class _InitDialogueState extends State<InitDialogue> {
                             });
                           },
                         ),
-                        Container(
-                          width: double.infinity,
-                          margin: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                              color: Colors.grey[200],
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10),
-                              )),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Left to Assign:",
-                                style: Theme.of(context).textTheme.headline6,
-                              ),
-                              SizedBox(height: 10),
-                              Wrap(
+                        DragTarget(
+                          builder: (context, List<dynamic> candidateData,
+                              List<dynamic> rejectedData) {
+                            return Container(
+                              width: double.infinity,
+                              margin: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                  color: Colors.grey[200],
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10),
+                                  )),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  for (var block in state.blocks.where(
-                                      (element) =>
-                                          element.settings.pin == null))
-                                    Draggable(
-                                      data: block,
-                                      child: InitChip(
-                                          block.settings.name,
-                                          block.data.type == "sensor"
-                                              ? Colors.redAccent
-                                              : block.data.type == "userInput"
-                                                  ? Colors.blueAccent
-                                                  : Colors.greenAccent,
-                                          block.data.imagePath),
-                                      feedback: InitChip(
-                                          block.settings.name,
-                                          block.data.type == "sensor"
-                                              ? Colors.redAccent
-                                              : block.data.type == "userInput"
-                                                  ? Colors.blueAccent
-                                                  : Colors.greenAccent,
-                                          block.data.imagePath),
-                                      childWhenDragging: Container(),
-                                    ),
+                                  Text(
+                                    "Left to Assign:",
+                                    style:
+                                        Theme.of(context).textTheme.headline6,
+                                  ),
+                                  SizedBox(height: 10),
+                                  Wrap(
+                                    children: [
+                                      for (var block in state.blocks.where(
+                                          (element) =>
+                                              element.settings.pin == null))
+                                        Draggable(
+                                          data: block,
+                                          child: InitChip(
+                                              block.settings.name,
+                                              block.data.type == "sensor"
+                                                  ? Colors.redAccent
+                                                  : block.data.type ==
+                                                          "userInput"
+                                                      ? Colors.blueAccent
+                                                      : Colors.greenAccent,
+                                              block.data.imagePath),
+                                          feedback: InitChip(
+                                              block.settings.name,
+                                              block.data.type == "sensor"
+                                                  ? Colors.redAccent
+                                                  : block.data.type ==
+                                                          "userInput"
+                                                      ? Colors.blueAccent
+                                                      : Colors.greenAccent,
+                                              block.data.imagePath),
+                                          childWhenDragging: Container(),
+                                        ),
+                                    ],
+                                  )
                                 ],
-                              )
-                            ],
-                          ),
+                              ),
+                            );
+                          },
+                          onWillAccept: (data) {
+                            return true;
+                          },
+                          onAccept: (data) {
+                            PositionedState block = (data as PositionedState);
+                            setState(() {
+                              assignments.removeWhere((item) =>
+                                  item.pin == block.settings.pin &&
+                                  item.component == block.data.component);
+                              block.settings.pin = null;
+                            });
+                          },
                         ),
                       ],
                     ),
@@ -325,18 +393,43 @@ class _InitDialogueState extends State<InitDialogue> {
                         ElevatedButton(
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
+                              for (int i = 0; i < assignments.length; i++) {
+                                assignments[i].variableName = "pin_" +
+                                    i.toString() +
+                                    "_" +
+                                    assignments[i]
+                                        .component!
+                                        .replaceAll(" ", "_");
+                              }
+
                               Provider.of<AutomaduinoState>(context,
                                       listen: false)
                                   .addPinList(assignments);
                               state.blocks.forEach((block) {
                                 Provider.of<AutomaduinoState>(context,
                                         listen: false)
-                                    .updatePin(block.key, block.settings.pin!);
+                                    .updatePin(
+                                        block.key,
+                                        block.settings.pin,
+                                        StateBlock(
+                                            block.settings.name,
+                                            block.data.type == "sensor"
+                                                ? Colors.redAccent
+                                                : block.data.type == "userInput"
+                                                    ? Colors.blueAccent
+                                                    : Colors.greenAccent,
+                                            block.data.imagePath,
+                                            block.data.option,
+                                            block.settings.pin,
+                                            block.settings.selectedOption,
+                                            updateStateName(block.key),
+                                            updateStateSelectedOption(
+                                                block.key)));
                               });
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                     content:
-                                        Text('Pins successfully initiated!')),
+                                    Text('Pins successfully initiated!')),
                               );
                               Navigator.pop(context);
                             }

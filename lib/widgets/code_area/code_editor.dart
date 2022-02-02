@@ -6,9 +6,9 @@ import '../../resources/code_transpiler.dart';
 import 'init_dialogue.dart';
 
 class CodeEditor extends StatefulWidget {
-  final String? code;
+  final bool pinWarning;
 
-  CodeEditor({Key? key, this.code}) : super(key: key);
+  CodeEditor({Key? key, required this.pinWarning}) : super(key: key);
 
   @override
   _CodeEditorState createState() => _CodeEditorState();
@@ -17,7 +17,7 @@ class CodeEditor extends StatefulWidget {
 class _CodeEditorState extends State<CodeEditor> {
   var codeController = TextEditingController();
   var numberLines = 35;
-  CodeTranspiler codeGenerator = new CodeTranspiler(null, null);
+  CodeTranspiler codeGenerator = new CodeTranspiler(null, null, null);
 
   void _countCodeLines() {
     numberLines = '\n'.allMatches(codeController.text).length + 1;
@@ -46,6 +46,19 @@ class _CodeEditorState extends State<CodeEditor> {
       decoration: BoxDecoration(
           border: new Border.all(color: Colors.grey), color: Colors.white),
       child: Column(children: [
+        /*
+        widget.pinWarning
+            ? Container(
+                padding: EdgeInsets.all(10),
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                ),
+                child: Text("Warning! Not all pins are set"),
+              )
+            : Container(),
+         */
         Container(
           width: double.infinity,
           color: Theme.of(context).colorScheme.secondary,
@@ -77,8 +90,8 @@ class _CodeEditorState extends State<CodeEditor> {
             Expanded(
               child: Consumer<AutomaduinoState>(
                 builder: (context, state, child) {
-                  codeGenerator =
-                      CodeTranspiler(state.blocks, state.connections);
+                  codeGenerator = CodeTranspiler(
+                      state.blocks, state.connections, state.pinAssignments);
                   codeController.text = codeGenerator.getCode();
                   return TextField(
                       decoration: InputDecoration(

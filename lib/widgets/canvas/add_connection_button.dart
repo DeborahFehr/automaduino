@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../resources/state.dart';
 
 class AddConnectionButton extends StatelessWidget {
-  final Key blockKey;
+  final Key? blockKey;
   final Offset blockPosition;
   final Function(bool active, Offset start, Offset end) updateDrag;
 

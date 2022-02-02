@@ -1,14 +1,18 @@
 import 'canvas_layout.dart';
 import 'transition.dart';
+import 'pin_assignment.dart';
 import 'arduino_functions.dart';
 
 class CodeTranspiler {
   List<PositionedState>? blocks = [];
   List<Transition>? connections = [];
+  List<PinAssignment>? pins = [];
 
-  CodeTranspiler(List<PositionedState>? blocks, List<Transition>? connections) {
+  CodeTranspiler(List<PositionedState>? blocks, List<Transition>? connections,
+      List<PinAssignment>? pins) {
     this.blocks = blocks;
     this.connections = connections;
+    this.pins = pins;
   }
 
   String getCode() {
@@ -35,6 +39,7 @@ class CodeTranspiler {
 
   String _generateCode() {
     String result = "";
+    result += _pinList(pins!);
     if (connections!.length > 0) {
       for (Transition con in connections!.toList())
         result = result + _connectionsDemo(con);
@@ -44,15 +49,16 @@ class CodeTranspiler {
     return result;
   }
 
-  String _pinList(List<String> content) {
-    // Result:
-    // int relais_pin=6;
-    // int vib_pin=7;
-    String setup = "";
-    content.forEach((element) {
-      setup += element + "\n";
+  String _pinList(List<PinAssignment> pins) {
+    String initPins = "//Pins:\n";
+    pins.forEach((element) {
+      initPins += "int " +
+          element.variableName! +
+          " = " +
+          element.pin.toString() +
+          ";\n";
     });
-    return "void setup() { \n" + setup + "\n" + "}";
+    return initPins + "\n";
   }
 
   String _generateSetup(List<String> content) {

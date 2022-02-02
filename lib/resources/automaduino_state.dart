@@ -69,8 +69,10 @@ class AutomaduinoState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updatePin(Key key, int pin) {
-    _blocks.firstWhere((el) => el.key == key).settings.pin = pin;
+  void updatePin(Key key, int? pin, Widget block) {
+    PositionedState state = _blocks.firstWhere((element) => element.key == key);
+    state.settings.pin = pin;
+    state.block = block;
     notifyListeners();
   }
 

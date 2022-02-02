@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'code_area/code_editor.dart';
 import '../resources/transition.dart';
-import '../resources/code_transpiler.dart';
 import 'code_area/init_dialogue.dart';
 
 class CodeArea extends StatefulWidget {
@@ -23,21 +22,8 @@ class CodeArea extends StatefulWidget {
 class _CodeAreaState extends State<CodeArea> {
   double _width = 0;
   bool closed = false;
-  String code = "";
   ScrollController _scrollController = ScrollController();
 
-  @override
-  void initState() {
-    super.initState();
-    CodeTranspiler codeGenerator = new CodeTranspiler(null, widget.connections);
-    code = codeGenerator.getCode();
-  }
-
-  @override
-  void didUpdateWidget(Widget oldWidget) {
-    CodeTranspiler codeGenerator = new CodeTranspiler(null, widget.connections);
-    code = codeGenerator.getCode();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,12 +43,10 @@ class _CodeAreaState extends State<CodeArea> {
                 controller: _scrollController,
                 child: SingleChildScrollView(
                   controller: _scrollController,
-                  child: CodeEditor(code: code),
+                  child: CodeEditor(pinWarning: true),
                 ),
               ),
               SizedBox(
-// ToDo: Alternate: Use Button Theme?
-
                 child: Stack(
                   children: [
                     IgnorePointer(

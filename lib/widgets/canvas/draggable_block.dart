@@ -28,7 +28,9 @@ class DraggableBlock extends StatelessWidget {
                 },
                 onWillAccept: (candidate) {
                   StateSettings data = (candidate as StateSettings);
-                  return !data.newBlock && data.newConnection;
+                  return !data.newBlock &&
+                      data.newConnection &&
+                      data.key != block.key;
                 },
                 onAccept: (data) {
                   addConnection((data as StateSettings).key as Key);
