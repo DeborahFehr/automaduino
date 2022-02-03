@@ -1,3 +1,4 @@
+import 'package:arduino_statemachines/resources/state.dart';
 import 'package:flutter/material.dart';
 import '../../resources/canvas_layout.dart';
 import '../../resources/transition.dart';
@@ -6,9 +7,12 @@ import "dart:math" as math;
 class LinePainter extends CustomPainter {
   final List<PositionedState> blocks;
   final List<Transition> connections;
+  final StartData startBlockPoint;
+  final EndData endBlockPoint;
   final DraggableConnection? dragLine;
 
-  const LinePainter(this.blocks, this.connections, this.dragLine);
+  const LinePainter(this.blocks, this.connections, this.startBlockPoint,
+      this.endBlockPoint, this.dragLine);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -18,13 +22,17 @@ class LinePainter extends CustomPainter {
     Paint paint = Paint()
       ..color = Colors.black87
       ..strokeCap = StrokeCap.round
-      ..strokeWidth = 3;
+      ..strokeWidth = 2;
 
     for (var con in connections) {
       // draw line to condition block
-      Offset startPoint =
-          blocks.firstWhere((el) => el.key == con.start).position + center;
-      Offset endPoint = con.position + Offset(100, 25);
+      Offset startPoint;
+      startPoint = con.startPoint
+          ? startBlockPoint.position + Offset(17, 31)
+          : blocks.firstWhere((el) => el.key == con.start).position + center;
+      Offset endPoint = con.startPoint
+          ? blocks.firstWhere((el) => el.key == con.end.first).position + center
+          : con.position + Offset(100, 25);
       canvas.drawLine(startPoint, endPoint, paint);
 
       // draw Arrow
@@ -43,28 +51,32 @@ class LinePainter extends CustomPainter {
                   10 * math.sin(angle + (math.pi / 6))),
           paint);
 
-      // draw lines from condition block to end block[s]
-      startPoint = con.position + Offset(100, 25);
+      if (!con.startPoint) {
+        // draw lines from condition block to end block[s]
+        startPoint = con.position + Offset(100, 25);
 
-      for (var end in con.end) {
-        Offset endPoint =
-            blocks.firstWhere((el) => el.key == end).position + center;
-        canvas.drawLine(startPoint, endPoint, paint);
+        for (var end in con.end) {
+          Offset endPoint;
+          endPoint = con.endPoint
+              ? endBlockPoint.position + Offset(17, 31)
+              : blocks.firstWhere((el) => el.key == end).position + center;
+          canvas.drawLine(startPoint, endPoint, paint);
 
-        Offset midPoint = (startPoint + endPoint) / 2;
-        double angle = (endPoint - startPoint).direction;
-        canvas.drawLine(
-            midPoint,
-            midPoint -
-                Offset(10 * math.cos(angle - (math.pi / 6)),
-                    10 * math.sin(angle - (math.pi / 6))),
-            paint);
-        canvas.drawLine(
-            midPoint,
-            midPoint -
-                Offset(10 * math.cos(angle + (math.pi / 6)),
-                    10 * math.sin(angle + (math.pi / 6))),
-            paint);
+          Offset midPoint = (startPoint + endPoint) / 2;
+          double angle = (endPoint - startPoint).direction;
+          canvas.drawLine(
+              midPoint,
+              midPoint -
+                  Offset(10 * math.cos(angle - (math.pi / 6)),
+                      10 * math.sin(angle - (math.pi / 6))),
+              paint);
+          canvas.drawLine(
+              midPoint,
+              midPoint -
+                  Offset(10 * math.cos(angle + (math.pi / 6)),
+                      10 * math.sin(angle + (math.pi / 6))),
+              paint);
+        }
       }
     }
 
@@ -74,8 +86,8 @@ class LinePainter extends CustomPainter {
       ..strokeWidth = 2;
 
     if (dragLine != null) {
-      canvas.drawLine(dragLine!.start + Offset(50, 100),
-          dragLine!.end + Offset(50, 100), paint);
+      Offset center = dragLine!.point ? Offset(17, 50) : Offset(50, 100);
+      canvas.drawLine(dragLine!.start + center, dragLine!.end + center, paint);
     }
   }
 

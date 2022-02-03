@@ -3,16 +3,18 @@ import 'package:flutter/material.dart';
 import '../../resources/state.dart';
 
 class AddConnectionButton extends StatelessWidget {
-  final Key? blockKey;
+  final Key blockKey;
+  final bool point;
   final Offset blockPosition;
-  final Function(bool active, Offset start, Offset end) updateDrag;
+  final Function(bool active, bool point, Offset start, Offset end) updateDrag;
 
-  const AddConnectionButton(this.blockKey, this.blockPosition, this.updateDrag);
+  const AddConnectionButton(
+      this.blockKey, this.point, this.blockPosition, this.updateDrag);
 
   @override
   Widget build(BuildContext context) {
     return Draggable(
-        data: StateSettings("", "", null, false, true, blockKey),
+        data: StateSettings("", "", null, false, true, point, blockKey, ""),
         child: TextButton(
           style: TextButton.styleFrom(
             padding: EdgeInsets.zero,
@@ -24,13 +26,13 @@ class AddConnectionButton extends StatelessWidget {
         feedback: Icon(Icons.keyboard_arrow_down),
         childWhenDragging: Container(),
         onDragStarted: () {
-          updateDrag(true, blockPosition, blockPosition);
+          updateDrag(true, point, blockPosition, blockPosition);
         },
         onDragUpdate: (details) {
-          updateDrag(true, blockPosition, details.delta);
+          updateDrag(true, point, blockPosition, details.delta);
         },
         onDragEnd: (details) {
-          updateDrag(false, blockPosition, details.offset);
+          updateDrag(false, point, blockPosition, details.offset);
         });
   }
 }

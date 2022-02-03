@@ -6,8 +6,11 @@ class Transition {
   final Condition condition;
   List<Key> end;
   Offset position;
+  final bool startPoint;
+  final bool endPoint;
 
-  Transition(this.start, this.condition, this.end, this.position);
+  Transition(this.start, this.condition, this.end, this.position,
+      this.startPoint, this.endPoint);
 
   @override
   String toString() {

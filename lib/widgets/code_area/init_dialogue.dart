@@ -34,15 +34,6 @@ class _InitDialogueState extends State<InitDialogue> {
     return update;
   }
 
-  dynamic Function(String, Widget) updateStateSelectedOption(Key key) {
-    void update(String option, Widget block) {
-      Provider.of<AutomaduinoState>(context, listen: false)
-          .updateStateSelectedOption(key, option, block);
-    }
-
-    return update;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Consumer<AutomaduinoState>(builder: (context, state, child) {
@@ -422,9 +413,7 @@ class _InitDialogueState extends State<InitDialogue> {
                                             block.data.option,
                                             block.settings.pin,
                                             block.settings.selectedOption,
-                                            updateStateName(block.key),
-                                            updateStateSelectedOption(
-                                                block.key)));
+                                            updateStateName(block.key)));
                               });
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(

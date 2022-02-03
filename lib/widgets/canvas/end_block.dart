@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import '../../resources/state.dart';
 
 class EndBlock extends StatelessWidget {
+  final Key key;
   final Offset blockPosition;
   final Function(Offset end) updatePosition;
+  final Function(Key target, bool startPoint) addConnection;
 
-  const EndBlock(this.blockPosition, this.updatePosition);
+  const EndBlock(
+      this.key, this.blockPosition, this.updatePosition, this.addConnection);
 
   @override
   Widget build(BuildContext context) {
@@ -14,31 +17,47 @@ class EndBlock extends StatelessWidget {
       left: blockPosition.dx,
       top: blockPosition.dy,
       child: Draggable(
-          data: StateSettings("", "", null, false, true, null),
+          data: StateSettings("", "", null, false, true, false, null, ""),
           child: DragTarget(builder: (BuildContext context,
               List<dynamic> candidateData, List<dynamic> rejectedData) {
-            return Column(
-              children: [
-                Text(
-                  "End",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Container(
-                  width: 25,
-                  height: 25,
-                  decoration: const ShapeDecoration(
-                    color: Colors.black,
-                    shape: CircleBorder(),
-                  ),
-                  child: Icon(
-                    Icons.flag_outlined,
-                    size: 18.0,
-                    color: Colors.white,
-                  ),
-                )
-              ],
+            return DragTarget(
+              builder: (context, List<dynamic> candidateData,
+                  List<dynamic> rejectedData) {
+                return Column(
+                  children: [
+                    Text(
+                      "End",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Container(
+                      width: 25,
+                      height: 25,
+                      decoration: const ShapeDecoration(
+                        color: Colors.black,
+                        shape: CircleBorder(),
+                      ),
+                      child: Icon(
+                        Icons.flag_outlined,
+                        size: 18.0,
+                        color: Colors.white,
+                      ),
+                    )
+                  ],
+                );
+              },
+              onWillAccept: (candidate) {
+                StateSettings data = (candidate as StateSettings);
+                return !data.newBlock &&
+                    data.newConnection &&
+                    data.key != key &&
+                    !data.startConnection;
+              },
+              onAccept: (data) {
+                addConnection(
+                    (data as StateSettings).key as Key, data.startConnection);
+              },
             );
           }),
           feedback: Column(

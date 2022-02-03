@@ -8,10 +8,9 @@ class StateBlock extends StatefulWidget {
   final int? pin;
   String selectedOption;
   final Function(String name, Widget block) updateName;
-  final Function(String option, Widget block) updateOption;
 
   StateBlock(this.name, this.color, this.imagePath, this.option, this.pin,
-      this.selectedOption, this.updateName, this.updateOption);
+      this.selectedOption, this.updateName);
 
   @override
   State<StatefulWidget> createState() {
@@ -78,8 +77,7 @@ class _StateBlock extends State<StateBlock> {
                           widget.option,
                           widget.pin,
                           widget.selectedOption,
-                          widget.updateName,
-                          widget.updateOption));
+                          widget.updateName));
                 },
               ),
               Column(

@@ -1,48 +1,47 @@
+import 'package:arduino_statemachines/resources/state.dart';
+import 'package:collection/collection.dart';
 import 'canvas_layout.dart';
 import 'transition.dart';
 import 'pin_assignment.dart';
 import 'arduino_functions.dart';
+import 'states_data.dart';
 
 class CodeTranspiler {
   List<PositionedState>? blocks = [];
   List<Transition>? connections = [];
   List<PinAssignment>? pins = [];
+  StartData? startPoint;
+  EndData? endPoint;
 
   CodeTranspiler(List<PositionedState>? blocks, List<Transition>? connections,
-      List<PinAssignment>? pins) {
+      List<PinAssignment>? pins, StartData? startPoint, EndData? endPoint) {
     this.blocks = blocks;
     this.connections = connections;
     this.pins = pins;
+    this.startPoint = startPoint;
+    this.endPoint = endPoint;
   }
 
   String getCode() {
     return (connections == null) ? _defaultCode() : _generateCode();
   }
 
-  String _connectionsDemo(Transition con) {
-    return "State " +
-        blocks!
-            .firstWhere((element) => element.key == con.start)
-            .settings
-            .name +
-        " connected to State " +
-        blocks!
-            .firstWhere((element) => element.key == con.end[0])
-            .settings
-            .name +
-        " by condition type " +
-        con.condition.type.toString() +
-        " with value " +
-        con.condition.values[0].toString() +
-        "\n";
-  }
-
   String _generateCode() {
     String result = "";
     result += _pinList(pins!);
-    if (connections!.length > 0) {
-      for (Transition con in connections!.toList())
-        result = result + _connectionsDemo(con);
+    result += _generateSetup(pins!);
+
+    Transition? start =
+        connections!.firstWhereOrNull((element) => element.startPoint);
+    if (start != null) {
+      PositionedState startState =
+          blocks!.firstWhere((element) => element.key == start.end.first);
+      result += _generateLoop(startState);
+    }
+
+    if (blocks!.length > 0) {
+      blocks!.asMap().forEach(
+          (index, block) => result += _generateStateFunction(index, block));
     } else {
       result = _defaultCode();
     }
@@ -61,42 +60,44 @@ class CodeTranspiler {
     return initPins + "\n";
   }
 
-  String _generateSetup(List<String> content) {
-    // Result:
-    // pinMode(relais_pin, OUTPUT);
-    // pinMode(vib_pin,INPUT);
+  String _generateSetup(List<PinAssignment> pins) {
     String setup = "";
-    content.forEach((element) {
-      setup += element + "\n";
+    pins.forEach((element) {
+      String type = returnDataByName(element.component!).type == "output"
+          ? "OUTPUT"
+          : "INPUT";
+      setup += "pinMode(" + element.variableName! + ", " + type + ");\n";
     });
-    return "void setup() { \n" + setup + "\n" + "}";
+    return "void setup() { \n" + setup + "}\n\n";
   }
 
-  String _generateLoop() {
+  String _generateLoop(PositionedState state) {
     // call entry function
     // if end defined: add var
-    return "void loop() {"
-        "}";
+    String loop = state.settings.variableName + "();\n";
+
+    return "void loop() {\n" + loop + "}\n\n";
   }
 
-  String _generateStateFunction() {
+  String _generateStateFunction(int index, PositionedState state) {
     // define variable of state
     // call state function
 
     // int vib_val;
     //   vib_val=digitalRead(vib_pin);
 
-    return "void loop() {"
-        "}";
+    String stateFunctions = state.settings.variableName + "(){\n";
+
+    return stateFunctions + "}\n\n";
   }
 
-  String _generateTransition() {
+  String _generateTransition(PositionedState state) {
     //   if(vib_val==1){
     //     delay(300);
     //     verification();
     //   }
-    return "void loop() {"
-        "}";
+    // depending on transition type
+    return "next();\n";
   }
 
   String _defaultCode() {

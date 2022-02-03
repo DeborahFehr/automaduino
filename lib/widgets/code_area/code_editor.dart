@@ -17,7 +17,8 @@ class CodeEditor extends StatefulWidget {
 class _CodeEditorState extends State<CodeEditor> {
   var codeController = TextEditingController();
   var numberLines = 35;
-  CodeTranspiler codeGenerator = new CodeTranspiler(null, null, null);
+  CodeTranspiler codeGenerator =
+      new CodeTranspiler(null, null, null, null, null);
 
   void _countCodeLines() {
     numberLines = '\n'.allMatches(codeController.text).length + 1;
@@ -69,7 +70,7 @@ class _CodeEditorState extends State<CodeEditor> {
                         showDialog(
                             context: context, builder: (_) => InitDialogue()),
                       },
-                  child: Text("Init Ports")),
+                  child: Text("Init Pins")),
               ElevatedButton(onPressed: () => {}, child: Text("Copy"))
             ],
           ),
@@ -91,7 +92,11 @@ class _CodeEditorState extends State<CodeEditor> {
               child: Consumer<AutomaduinoState>(
                 builder: (context, state, child) {
                   codeGenerator = CodeTranspiler(
-                      state.blocks, state.connections, state.pinAssignments);
+                      state.blocks,
+                      state.connections,
+                      state.pinAssignments,
+                      state.startPoint,
+                      state.endPoint);
                   codeController.text = codeGenerator.getCode();
                   return TextField(
                       decoration: InputDecoration(

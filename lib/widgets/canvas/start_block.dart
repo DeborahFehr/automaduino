@@ -4,11 +4,14 @@ import '../../resources/state.dart';
 import 'add_connection_button.dart';
 
 class StartBlock extends StatelessWidget {
+  final Key key;
+  final bool connected;
   final Offset blockPosition;
   final Function(Offset end) updatePosition;
-  final Function(bool active, Offset start, Offset end) updateDrag;
+  final Function(bool active, bool point, Offset start, Offset end) updateDrag;
 
-  const StartBlock(this.blockPosition, this.updatePosition, this.updateDrag);
+  const StartBlock(this.key, this.connected, this.blockPosition,
+      this.updatePosition, this.updateDrag);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +19,7 @@ class StartBlock extends StatelessWidget {
       left: blockPosition.dx,
       top: blockPosition.dy,
       child: Draggable(
-          data: StateSettings("", "", null, false, true, null),
+          data: StateSettings("", "", null, false, true, false, key, ""),
           child: Column(
             children: [
               Text(
@@ -38,7 +41,9 @@ class StartBlock extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-              AddConnectionButton(null, blockPosition, updateDrag),
+              connected
+                  ? Container()
+                  : AddConnectionButton(key, true, blockPosition, updateDrag),
             ],
           ),
           feedback: Column(
@@ -54,13 +59,18 @@ class StartBlock extends StatelessWidget {
                 ),
               ),
               Container(
-                width: 15,
-                height: 15,
+                width: 25,
+                height: 25,
                 decoration: const ShapeDecoration(
                   color: Colors.black,
                   shape: CircleBorder(),
                 ),
-              )
+                child: Icon(
+                  Icons.play_arrow_outlined,
+                  size: 20.0,
+                  color: Colors.white,
+                ),
+              ),
             ],
           ),
           childWhenDragging: Container(),

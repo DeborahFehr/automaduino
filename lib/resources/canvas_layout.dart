@@ -22,6 +22,7 @@ class PositionedState {
 class DraggableConnection {
   final Offset start;
   Offset end;
+  final bool point;
 
-  DraggableConnection(this.start, this.end);
+  DraggableConnection(this.start, this.end, this.point);
 }

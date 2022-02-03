@@ -6,8 +6,8 @@ import 'add_connection_button.dart';
 class DraggableBlock extends StatelessWidget {
   final PositionedState block;
   final Function(PositionedState block, Offset position) updatePosition;
-  final Function(bool active, Offset start, Offset end) updateDrag;
-  final Function(Key target) addConnection;
+  final Function(bool active, bool point, Offset start, Offset end) updateDrag;
+  final Function(Key target, bool startPoint) addConnection;
 
   const DraggableBlock(
       this.block, this.updatePosition, this.updateDrag, this.addConnection);
@@ -33,7 +33,8 @@ class DraggableBlock extends StatelessWidget {
                       data.key != block.key;
                 },
                 onAccept: (data) {
-                  addConnection((data as StateSettings).key as Key);
+                  addConnection(
+                      (data as StateSettings).key as Key, data.startConnection);
                 },
               ),
               feedback: block.block,
@@ -44,10 +45,8 @@ class DraggableBlock extends StatelessWidget {
               onDragEnd: (details) {
                 RenderBox renderBox = context.findRenderObject() as RenderBox;
                 updatePosition(block, renderBox.globalToLocal(details.offset));
-                //Provider.of<StateModel>(context, listen: false)
-                //.updateBlockPosition(block.key, details.offset);
               }),
-          AddConnectionButton(block.key, block.position, updateDrag),
+          AddConnectionButton(block.key, false, block.position, updateDrag),
         ],
       ),
     );

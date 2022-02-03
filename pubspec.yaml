@@ -30,6 +30,7 @@ dependencies:
   multi_split_view: ^1.5.0+1
   provider: ^6.0.2
   url_launcher: ^6.0.18
+  collection: ^1.15.0
 
 
 dev_dependencies:

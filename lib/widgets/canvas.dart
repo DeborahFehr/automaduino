@@ -24,18 +24,16 @@ class BuildingArea extends StatefulWidget {
 class _BuildingAreaState extends State<BuildingArea> {
   DraggableConnection? drag;
   Offset startPosition = Offset(40, 40);
-  Offset endPosition = Offset(440, 440);
+  Offset endPosition = Offset(240, 40);
 
   void updateStartPosition(Offset position) {
-    setState(() {
-      startPosition = position;
-    });
+    Provider.of<AutomaduinoState>(context, listen: false)
+        .updateStartPosition(position);
   }
 
   void updateEndPosition(Offset position) {
-    setState(() {
-      endPosition = position;
-    });
+    Provider.of<AutomaduinoState>(context, listen: false)
+        .updateEndPosition(position);
   }
 
   void updateBlockPosition(PositionedState block, Offset position) {
@@ -44,11 +42,11 @@ class _BuildingAreaState extends State<BuildingArea> {
     setState(() {});
   }
 
-  void updateDragPosition(bool active, Offset start, Offset end) {
+  void updateDragPosition(bool active, bool point, Offset start, Offset end) {
     if (drag == null) {
-      drag = DraggableConnection(start, end);
+      drag = DraggableConnection(start, end, point);
     } else {
-      drag = active ? DraggableConnection(start, drag!.end + end) : null;
+      drag = active ? DraggableConnection(start, drag!.end + end, point) : null;
     }
     setState(() {});
   }
@@ -76,19 +74,31 @@ class _BuildingAreaState extends State<BuildingArea> {
         .firstWhere((el) => el.key == start)
         .position;
 
-    Offset endPoint = Provider.of<AutomaduinoState>(context, listen: false)
-        .blocks
-        .firstWhere((el) => el.key == end)
-        .position;
+    Offset endPoint;
+    endPoint = end ==
+            Provider.of<AutomaduinoState>(context, listen: false).endPoint.key
+        ? Provider.of<AutomaduinoState>(context, listen: false)
+            .endPoint
+            .position
+        : Provider.of<AutomaduinoState>(context, listen: false)
+            .blocks
+            .firstWhere((el) => el.key == end)
+            .position;
 
     return (startPoint + endPoint) / 2;
   }
 
-  dynamic Function(Key) addConnection(Key end) {
-    void addStartKey(Key start) {
+  dynamic Function(Key, bool) addConnection(Key end, bool endPoint) {
+    void addStartKey(Key start, bool startPoint) {
+      Offset transitionPosition =
+          startPoint ? Offset(0, 0) : calculateMidpoint(start, end);
+      if (startPoint) {
+        Provider.of<AutomaduinoState>(context, listen: false)
+            .startPointConnected();
+      }
       Provider.of<AutomaduinoState>(context, listen: false).addConnection(
           Transition(start, Condition(UniqueKey(), "then", [""]), [end],
-              calculateMidpoint(start, end)));
+              transitionPosition, startPoint, endPoint));
       setState(() {});
     }
 
@@ -104,15 +114,6 @@ class _BuildingAreaState extends State<BuildingArea> {
     return update;
   }
 
-  dynamic Function(String, Widget) updateStateSelectedOption(Key key) {
-    void update(String option, Widget block) {
-      Provider.of<AutomaduinoState>(context, listen: false)
-          .updateStateSelectedOption(key, option, block);
-    }
-
-    return update;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Consumer<AutomaduinoState>(
@@ -123,12 +124,19 @@ class _BuildingAreaState extends State<BuildingArea> {
             return Stack(
               children: <Widget>[
                 CustomPaint(
-                  painter: LinePainter(state.blocks, state.connections, drag),
+                  painter: LinePainter(state.blocks, state.connections,
+                      state.startPoint, state.endPoint, drag),
                 ),
                 StartBlock(
-                    startPosition, updateStartPosition, updateDragPosition),
-                EndBlock(endPosition, updateEndPosition),
-                for (var connection in state.connections)
+                    state.startPoint.key,
+                    state.startPoint.connected,
+                    state.startPoint.position,
+                    updateStartPosition,
+                    updateDragPosition),
+                EndBlock(state.endPoint.key, state.endPoint.position,
+                    updateEndPosition, addConnection(state.endPoint.key, true)),
+                for (var connection in state.connections
+                    .where((element) => !element.startPoint))
                   DraggableCondition(
                       connection.condition.key,
                       connection,
@@ -137,7 +145,7 @@ class _BuildingAreaState extends State<BuildingArea> {
                       updateConnectionDetails),
                 for (var block in state.blocks)
                   DraggableBlock(block, updateBlockPosition, updateDragPosition,
-                      addConnection(block.key)),
+                      addConnection(block.key, false)),
               ],
             );
           },
@@ -147,6 +155,9 @@ class _BuildingAreaState extends State<BuildingArea> {
           onAcceptWithDetails: (drag) {
             RenderBox renderBox = context.findRenderObject() as RenderBox;
             StateSettings data = drag.data as StateSettings;
+            data.variableName =
+                (state.blocks.length.toString() + "_" + data.variableName)
+                    .replaceAll(" ", "_");
             StateData blockData =
                 returnDataByNameAndOption(data.name, data.selectedOption);
             Key key = UniqueKey();
@@ -164,8 +175,7 @@ class _BuildingAreaState extends State<BuildingArea> {
                     blockData.option,
                     data.pin,
                     data.selectedOption,
-                    updateStateName(key),
-                    updateStateSelectedOption(key)),
+                    updateStateName(key)),
                 data.added(),
                 blockData,
                 renderBox.globalToLocal(drag.offset)));
