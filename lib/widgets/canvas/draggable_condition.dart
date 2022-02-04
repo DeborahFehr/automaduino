@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../resources/state.dart';
 import '../../resources/transition.dart';
 import 'condition_field.dart';
+import 'package:contextmenu/contextmenu.dart';
 
 class DraggableCondition extends StatefulWidget {
   final Key key;
@@ -30,19 +31,37 @@ class _ConditionField extends State<DraggableCondition> {
     return Positioned(
       left: widget.position.dx,
       top: widget.position.dy,
-      child: Draggable(
-          data: StateSettings("", "then", null, false, false, false, null, ""),
-          child: conditionField,
-          feedback: conditionField,
-          childWhenDragging: Container(),
-          onDragUpdate: (details) {
-            widget.updatePosition(widget.connection, details.delta);
-          },
-          onDragEnd: (details) {
-            RenderBox renderBox = context.findRenderObject() as RenderBox;
-            widget.updatePosition(
-                widget.connection, renderBox.globalToLocal(details.offset));
-          }),
+      child: ContextMenuArea(
+        width: 250,
+        items: [
+          ListTile(
+            leading: Icon(Icons.highlight_remove),
+            title: Text('Delete Transition'),
+            onTap: () {
+              Navigator.of(context).pop();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(widget.connection.toString()),
+                ),
+              );
+            },
+          ),
+        ],
+        child: Draggable(
+            data:
+                StateSettings("", "then", null, false, false, false, null, ""),
+            child: conditionField,
+            feedback: conditionField,
+            childWhenDragging: Container(),
+            onDragUpdate: (details) {
+              widget.updatePosition(widget.connection, details.delta);
+            },
+            onDragEnd: (details) {
+              RenderBox renderBox = context.findRenderObject() as RenderBox;
+              widget.updatePosition(
+                  widget.connection, renderBox.globalToLocal(details.offset));
+            }),
+      ),
     );
   }
 }

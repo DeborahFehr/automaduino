@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../../resources/syntax_Highlighter.dart';
 import '../../resources/automaduino_state.dart';
 import '../../resources/code_transpiler.dart';
-import 'init_dialogue.dart';
+import 'init_dialog.dart';
 
 class CodeEditor extends StatefulWidget {
   final bool pinWarning;
@@ -66,9 +66,10 @@ class _CodeEditorState extends State<CodeEditor> {
           child: Wrap(
             children: [
               ElevatedButton(
-                  onPressed: () => {
+                  onPressed: () =>
+                  {
                         showDialog(
-                            context: context, builder: (_) => InitDialogue()),
+                            context: context, builder: (_) => InitDialog()),
                       },
                   child: Text("Init Pins")),
               ElevatedButton(onPressed: () => {}, child: Text("Copy"))

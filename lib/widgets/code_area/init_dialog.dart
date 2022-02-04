@@ -7,15 +7,15 @@ import '../../resources/states_data.dart';
 import 'package:provider/provider.dart';
 import '../canvas/state_block.dart';
 
-class InitDialogue extends StatefulWidget {
-  InitDialogue({Key? key}) : super(key: key);
+class InitDialog extends StatefulWidget {
+  InitDialog({Key? key}) : super(key: key);
 
   @override
-  _InitDialogueState createState() => _InitDialogueState();
+  _InitDialogState createState() => _InitDialogState();
 }
 
 /// This should srsly be refactored
-class _InitDialogueState extends State<InitDialogue> {
+class _InitDialogState extends State<InitDialog> {
   final _formKey = GlobalKey<FormState>();
 
   final List<int> pinOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
@@ -57,8 +57,8 @@ class _InitDialogueState extends State<InitDialogue> {
                         Table(
                           columnWidths: {
                             0: FlexColumnWidth(1),
-                            1: FlexColumnWidth(3),
-                            2: FlexColumnWidth(7),
+                            1: FlexColumnWidth(7),
+                            2: FlexColumnWidth(3),
                             3: FlexColumnWidth(9)
                           },
                           border: TableBorder(
@@ -71,8 +71,8 @@ class _InitDialogueState extends State<InitDialogue> {
                             TableRow(
                               children: <Widget>[
                                 Container(),
-                                Center(child: Text("Pin")),
                                 Center(child: Text("Component")),
+                                Center(child: Text("Pin")),
                                 Center(child: Text("States")),
                               ],
                             ),
@@ -120,38 +120,6 @@ class _InitDialogueState extends State<InitDialogue> {
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 10),
-                                    child: DropdownButtonFormField(
-                                      isExpanded: true,
-                                      value: assignment.pin,
-                                      style: const TextStyle(fontSize: 12),
-                                      onChanged: (dynamic pin) {
-                                        setState(() {
-                                          assignment.pin = pin;
-                                        });
-                                      },
-                                      validator: (dynamic value) {
-                                        if (value == null) {
-                                          return 'Field required';
-                                        }
-                                        return null;
-                                      },
-                                      items: pinOptions
-                                          .map<DropdownMenuItem>((int value) {
-                                        return DropdownMenuItem(
-                                          value: value,
-                                          child: Center(
-                                            child: Text(
-                                              value.toString(),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ),
-                                        );
-                                      }).toList(),
                                     ),
                                   ),
                                   Padding(
@@ -208,6 +176,38 @@ class _InitDialogueState extends State<InitDialogue> {
                                               Text(value),
                                             ],
                                           )),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 10),
+                                    child: DropdownButtonFormField(
+                                      isExpanded: true,
+                                      value: assignment.pin,
+                                      style: const TextStyle(fontSize: 12),
+                                      onChanged: (dynamic pin) {
+                                        setState(() {
+                                          assignment.pin = pin;
+                                        });
+                                      },
+                                      validator: (dynamic value) {
+                                        if (value == null) {
+                                          return 'Field required';
+                                        }
+                                        return null;
+                                      },
+                                      items: pinOptions
+                                          .map<DropdownMenuItem>((int value) {
+                                        return DropdownMenuItem(
+                                          value: value,
+                                          child: Center(
+                                            child: Text(
+                                              value.toString(),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
                                         );
                                       }).toList(),
                                     ),
@@ -418,7 +418,7 @@ class _InitDialogueState extends State<InitDialogue> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                     content:
-                                    Text('Pins successfully initiated!')),
+                                        Text('Pins successfully initiated!')),
                               );
                               Navigator.pop(context);
                             }

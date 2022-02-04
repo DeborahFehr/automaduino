@@ -23,21 +23,24 @@ class BuildingArea extends StatefulWidget {
 
 class _BuildingAreaState extends State<BuildingArea> {
   DraggableConnection? drag;
-  Offset startPosition = Offset(40, 40);
-  Offset endPosition = Offset(240, 40);
 
-  void updateStartPosition(Offset position) {
-    Provider.of<AutomaduinoState>(context, listen: false)
-        .updateStartPosition(position);
+  void updateStartPosition(StartData startPoint, Offset end) {
+    //Provider.of<AutomaduinoState>(context, listen: false)
+    //    .updateStartPosition(startPoint.position + end);
+    startPoint.position = startPoint.position + end;
+    setState(() {});
   }
 
-  void updateEndPosition(Offset position) {
-    Provider.of<AutomaduinoState>(context, listen: false)
-        .updateEndPosition(position);
+  void updateEndPosition(EndData endPoint, Offset end) {
+    //Provider.of<AutomaduinoState>(context, listen: false)
+    //    .updateEndPosition(endPoint.position + end);
+    endPoint.position = endPoint.position + end;
+    setState(() {});
   }
 
   void updateBlockPosition(PositionedState block, Offset position) {
     // ToDo: We actually dont update the position in the datastructure
+    // needed to correctly determine position during drag
     block.position = block.position + position;
     setState(() {});
   }
@@ -128,13 +131,9 @@ class _BuildingAreaState extends State<BuildingArea> {
                       state.startPoint, state.endPoint, drag),
                 ),
                 StartBlock(
-                    state.startPoint.key,
-                    state.startPoint.connected,
-                    state.startPoint.position,
-                    updateStartPosition,
-                    updateDragPosition),
-                EndBlock(state.endPoint.key, state.endPoint.position,
-                    updateEndPosition, addConnection(state.endPoint.key, true)),
+                    state.startPoint, updateStartPosition, updateDragPosition),
+                EndBlock(state.endPoint.key, state.endPoint, updateEndPosition,
+                    addConnection(state.endPoint.key, true)),
                 for (var connection in state.connections
                     .where((element) => !element.startPoint))
                   DraggableCondition(

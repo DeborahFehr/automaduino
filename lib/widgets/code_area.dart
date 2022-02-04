@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'code_area/code_editor.dart';
 import '../resources/transition.dart';
-import 'code_area/init_dialogue.dart';
+import 'code_area/init_dialog.dart';
 
 class CodeArea extends StatefulWidget {
   final double closedWidth;
@@ -88,10 +88,11 @@ class _CodeAreaState extends State<CodeArea> {
                                       splashColor:
                                           Theme.of(context).colorScheme.primary,
                                       color: Colors.white,
-                                      onPressed: () => {
+                                      onPressed: () =>
+                                      {
                                         showDialog(
                                             context: context,
-                                            builder: (_) => InitDialogue()),
+                                            builder: (_) => InitDialog()),
                                       },
                                       icon: Icon(Icons.developer_board),
                                     ),

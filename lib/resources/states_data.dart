@@ -2,7 +2,7 @@ import 'state.dart';
 
 List<StateData> sensorBlocks = [
   StateData("sensor", "Motion Sensor", "graphics/state_icons/motion-sensor.png",
-      "https://automaduino-docs.vercel.app/", "Read Data"),
+      "https://automaduino-docs.vercel.app/", "Read Digital"),
   //StateData("sensor", "Temperature Sensor", "graphics/state_icons/temperature-sensor.png",
   //    "https://automaduino-docs.vercel.app/", "Read Data"),
   StateData(
@@ -10,19 +10,19 @@ List<StateData> sensorBlocks = [
       "Humidity Sensor",
       "graphics/state_icons/humidity-sensor.png",
       "https://automaduino-docs.vercel.app/",
-      "Read Data"),
+      "Read Analog"),
   StateData(
       "sensor",
       "Vibration Sensor",
       "graphics/state_icons/vibration-sensor.png",
       "https://automaduino-docs.vercel.app/",
-      "Read Data"),
+      "Read Digital"),
   StateData(
       "sensor",
       "Loudness Sensor",
       "graphics/state_icons/loudness-sensor.png",
       "https://automaduino-docs.vercel.app/",
-      "Read Data"),
+      "Read Analog"),
   //StateData("sensor", "Ultrasonic Ranger", "graphics/state_icons/ultrasonic-ranger.png",
   //    "https://automaduino-docs.vercel.app/", "Read Data")
 ];

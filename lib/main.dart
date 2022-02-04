@@ -7,6 +7,7 @@ import '../resources/automaduino_state.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../resources/color_map.dart';
+import 'widgets/dialog_sources.dart';
 
 void main() {
   runApp(
@@ -119,8 +120,8 @@ class _MyHomePageState extends State<MyHomePage> {
             ListTile(
               title: const Text('Image Sources'),
               onTap: () {
-                // ToDo: Show sources from resources/image_sources.dart file
-                Navigator.pop(context);
+                showDialog(context: context, builder: (_) => SourcesDialog());
+                //Navigator.pop(context);
               },
             ),
           ],

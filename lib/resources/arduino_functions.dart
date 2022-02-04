@@ -9,12 +9,12 @@ class StateFunction {
 }
 
 List<StateFunction> sensorFunctions = [
-  StateFunction("Motion Sensor", "Read Data", digitalRead),
+  StateFunction("Motion Sensor", "Read Digital", digitalRead),
   // returns true or false
   StateFunction("Temperature Sensor", "Read Data", () => print("todo")),
-  StateFunction("Humidity Sensor", "Read Data", analogRead),
-  StateFunction("Vibration Sensor", "Read Data", digitalRead),
-  StateFunction("Loudness Sensor", "Read Data", analogRead),
+  StateFunction("Humidity Sensor", "Read Analog", analogRead),
+  StateFunction("Vibration Sensor", "Read Digital", digitalRead),
+  StateFunction("Loudness Sensor", "Read Analog", analogRead),
   StateFunction("Ultrasonic Ranger", "Read Data", () => print("todo")),
 ];
 
@@ -64,13 +64,15 @@ String transitionThen(String functionName) {
   return functionName + "();";
 }
 
-String transitionIf(String functionName, String value) {
-  return "if(stateValue == " + value + "){\n" + functionName + "();\n}";
+String transitionIf(String variable, String functionName, String value) {
+  return "if(" + variable + " == " + value + "){\n" + functionName + "();\n}";
 }
 
-String transitionIfElse(
-    String functionName, String elseFunctionName, String value) {
-  return "if(stateValue == " +
+String transitionIfElse(String variable, String functionName,
+    String elseFunctionName, String value) {
+  return "if(" +
+      variable +
+      " == " +
       value +
       "){\n" +
       functionName +
@@ -85,4 +87,14 @@ String transitionCond(String functionName) {
 
 String transitionTime(String functionName, String time) {
   return "delay(" + time + ");\n" + functionName + "();";
+}
+
+StateFunction returnFunctionByNameAndOption(String name, String option) {
+  StateFunction result;
+  List<StateFunction> searchList =
+      sensorFunctions + userInputFunctions + outputFunctions;
+  result =
+      searchList.firstWhere((el) => el.name == name && el.option == option);
+
+  return result;
 }
