@@ -103,7 +103,6 @@ class CodeTranspiler {
     StateFunction arduinoFunction = returnFunctionByNameAndOption(
         state.data.component, state.settings.selectedOption);
 
-    // ToDo: lookup variable name instead of using settings pin
     String pinVariable = state.settings.pin == null
         ? ""
         : pins!

@@ -2,11 +2,8 @@ import 'package:flutter/material.dart';
 import '../resources/states_data.dart';
 import 'block_drawer/block_listview.dart';
 
-// TODO: Vertical Text
-// https://stackoverflow.com/questions/58310795/flutter-vertical-text-widget
-
 class BuildingElementsDrawer extends StatefulWidget {
-  Function(bool closed) updateWidth;
+  final Function(bool closed) updateWidth;
 
   BuildingElementsDrawer({Key? key, required this.updateWidth})
       : super(key: key);

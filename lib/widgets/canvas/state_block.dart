@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 class StateBlock extends StatefulWidget {
-  String name;
+  final String name;
   final Color color;
   final String imagePath;
   final String option;
   final int? pin;
-  String selectedOption;
+  final String selectedOption;
   final Function(String name, Widget block) updateName;
 
   StateBlock(this.name, this.color, this.imagePath, this.option, this.pin,

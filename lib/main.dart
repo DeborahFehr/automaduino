@@ -60,7 +60,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void updateDrawerWidth(bool closedDrawer) {
-    // todo smooth according to animation of drawer
     _closedDrawer = closedDrawer;
     setState(() {});
   }
