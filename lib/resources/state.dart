@@ -7,16 +7,25 @@ class StateSettings {
   int? pin;
   final bool newBlock;
   final bool newConnection;
+  final bool additionalConnection;
   final bool startConnection;
   final Key? key;
   String variableName;
 
-  StateSettings(this.name, this.selectedOption, this.pin, this.newBlock,
-      this.newConnection, this.startConnection, this.key, this.variableName);
+  StateSettings(
+      this.name,
+      this.selectedOption,
+      this.pin,
+      this.newBlock,
+      this.newConnection,
+      this.additionalConnection,
+      this.startConnection,
+      this.key,
+      this.variableName);
 
   StateSettings added() {
     return StateSettings(this.name, this.selectedOption, this.pin, false, false,
-        false, this.key, this.variableName);
+        false, false, this.key, this.variableName);
   }
 }
 

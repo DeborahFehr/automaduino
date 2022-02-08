@@ -25,15 +25,6 @@ class _InitDialogState extends State<InitDialog> {
 
   List<PinAssignment> assignments = [];
 
-  dynamic Function(String, Widget) updateStateName(Key key) {
-    void update(String name, Widget block) {
-      Provider.of<AutomaduinoState>(context, listen: false)
-          .updateStateName(key, name, block);
-    }
-
-    return update;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Consumer<AutomaduinoState>(builder: (context, state, child) {
@@ -400,27 +391,16 @@ class _InitDialogState extends State<InitDialog> {
                                 Provider.of<AutomaduinoState>(context,
                                         listen: false)
                                     .updatePin(
-                                        block.key,
-                                        block.settings.pin,
-                                        StateBlock(
-                                            block.settings.name,
-                                            block.data.type == "sensor"
-                                                ? Colors.redAccent
-                                                : block.data.type == "userInput"
-                                                    ? Colors.blueAccent
-                                                    : Colors.greenAccent,
-                                            block.data.imagePath,
-                                            block.data.option,
-                                            block.settings.pin,
-                                            block.settings.selectedOption,
-                                            updateStateName(block.key)));
+                                  block.key,
+                                  block.settings.pin,
+                                );
                               });
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                     content:
                                         Text('Pins successfully initiated!')),
                               );
-                              Navigator.pop(context);
+                              Navigator.pop(context, "test");
                             }
                           },
                           child: Text('Submit'),

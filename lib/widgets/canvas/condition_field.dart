@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../resources/transition.dart';
+import 'condition_input.dart';
 
 class ConditionField extends StatefulWidget {
   final Condition condition;
@@ -17,25 +18,18 @@ class ConditionField extends StatefulWidget {
 }
 
 class _ConditionField extends State<ConditionField> {
-  String dropdownValue = 'then';
   List<String> items = conditionTypes;
-
-  final conditionController = TextEditingController();
-
-  @override
-  void dispose() {
-    conditionController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
-    conditionController.text = widget.condition.values[0];
-    conditionController.selection = TextSelection.fromPosition(
-        TextPosition(offset: conditionController.text.length));
+    String dropdownValue = widget.condition.type;
     return Container(
       width: 200,
-      height: 50,
+      height: dropdownValue == "cond"
+          ? (widget.condition.values.length * 20) + 50
+          : dropdownValue == "ifelse"
+              ? 70
+              : 50,
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
@@ -79,29 +73,8 @@ class _ConditionField extends State<ConditionField> {
                 endIndent: 0,
                 color: Colors.grey,
               ),
-              Flexible(
-                child: TextField(
-                  controller: conditionController,
-                  maxLines: 1,
-                  decoration: InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.deepPurple),
-                    ),
-                    border: OutlineInputBorder(),
-                    labelStyle: TextStyle(color: Colors.deepPurple),
-                    labelText: 'Condition',
-                    isDense: true,
-                    contentPadding: EdgeInsets.fromLTRB(5.0, 8.0, 5.0, 8.0),
-                  ),
-                  style: TextStyle(
-                    fontSize: 12.0,
-                  ),
-                  onChanged: (text) {
-                    widget.updateConnectionDetails(widget.condition,
-                        values: [text]);
-                  },
-                ),
-              ),
+              ConditionInput(dropdownValue, widget.condition,
+                  widget.updateConnectionDetails)
             ],
           ),
         ),

@@ -1,31 +1,17 @@
 import 'package:flutter/material.dart';
 
-class StateBlock extends StatefulWidget {
+class StateBlock extends StatelessWidget {
   final String name;
   final Color color;
   final String imagePath;
   final String option;
   final int? pin;
   final String selectedOption;
-  final Function(String name, Widget block) updateName;
+  final Function(String name) updateName;
+  final TextEditingController controller;
 
   StateBlock(this.name, this.color, this.imagePath, this.option, this.pin,
-      this.selectedOption, this.updateName);
-
-  @override
-  State<StatefulWidget> createState() {
-    return _StateBlock();
-  }
-}
-
-class _StateBlock extends State<StateBlock> {
-  TextEditingController _titleController = new TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    _titleController.text = widget.name;
-  }
+      this.selectedOption, this.updateName, this.controller);
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +22,7 @@ class _StateBlock extends State<StateBlock> {
         borderRadius: BorderRadius.circular(10),
         color: Theme.of(context).scaffoldBackgroundColor,
         image: DecorationImage(
-          image: AssetImage(widget.imagePath),
+          image: AssetImage(imagePath),
           scale: 2,
         ),
       ),
@@ -45,19 +31,23 @@ class _StateBlock extends State<StateBlock> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
           side: BorderSide(
-            color: widget.color,
+            color: color,
             width: 2,
           ),
         ),
         color: Color.fromRGBO(255, 255, 255, .7),
-        shadowColor: widget.color,
+        shadowColor: color,
         child: Padding(
           padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              TextField(
-                controller: _titleController,
+              TextFormField(
+                controller: controller
+                  ..value = TextEditingValue(
+                      text: name,
+                      selection: TextSelection(
+                          baseOffset: name.length, extentOffset: name.length)),
                 keyboardType: TextInputType.multiline,
                 maxLines: 2,
                 textAlign: TextAlign.center,
@@ -68,16 +58,7 @@ class _StateBlock extends State<StateBlock> {
                   isDense: true,
                 ),
                 onChanged: (text) {
-                  widget.updateName(
-                      text,
-                      StateBlock(
-                          text,
-                          widget.color,
-                          widget.imagePath,
-                          widget.option,
-                          widget.pin,
-                          widget.selectedOption,
-                          widget.updateName));
+                  updateName(text);
                 },
               ),
               Column(
@@ -85,7 +66,7 @@ class _StateBlock extends State<StateBlock> {
                   Container(
                     height: 20,
                     child: Text(
-                      widget.option,
+                      option,
                       style: TextStyle(
                         fontSize: 13.0,
                         fontWeight: FontWeight.bold,
@@ -98,9 +79,7 @@ class _StateBlock extends State<StateBlock> {
                         alignment: Alignment.bottomRight,
                         child: Text(
                           "Pin: " +
-                              (widget.pin == null
-                                  ? "unassigned"
-                                  : widget.pin.toString()),
+                              (pin == null ? "unassigned" : pin.toString()),
                           style: TextStyle(
                             fontSize: 11.0,
                           ),

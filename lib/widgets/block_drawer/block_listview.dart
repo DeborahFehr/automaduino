@@ -30,8 +30,16 @@ class BlockListView extends StatelessWidget {
               children: [
                 Container(height: 5),
                 Draggable(
-                  data: StateSettings(list[index].component, list[index].option,
-                      null, true, false, false, null, list[index].component),
+                  data: StateSettings(
+                      list[index].component,
+                      list[index].option,
+                      null,
+                      true,
+                      false,
+                      false,
+                      false,
+                      null,
+                      list[index].component),
                   child: buildingBlock,
                   feedback: BlockPreview(
                       list[index].component,

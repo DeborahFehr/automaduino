@@ -4,7 +4,6 @@ import 'canvas/draggable_block.dart';
 import 'canvas/line_painter.dart';
 import 'package:provider/provider.dart';
 import 'canvas/draggable_condition.dart';
-import 'canvas/state_block.dart';
 import '../resources/automaduino_state.dart';
 import '../resources/canvas_layout.dart';
 import '../resources/transition.dart';
@@ -45,11 +44,21 @@ class _BuildingAreaState extends State<BuildingArea> {
     setState(() {});
   }
 
-  void updateDragPosition(bool active, bool point, Offset start, Offset end) {
+  void deleteState(PositionedState? block, {end: false}) {
+    end
+        ? Provider.of<AutomaduinoState>(context, listen: false).hideEndPoint()
+        : Provider.of<AutomaduinoState>(context, listen: false)
+            .deleteBlock(block!);
+  }
+
+  void updateDragPosition(
+      bool active, bool point, bool addition, Offset start, Offset end) {
     if (drag == null) {
-      drag = DraggableConnection(start, end, point);
+      drag = DraggableConnection(start, end, point, addition);
     } else {
-      drag = active ? DraggableConnection(start, drag!.end + end, point) : null;
+      drag = active
+          ? DraggableConnection(start, drag!.end + end, point, addition)
+          : null;
     }
     setState(() {});
   }
@@ -91,27 +100,42 @@ class _BuildingAreaState extends State<BuildingArea> {
     return (startPoint + endPoint) / 2;
   }
 
-  dynamic Function(Key, bool) addConnection(Key end, bool endPoint) {
-    void addStartKey(Key start, bool startPoint) {
-      Offset transitionPosition =
-          startPoint ? Offset(0, 0) : calculateMidpoint(start, end);
-      if (startPoint) {
+  dynamic Function(Key, bool, bool) addConnection(Key end, bool endPoint) {
+    void addStartKey(Key start, bool startPoint, bool addition) {
+      if (addition) {
         Provider.of<AutomaduinoState>(context, listen: false)
-            .startPointConnected();
+            .addAdditionalConnection(start, end);
+      } else {
+        Offset transitionPosition =
+            startPoint ? Offset(0, 0) : calculateMidpoint(start, end);
+        if (startPoint) {
+          Provider.of<AutomaduinoState>(context, listen: false)
+              .startPointConnected();
+        }
+        Provider.of<AutomaduinoState>(context, listen: false).addConnection(
+            Transition(start, Condition(UniqueKey(), "then", [""]), [end],
+                transitionPosition, startPoint, endPoint));
       }
-      Provider.of<AutomaduinoState>(context, listen: false).addConnection(
-          Transition(start, Condition(UniqueKey(), "then", [""]), [end],
-              transitionPosition, startPoint, endPoint));
-      setState(() {});
     }
 
     return addStartKey;
   }
 
-  dynamic Function(String, Widget) updateStateName(Key key) {
-    void update(String name, Widget block) {
+  void deleteTransition(Transition? connection, {start: false}) {
+    start
+        ? Provider.of<AutomaduinoState>(context, listen: false)
+            .deleteConnection(
+                Provider.of<AutomaduinoState>(context, listen: false)
+                    .connections
+                    .firstWhere((element) => element.startPoint))
+        : Provider.of<AutomaduinoState>(context, listen: false)
+            .deleteConnection(connection!);
+  }
+
+  dynamic Function(String) updateStateName(Key key) {
+    void update(String name) {
       Provider.of<AutomaduinoState>(context, listen: false)
-          .updateStateName(key, name, block);
+          .updateStateName(key, name);
     }
 
     return update;
@@ -121,65 +145,73 @@ class _BuildingAreaState extends State<BuildingArea> {
   Widget build(BuildContext context) {
     return Consumer<AutomaduinoState>(
       builder: (context, state, child) {
-        return DragTarget(
-          builder: (BuildContext context, List<dynamic> candidateData,
-              List<dynamic> rejectedData) {
-            return Stack(
-              children: <Widget>[
-                CustomPaint(
-                  painter: LinePainter(state.blocks, state.connections,
-                      state.startPoint, state.endPoint, drag),
-                ),
-                StartBlock(
-                    state.startPoint, updateStartPosition, updateDragPosition),
-                EndBlock(state.endPoint.key, state.endPoint, updateEndPosition,
-                    addConnection(state.endPoint.key, true)),
-                for (var connection in state.connections
-                    .where((element) => !element.startPoint))
-                  DraggableCondition(
-                      connection.condition.key,
-                      connection,
-                      connection.position,
-                      updateConnectionPosition,
-                      updateConnectionDetails),
-                for (var block in state.blocks)
-                  DraggableBlock(block, updateBlockPosition, updateDragPosition,
-                      addConnection(block.key, false)),
-              ],
-            );
-          },
-          onWillAccept: (data) {
-            return (data! as StateSettings).newBlock;
-          },
-          onAcceptWithDetails: (drag) {
-            RenderBox renderBox = context.findRenderObject() as RenderBox;
-            StateSettings data = drag.data as StateSettings;
-            data.variableName =
-                (state.blocks.length.toString() + "_" + data.variableName)
-                    .replaceAll(" ", "_");
-            StateData blockData =
-                returnDataByNameAndOption(data.name, data.selectedOption);
-            Key key = UniqueKey();
-            Color color = blockData.type == "sensor"
-                ? Colors.redAccent
-                : blockData.type == "userInput"
-                    ? Colors.blueAccent
-                    : Colors.greenAccent;
-            state.addBlock(PositionedState(
-                key,
-                StateBlock(
-                    data.name,
-                    color,
-                    blockData.imagePath,
-                    blockData.option,
-                    data.pin,
-                    data.selectedOption,
-                    updateStateName(key)),
-                data.added(),
-                blockData,
-                renderBox.globalToLocal(drag.offset)));
-            setState(() {});
-          },
+        return InteractiveViewer(
+          maxScale: 2.0,
+          minScale: 0.5,
+          constrained: false,
+          child: ConstrainedBox(
+            constraints: BoxConstraints.tightFor(width: 1000, height: 1000),
+            child: DragTarget(
+              builder: (BuildContext context, List<dynamic> candidateData,
+                  List<dynamic> rejectedData) {
+                return Stack(
+                  clipBehavior: Clip.none,
+                  fit: StackFit.passthrough,
+                  children: <Widget>[
+                    CustomPaint(
+                      painter: LinePainter(state.blocks, state.connections,
+                          state.startPoint, state.endPoint, drag),
+                    ),
+                    StartBlock(state.startPoint, updateStartPosition,
+                        updateDragPosition, deleteTransition),
+                    state.endPoint.available
+                        ? EndBlock(
+                            state.endPoint.key,
+                            state.endPoint,
+                            updateEndPosition,
+                            deleteState,
+                            addConnection(state.endPoint.key, true))
+                        : SizedBox.shrink(),
+                    for (var connection in state.connections
+                        .where((element) => !element.startPoint))
+                      DraggableCondition(
+                          connection.condition.key,
+                          connection,
+                          connection.position,
+                          updateConnectionPosition,
+                          updateConnectionDetails,
+                          deleteTransition,
+                          updateDragPosition),
+                    for (var block in state.blocks)
+                      DraggableBlock(
+                          block,
+                          updateStateName,
+                          deleteState,
+                          updateBlockPosition,
+                          updateDragPosition,
+                          addConnection(block.key, false)),
+                  ],
+                );
+              },
+              onWillAccept: (data) {
+                return (data! as StateSettings).newBlock;
+              },
+              onAcceptWithDetails: (drag) {
+                RenderBox renderBox = context.findRenderObject() as RenderBox;
+                StateSettings data = drag.data as StateSettings;
+                data.variableName =
+                    (state.blocks.length.toString() + "_" + data.name)
+                        .replaceAll(" ", "_");
+                StateData blockData =
+                    returnDataByNameAndOption(data.name, data.selectedOption);
+                Key key = UniqueKey();
+                state.addBlock(
+                  PositionedState(key, data.added(), blockData,
+                      renderBox.globalToLocal(drag.offset), false),
+                );
+              },
+            ),
+          ),
         );
       },
     );

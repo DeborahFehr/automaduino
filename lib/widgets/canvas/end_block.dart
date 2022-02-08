@@ -1,3 +1,4 @@
+import 'package:arduino_statemachines/resources/canvas_layout.dart';
 import 'package:arduino_statemachines/resources/state.dart';
 import 'package:flutter/material.dart';
 import '../../resources/state.dart';
@@ -7,10 +8,11 @@ class EndBlock extends StatelessWidget {
   final Key key;
   final EndData endPoint;
   final Function(EndData position, Offset delta) updatePosition;
-  final Function(Key target, bool startPoint) addConnection;
+  final Function(PositionedState? state, {bool end}) hideEnd;
+  final Function(Key target, bool startPoint, bool addition) addConnection;
 
-  const EndBlock(
-      this.key, this.endPoint, this.updatePosition, this.addConnection);
+  const EndBlock(this.key, this.endPoint, this.updatePosition, this.hideEnd,
+      this.addConnection);
 
   @override
   Widget build(BuildContext context) {
@@ -22,19 +24,16 @@ class EndBlock extends StatelessWidget {
         items: [
           ListTile(
             leading: Icon(Icons.highlight_remove),
-            title: Text('Delete Transition'),
+            title: Text('Delete State'),
             onTap: () {
+              hideEnd(null, end: true);
               Navigator.of(context).pop();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text("finish"),
-                ),
-              );
             },
           ),
         ],
         child: Draggable(
-            data: StateSettings("", "", null, false, true, false, null, ""),
+            data: StateSettings(
+                "", "", null, false, true, false, false, null, ""),
             child: DragTarget(builder: (BuildContext context,
                 List<dynamic> candidateData, List<dynamic> rejectedData) {
               return DragTarget(
@@ -72,8 +71,8 @@ class EndBlock extends StatelessWidget {
                       !data.startConnection;
                 },
                 onAccept: (data) {
-                  addConnection(
-                      (data as StateSettings).key as Key, data.startConnection);
+                  addConnection((data as StateSettings).key as Key,
+                      data.startConnection, data.additionalConnection);
                 },
               );
             }),

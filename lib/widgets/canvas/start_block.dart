@@ -1,15 +1,20 @@
 import 'package:arduino_statemachines/resources/state.dart';
 import 'package:flutter/material.dart';
 import '../../resources/state.dart';
+import '../../resources/transition.dart';
 import 'add_connection_button.dart';
 import 'package:contextmenu/contextmenu.dart';
 
 class StartBlock extends StatelessWidget {
   final StartData startPoint;
   final Function(StartData position, Offset delta) updatePosition;
-  final Function(bool active, bool point, Offset start, Offset end) updateDrag;
+  final Function(
+          bool active, bool point, bool adition, Offset start, Offset end)
+      updateDrag;
+  final Function(Transition? connection, {bool start}) deleteConnection;
 
-  const StartBlock(this.startPoint, this.updatePosition, this.updateDrag);
+  const StartBlock(this.startPoint, this.updatePosition, this.updateDrag,
+      this.deleteConnection);
 
   @override
   Widget build(BuildContext context) {
@@ -23,17 +28,14 @@ class StartBlock extends StatelessWidget {
             leading: Icon(Icons.highlight_remove),
             title: Text('Delete Transition'),
             onTap: () {
+              deleteConnection(null, start: true);
               Navigator.of(context).pop();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Foo!'),
-                ),
-              );
             },
           ),
         ],
         child: Draggable(
-            data: StateSettings("", "", null, false, true, false, key, ""),
+            data:
+                StateSettings("", "", null, false, true, false, false, key, ""),
             child: Column(
               children: [
                 Text(
@@ -57,8 +59,8 @@ class StartBlock extends StatelessWidget {
                 ),
                 startPoint.connected
                     ? Container()
-                    : AddConnectionButton(
-                        startPoint.key, true, startPoint.position, updateDrag),
+                    : AddConnectionButton(startPoint.key, true, false,
+                        startPoint.position, updateDrag),
               ],
             ),
             feedback: Column(

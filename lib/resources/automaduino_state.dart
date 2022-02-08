@@ -29,6 +29,30 @@ class AutomaduinoState extends ChangeNotifier {
     notifyListeners();
   }
 
+  void deleteBlock(PositionedState block) {
+    List<Transition> availableConnections = _connections
+        .where((element) => element.end.contains(block.key))
+        .toList();
+    availableConnections
+        .where((element) =>
+            element.condition.type != "ifelse" &&
+            element.condition.type != "cond")
+        .forEach((connection) {
+      _blocks
+          .firstWhere((element) => element.key == connection.start)
+          .outgoingConnection = false;
+    });
+    _connections.removeWhere((element) =>
+        element.start == block.key || element.end.contains(block.key));
+    _blocks.removeWhere((element) => element == block);
+    _blocks.forEach((element) {
+      element.settings.variableName =
+          (blocks.indexOf(element).toString() + "_" + element.settings.name)
+              .replaceAll(" ", "_");
+    });
+    notifyListeners();
+  }
+
   void updateBlockPosition(Key key, Offset position) {
     _blocks.firstWhere((element) => element.key == key).position = position;
     notifyListeners();
@@ -37,14 +61,40 @@ class AutomaduinoState extends ChangeNotifier {
   /// Adds [connection] between two blocks.
   void addConnection(Transition connection) {
     _connections.add(connection);
+    if (!connection.startPoint) {
+      _blocks
+          .firstWhere((element) => element.key == connection.start)
+          .outgoingConnection = true;
+    }
+    notifyListeners();
+  }
+
+  void addAdditionalConnection(Key start, Key end) {
+    _connections.firstWhere((element) => element.start == start).end.add(end);
+    notifyListeners();
+  }
+
+  void deleteConnection(Transition connection) {
+    if (!connection.startPoint) {
+      _blocks
+          .firstWhere((element) => element.key == connection.start)
+          .outgoingConnection = false;
+    }
+    _connections.removeWhere((element) => element == connection);
     notifyListeners();
   }
 
   void updateConnectionType(Condition condition, String type) {
-    _connections
-        .firstWhere((element) => element.condition.key == condition.key)
-        .condition
-        .type = type;
+    Transition connection = _connections
+        .firstWhere((element) => element.condition.key == condition.key);
+
+    if (connection.condition.type == "cond" ||
+        connection.condition.type == "ifelse") {
+      if (type == "then" || type == "if" || type == "time") {
+        connection.end = [connection.end.first];
+      }
+    }
+    connection.condition.type = type;
     notifyListeners();
   }
 
@@ -56,12 +106,11 @@ class AutomaduinoState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateStateName(Key key, String name, Widget block) {
+  void updateStateName(Key key, String name) {
     PositionedState state = _blocks.firstWhere((element) => element.key == key);
     state.settings.name = name;
     state.settings.variableName =
         (blocks.indexOf(state).toString() + "_" + name).replaceAll(" ", "_");
-    state.block = block;
 
     notifyListeners();
   }
@@ -71,10 +120,9 @@ class AutomaduinoState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updatePin(Key key, int? pin, Widget block) {
+  void updatePin(Key key, int? pin) {
     PositionedState state = _blocks.firstWhere((element) => element.key == key);
     state.settings.pin = pin;
-    state.block = block;
     notifyListeners();
   }
 
@@ -85,6 +133,12 @@ class AutomaduinoState extends ChangeNotifier {
 
   void updateEndPosition(Offset position) {
     _endPoint.position = position;
+    notifyListeners();
+  }
+
+  void hideEndPoint() {
+    endPoint.available = false;
+    _connections.removeWhere((element) => element.end.contains(endPoint.key));
     notifyListeners();
   }
 

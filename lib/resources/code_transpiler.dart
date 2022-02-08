@@ -92,12 +92,6 @@ class CodeTranspiler {
   }
 
   String _generateStateFunction(int index, PositionedState state) {
-    // define variable of state
-    // call state function
-
-    // int vib_val;
-    //   vib_val=digitalRead(vib_pin);
-
     String stateFunctions = "void " + state.settings.variableName + "(){\n";
 
     StateFunction arduinoFunction = returnFunctionByNameAndOption(
@@ -130,11 +124,6 @@ class CodeTranspiler {
   }
 
   String _generateTransition(Transition connection) {
-    //   if(vib_val==1){
-    //     delay(300);
-    //     verification();
-    //   }
-
     String transitionFunction = "";
 
     String nextFunction = "";
