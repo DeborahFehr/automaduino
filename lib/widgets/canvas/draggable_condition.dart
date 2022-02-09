@@ -1,3 +1,4 @@
+import 'package:arduino_statemachines/resources/canvas_layout.dart';
 import 'package:flutter/material.dart';
 import '../../resources/state.dart';
 import '../../resources/transition.dart';
@@ -8,11 +9,13 @@ import 'package:contextmenu/contextmenu.dart';
 class DraggableCondition extends StatefulWidget {
   final Key key;
   final Transition connection;
+  final PositionedState? block;
   final Offset position;
   final Function(Transition connection, Offset position) updatePosition;
   final Function(Condition condition, {String? type, List<String>? values})
       updateConnectionDetails;
   final Function(Transition connection) deleteConnection;
+  final Function(Transition connection, int position) deleteSingleCond;
   final Function(
           bool active, bool point, bool adition, Offset start, Offset end)
       updateDrag;
@@ -20,10 +23,12 @@ class DraggableCondition extends StatefulWidget {
   DraggableCondition(
       this.key,
       this.connection,
+      this.block,
       this.position,
       this.updatePosition,
       this.updateConnectionDetails,
       this.deleteConnection,
+      this.deleteSingleCond,
       this.updateDrag);
 
   @override
@@ -35,10 +40,37 @@ class DraggableCondition extends StatefulWidget {
 class _ConditionField extends State<DraggableCondition> {
   void test(Transition connection, Offset position) {}
 
+  List<String> values = [];
+  Widget conditionField = Container();
+
+  void addCondValue() {
+    setState(() {
+      values.add("");
+    });
+  }
+
+  void deleteCondValue(int position) {
+    //widget.deleteSingleCond(widget.connection, position);
+    setState(() {
+      values.removeAt(position);
+      if (widget.connection.end.length >= values.length) {
+        widget.connection.end.removeAt(position);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    Widget conditionField = ConditionField(
-        widget.connection.condition, test, widget.updateConnectionDetails);
+    values = widget.connection.condition.values;
+    conditionField = ConditionField(
+        widget.connection.condition,
+        widget.block!.data.type,
+        test,
+        widget.updateConnectionDetails,
+        addCondValue,
+        deleteCondValue,
+        widget.connection.end.length >= values.length);
+
     return Positioned(
       left: widget.position.dx,
       top: widget.position.dy,
@@ -65,7 +97,7 @@ class _ConditionField extends State<DraggableCondition> {
                           ? SizedBox.shrink()
                           : Column(
                               children: [
-                                SizedBox(height: 40),
+                                SizedBox(height: 30),
                                 AddConnectionButton(
                                     widget.connection.start,
                                     false,
@@ -76,7 +108,32 @@ class _ConditionField extends State<DraggableCondition> {
                             ),
                     ],
                   )
-                : conditionField,
+                : widget.connection.condition.type == "cond"
+                    ? Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          conditionField,
+                          Column(
+                            children: [
+                              SizedBox(height: 10),
+                              for (int i = 0; i < values.length; i++)
+                                (widget.connection.end.length !=
+                                            values.length) &&
+                                        i == values.length - 1
+                                    ? AddConnectionButton(
+                                        widget.connection.start,
+                                        false,
+                                        true,
+                                        widget.connection.position,
+                                        widget.updateDrag)
+                                    : SizedBox(
+                                        height: 20,
+                                      ),
+                            ],
+                          ),
+                        ],
+                      )
+                    : conditionField,
             feedback: conditionField,
             childWhenDragging: Container(),
             onDragUpdate: (details) {

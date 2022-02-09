@@ -19,20 +19,21 @@ class AddConnectionButton extends StatelessWidget {
     return Draggable(
         data: StateSettings(
             "", "", null, false, true, condition, point, blockKey, ""),
-        child: TextButton(
-          style: TextButton.styleFrom(
-            padding: EdgeInsets.zero,
-            minimumSize: Size.zero,
+        child: SizedBox(
+          height: 20,
+          child: TextButton(
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.zero,
+              minimumSize: Size.zero,
+            ),
+            child: condition
+                ? Icon(Icons.arrow_forward) //Icon(Icons.arrow_circle_right)
+                : Icon(Icons.arrow_drop_down_circle),
+            onPressed: () {},
           ),
-          child: condition
-              ? Icon(Icons.arrow_circle_right)
-              : Icon(Icons.arrow_drop_down_circle),
-          onPressed: () {},
         ),
-        feedback: condition
-            ? Icon(Icons.keyboard_arrow_right)
-            : Icon(Icons.keyboard_arrow_down),
-        childWhenDragging: Container(),
+        feedback: Icon(Icons.keyboard_arrow_down),
+        childWhenDragging: SizedBox(height: 20),
         onDragStarted: () {
           updateDrag(true, point, condition, blockPosition, blockPosition);
         },

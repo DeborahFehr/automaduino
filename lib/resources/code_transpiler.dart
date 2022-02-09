@@ -146,12 +146,27 @@ class CodeTranspiler {
             "value", nextFunction, connection.condition.values.first);
         break;
       case "ifelse":
-        transitionFunction += transitionIf(
-            "value", nextFunction, connection.condition.values.first);
+        String elseFunction = "";
+        if (connection.end.length > 1) {
+          elseFunction = blocks!
+              .firstWhere((element) => element.key == connection.end[1])
+              .settings
+              .variableName;
+        }
+        transitionFunction += transitionIfElse("value", nextFunction,
+            elseFunction, connection.condition.values.first);
         break;
       case "cond":
-        transitionFunction += transitionIf(
-            "value", nextFunction, connection.condition.values.first);
+        List<String> functionNames = [];
+        List<String> conditionValues = [];
+        for (int i = 0; i < connection.end.length; i++) {
+          StateSettings settings = blocks!
+              .firstWhere((element) => element.key == connection.end[i])
+              .settings;
+          functionNames.add(settings.variableName);
+          conditionValues.add(connection.condition.values[i]);
+        }
+        transitionFunction += transitionCond(functionNames, conditionValues);
         break;
       case "time":
         transitionFunction +=

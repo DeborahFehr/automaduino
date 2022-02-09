@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import '../../resources/transition.dart';
 
 class ConditionInput extends StatefulWidget {
-  final String type;
   final Condition condition;
   final Function(Condition condition, {String? type, List<String>? values})
       updateConnectionDetails;
+  final Function() addCondValue;
+  final Function(int position) deleteCondValue;
+  final bool condButtonActive;
 
-  ConditionInput(this.type, this.condition, this.updateConnectionDetails);
+  ConditionInput(this.condition, this.updateConnectionDetails,
+      this.addCondValue, this.deleteCondValue, this.condButtonActive);
 
   @override
   State<StatefulWidget> createState() {
@@ -18,8 +21,9 @@ class ConditionInput extends StatefulWidget {
 class _ConditionField extends State<ConditionInput> {
   Widget child = Container();
 
-  Widget addTextField(String hint) {
-    return TextField(
+  Widget addTextField(String hint, String initialValue, int position) {
+    return TextFormField(
+      initialValue: initialValue,
       maxLines: 1,
       decoration: InputDecoration(
         focusedBorder: OutlineInputBorder(
@@ -35,23 +39,24 @@ class _ConditionField extends State<ConditionInput> {
         fontSize: 12.0,
       ),
       onChanged: (text) {
-        widget.updateConnectionDetails(widget.condition, values: [text]);
+        widget.condition.values[position] = text;
+        widget.updateConnectionDetails(widget.condition, values: widget.condition.values);
       },
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    switch (widget.type) {
+    switch (widget.condition.type) {
       case "if":
         {
-          child = addTextField("test");
+          child = addTextField("Enter Value", widget.condition.values.first, 0);
         }
         break;
 
       case "time":
         {
-          child = addTextField("test 2");
+          child = addTextField("Delay in ms", widget.condition.values.first, 0);
         }
         break;
 
@@ -59,7 +64,7 @@ class _ConditionField extends State<ConditionInput> {
         {
           child = Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [addTextField("test 2"), Text("else")],
+            children: [addTextField("Enter Value", widget.condition.values.first, 0), Text("else")],
           );
         }
         break;
@@ -69,34 +74,39 @@ class _ConditionField extends State<ConditionInput> {
           child = Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    height: 15.0,
-                    width: 15.0,
-                    child: Ink(
-                      decoration: const ShapeDecoration(
-                        color: Colors.red,
-                        shape: CircleBorder(),
+              for (int i = 0; i < widget.condition.values.length; i++)
+                SizedBox(
+                  height: 20,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      SizedBox(
+                        height: 15.0,
+                        width: 15.0,
+                        child: Ink(
+                          decoration: const ShapeDecoration(
+                            color: Colors.red,
+                            shape: CircleBorder(),
+                          ),
+                          child: IconButton(
+                              padding: EdgeInsets.zero,
+                              splashRadius: 10,
+                              icon: Icon(Icons.highlight_remove, size: 15.0),
+                              color: Colors.white,
+                              onPressed: () {
+                                widget.deleteCondValue(i);
+                              }),
+                        ),
                       ),
-                      child: IconButton(
-                          padding: EdgeInsets.zero,
-                          splashRadius: 10,
-                          icon: Icon(Icons.highlight_remove, size: 15.0),
-                          color: Colors.white,
-                          onPressed: () {
-                            print("i should be doin something??");
-                          }),
-                    ),
+                      SizedBox(
+                        height: 20.0,
+                        width: 85.0,
+                        child: addTextField("Enter Value", widget.condition.values[i], i),
+                      ),
+                    ],
                   ),
-                  SizedBox(
-                    height: 20.0,
-                    width: 85.0,
-                    child: addTextField("test 2"),
-                  ),
-                ],
-              ),
+                ),
               SizedBox(
                 height: 20.0,
                 width: 20.0,
@@ -110,9 +120,11 @@ class _ConditionField extends State<ConditionInput> {
                       splashRadius: 15,
                       icon: Icon(Icons.add, size: 15.0),
                       color: Colors.white,
-                      onPressed: () {
-                        print("i should be doin something??");
-                      }),
+                      onPressed: widget.condButtonActive
+                          ? () {
+                              widget.addCondValue();
+                            }
+                          : null),
                 ),
               ),
             ],

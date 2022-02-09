@@ -1,5 +1,5 @@
 name: arduino_statemachines
-description: Test with dragable....
+description: Automaduino - A visual programming language for arduino
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -33,6 +33,10 @@ dependencies:
   collection: ^1.15.0
   contextmenu: ^2.0.1
 
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.17.0
+
 
 dev_dependencies:
   flutter_test:
@@ -48,6 +52,8 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  generate: true
 
   # To add graphics to your application, add an graphics section, like this:
   assets:

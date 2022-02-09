@@ -65,24 +65,38 @@ String transitionThen(String functionName) {
 }
 
 String transitionIf(String variable, String functionName, String value) {
-  return "if(" + variable + " == " + value + "){\n" + functionName + "();\n}";
+  return "if(" + variable + " " + value + "){\n" + functionName + "();\n}";
 }
 
 String transitionIfElse(String variable, String functionName,
     String elseFunctionName, String value) {
-  return "if(" +
+  String result = "if(" +
       variable +
       " == " +
       value +
       "){\n" +
       functionName +
-      "();\n}\nelse{\n" +
-      elseFunctionName +
-      "();\n}";
+      "();\n}\nelse{\n";
+  if (elseFunctionName != "") {
+    result += elseFunctionName + "();";
+  }
+
+  result += "\n}";
+  return result;
 }
 
-String transitionCond(String functionName) {
-  return functionName + "();";
+String transitionCond(List<String> functionNames, List<String> conditions) {
+  String result = "";
+  result += "switch (value) {";
+
+  for (int i = 0; i < functionNames.length; i++) {
+    result += "case " + conditions[i] + ":\n";
+    result += functionNames[i] + "();\n";
+    result += "break;\n";
+  }
+
+  result += "default:\nbreak;\n}";
+  return result;
 }
 
 String transitionTime(String functionName, String time) {

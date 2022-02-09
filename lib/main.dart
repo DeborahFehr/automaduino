@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../resources/color_map.dart';
 import 'widgets/dialog_sources.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
   runApp(
@@ -23,6 +24,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Automaduino Editor',
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSwatch(
           primarySwatch: MaterialColor(0xff19969C, primaryColor),
@@ -79,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Image.asset('graphics/logo_icon.png', fit: BoxFit.contain),
         ),
         title: Text(
-          "AUTOMADUINO Editor",
+          AppLocalizations.of(context)!.automaduinoEditor,
           style: TextStyle(
               fontFamily: 'Glacial Indifference', fontWeight: FontWeight.w700),
         ),

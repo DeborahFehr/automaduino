@@ -70,8 +70,10 @@ class AutomaduinoState extends ChangeNotifier {
   }
 
   void addAdditionalConnection(Key start, Key end) {
-    _connections.firstWhere((element) => element.start == start).end.add(end);
-    notifyListeners();
+    if (!_connections.any((element) => element.end.contains(end))) {
+      _connections.firstWhere((element) => element.start == start).end.add(end);
+      notifyListeners();
+    }
   }
 
   void deleteConnection(Transition connection) {
@@ -90,9 +92,7 @@ class AutomaduinoState extends ChangeNotifier {
 
     if (connection.condition.type == "cond" ||
         connection.condition.type == "ifelse") {
-      if (type == "then" || type == "if" || type == "time") {
-        connection.end = [connection.end.first];
-      }
+      connection.end = [connection.end.first];
     }
     connection.condition.type = type;
     notifyListeners();
@@ -103,6 +103,14 @@ class AutomaduinoState extends ChangeNotifier {
         .firstWhere((element) => element.condition.key == condition.key)
         .condition
         .values = values;
+    notifyListeners();
+  }
+
+  void deleteCondValue(Transition transition, int position) {
+    Transition connection = _connections
+        .firstWhere((element) => element.start == transition.start);
+    connection.end.removeAt(position);
+    connection.condition.values.removeAt(position);
     notifyListeners();
   }
 

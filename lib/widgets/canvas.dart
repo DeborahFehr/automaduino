@@ -10,6 +10,7 @@ import '../resources/transition.dart';
 import '../resources/states_data.dart';
 import 'canvas/end_block.dart';
 import 'canvas/start_block.dart';
+import 'package:collection/collection.dart';
 
 class BuildingArea extends StatefulWidget {
   BuildingArea({Key? key}) : super(key: key);
@@ -132,6 +133,11 @@ class _BuildingAreaState extends State<BuildingArea> {
             .deleteConnection(connection!);
   }
 
+  void deleteSingleCond(Transition connection, int position) {
+    Provider.of<AutomaduinoState>(context, listen: false)
+        .deleteCondValue(connection, position);
+  }
+
   dynamic Function(String) updateStateName(Key key) {
     void update(String name) {
       Provider.of<AutomaduinoState>(context, listen: false)
@@ -177,10 +183,13 @@ class _BuildingAreaState extends State<BuildingArea> {
                       DraggableCondition(
                           connection.condition.key,
                           connection,
+                          state.blocks.firstWhereOrNull(
+                              (element) => element.key == connection.start),
                           connection.position,
                           updateConnectionPosition,
                           updateConnectionDetails,
                           deleteTransition,
+                          deleteSingleCond,
                           updateDragPosition),
                     for (var block in state.blocks)
                       DraggableBlock(

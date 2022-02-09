@@ -25,6 +25,8 @@ class Transition {
 
 List<String> conditionTypes = ["then", "if", "ifelse", "cond", "time"];
 
+List<String> restrictedConditionTypes = ["then", "time"];
+
 /// Condition describes the connection
 class Condition {
   final Key key;
