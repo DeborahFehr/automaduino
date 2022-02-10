@@ -11,6 +11,7 @@ import '../resources/states_data.dart';
 import 'canvas/end_block.dart';
 import 'canvas/start_block.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BuildingArea extends StatefulWidget {
   BuildingArea({Key? key}) : super(key: key);
@@ -215,8 +216,12 @@ class _BuildingAreaState extends State<BuildingArea> {
                     returnDataByNameAndOption(data.name, data.selectedOption);
                 Key key = UniqueKey();
                 state.addBlock(
-                  PositionedState(key, data.added(), blockData,
-                      renderBox.globalToLocal(drag.offset), false),
+                  PositionedState(
+                      key,
+                      data.added(AppLocalizations.of(context)!.json(data.name)),
+                      blockData,
+                      renderBox.globalToLocal(drag.offset),
+                      false),
                 );
               },
             ),

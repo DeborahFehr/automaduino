@@ -5,6 +5,7 @@ import '../../resources/transition.dart';
 import 'condition_field.dart';
 import 'add_connection_button.dart';
 import 'package:contextmenu/contextmenu.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DraggableCondition extends StatefulWidget {
   final Key key;
@@ -79,7 +80,7 @@ class _ConditionField extends State<DraggableCondition> {
         items: [
           ListTile(
             leading: Icon(Icons.highlight_remove),
-            title: Text('Delete Transition'),
+            title: Text(AppLocalizations.of(context)!.deleteTransition),
             onTap: () {
               widget.deleteConnection(widget.connection);
               Navigator.of(context).pop();

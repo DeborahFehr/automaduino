@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'init_dialog.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CodeEditor extends StatefulWidget {
   final String code;
@@ -40,13 +41,13 @@ class _CodeEditorState extends State<CodeEditor> {
       child: Column(children: [
         widget.pinWarning
             ? Container(
-                padding: EdgeInsets.all(10),
+          padding: EdgeInsets.all(10),
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
                   borderRadius: BorderRadius.all(Radius.circular(10.0)),
                 ),
-                child: Text("Warning! Pins need to be set!"),
+                child: Text(AppLocalizations.of(context)!.pinWarning),
               )
             : Container(),
         Container(
@@ -59,17 +60,17 @@ class _CodeEditorState extends State<CodeEditor> {
                         showDialog(
                             context: context, builder: (_) => InitDialog()),
                       },
-                  child: Text("Init Pins")),
+                  child: Text(AppLocalizations.of(context)!.initPins)),
               ElevatedButton(
                   onPressed: () {
                     Clipboard.setData(ClipboardData(text: codeController.text));
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text("Code copied!"),
+                        content: Text(AppLocalizations.of(context)!.codeCopied),
                       ),
                     );
                   },
-                  child: Text("Copy"))
+                  child: Text(AppLocalizations.of(context)!.copyCode))
             ],
           ),
         ),

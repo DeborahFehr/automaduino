@@ -6,6 +6,7 @@ import '../resources/code_transpiler.dart';
 import 'package:provider/provider.dart';
 import '../resources/automaduino_state.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CodeArea extends StatefulWidget {
   final double closedWidth;
@@ -82,7 +83,7 @@ class _CodeAreaState extends State<CodeArea> {
                             child: Padding(
                               padding: EdgeInsets.all(10),
                               child: Text(
-                                'C\no\nd\ne\n \nE\nd\ni\nt\no\nr',
+                                AppLocalizations.of(context)!.codeEditor,
                                 style: TextStyle(
                                     fontSize: 20.0, color: Colors.white),
                                 textAlign: TextAlign.center,
@@ -98,7 +99,8 @@ class _CodeAreaState extends State<CodeArea> {
                           children: [
                             closed
                                 ? Tooltip(
-                                    message: 'Init Pins',
+                              message:
+                                        AppLocalizations.of(context)!.initPins,
                                     child: Container(
                                       color: pinWarning
                                           ? Colors.redAccent
@@ -129,7 +131,8 @@ class _CodeAreaState extends State<CodeArea> {
                             ),
                             closed
                                 ? Tooltip(
-                                    message: 'Copy Code',
+                              message:
+                                        AppLocalizations.of(context)!.copyCode,
                                     child: Container(
                                       color:
                                           Theme.of(context).colorScheme.primary,
@@ -145,7 +148,9 @@ class _CodeAreaState extends State<CodeArea> {
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(
                                             SnackBar(
-                                              content: Text("Code copied!"),
+                                              content: Text(
+                                                  AppLocalizations.of(context)!
+                                                      .codeCopied),
                                             ),
                                           );
                                         },

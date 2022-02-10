@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../resources/transition.dart';
 import 'condition_input.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ConditionField extends StatefulWidget {
   final Condition condition;
@@ -71,7 +72,8 @@ class _ConditionField extends State<ConditionField> {
                 items: items.map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
-                    child: Text(value),
+                    child:
+                        Text(AppLocalizations.of(context)!.transitions(value)),
                   );
                 }).toList(),
               ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../resources/states_data.dart';
 import 'block_drawer/block_listview.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BuildingElementsDrawer extends StatefulWidget {
   final Function(bool closed) updateWidth;
@@ -38,20 +39,22 @@ class _BuildingElementsDrawerState extends State<BuildingElementsDrawer> {
                             tabs: [
                         Tab(
                           child: Tooltip(
-                            message: 'Input Sensors',
-                            child: Icon(Icons.input),
-                          ),
+                            message:
+                                      AppLocalizations.of(context)!.sensors,
+                                  child: Icon(Icons.input),
+                                ),
                         ),
                         Tab(
                             child: Tooltip(
-                              message: 'User Input',
-                              child: Icon(Icons.touch_app),
-                            )),
+                              message:
+                                    AppLocalizations.of(context)!.userInput,
+                                child: Icon(Icons.touch_app),
+                              )),
                         Tab(
                             child: Tooltip(
-                              message: 'Output',
-                              child: Icon(Icons.lightbulb_outline),
-                            )),
+                              message: AppLocalizations.of(context)!.output,
+                                child: Icon(Icons.lightbulb_outline),
+                              )),
                       ],
                     ),
                   ],
@@ -86,7 +89,7 @@ class _BuildingElementsDrawerState extends State<BuildingElementsDrawer> {
                   child: Padding(
                     padding: EdgeInsets.all(10),
                     child: Text(
-                      'S\nt\na\nt\ne\n \nB\nl\no\nc\nk\ns',
+                      AppLocalizations.of(context)!.stateBlocks,
                       style: TextStyle(fontSize: 20.0, color: Colors.white),
                       textAlign: TextAlign.center,
                     ),

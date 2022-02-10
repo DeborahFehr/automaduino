@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BlockPreview extends StatelessWidget {
   final String name;
@@ -38,7 +39,7 @@ class BlockPreview extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                name,
+                AppLocalizations.of(context)!.json(name),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14.0,
@@ -52,7 +53,7 @@ class BlockPreview extends StatelessWidget {
                     Container(
                       width: 45,
                       child: Text(
-                        option,
+                        AppLocalizations.of(context)!.json(option),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 12.0,
@@ -61,7 +62,7 @@ class BlockPreview extends StatelessWidget {
                     ),
                     button
                         ? Tooltip(
-                            message: 'Open Documentation',
+                      message: AppLocalizations.of(context)!.openDocs,
                             child: IconButton(
                               splashRadius: 15,
                               splashColor: color,

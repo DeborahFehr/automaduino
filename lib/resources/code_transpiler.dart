@@ -57,11 +57,13 @@ class CodeTranspiler {
   String _pinList(List<PinAssignment> pins) {
     String initPins = "//Pins:\n";
     pins.forEach((element) {
-      initPins += "int " +
-          element.variableName! +
-          " = " +
-          element.pin.toString() +
-          ";\n";
+      if (element.variableName != null) {
+        initPins += "int " +
+            element.variableName! +
+            " = " +
+            element.pin.toString() +
+            ";\n";
+      }
     });
     return initPins + "\n";
   }
@@ -69,14 +71,15 @@ class CodeTranspiler {
   String _generateSetup(List<PinAssignment> pins) {
     String setup = "";
     pins.forEach((element) {
-      String type = returnDataByName(element.component!).type == "output"
-          ? "OUTPUT"
-          : "INPUT";
-      setup += "pinMode(" + element.variableName! + ", " + type + ");\n";
+      if (element.variableName != null) {
+        String type = returnDataByName(element.component!).type == "output"
+            ? "OUTPUT"
+            : "INPUT";
+        setup += "pinMode(" + element.variableName! + ", " + type + ");\n";
+      }
     });
     return "void setup() { \n" +
         setup
-        //+ "Serial.begin(9600);\n"
         +
         "}\n\n";
   }

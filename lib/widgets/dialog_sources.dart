@@ -1,6 +1,7 @@
 import 'package:arduino_statemachines/resources/image_sources.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SourcesDialog extends StatefulWidget {
   SourcesDialog({Key? key}) : super(key: key);
@@ -45,7 +46,7 @@ class _SourcesDialogState extends State<SourcesDialog> {
                       TableCell(
                         child: Center(
                           child: Text(
-                            'Icon',
+                            AppLocalizations.of(context)!.icon,
                             style: Theme.of(context).textTheme.headline6,
                           ),
                         ),
@@ -53,7 +54,7 @@ class _SourcesDialogState extends State<SourcesDialog> {
                       TableCell(
                         child: Center(
                           child: Text(
-                            'Use',
+                            AppLocalizations.of(context)!.use,
                             style: Theme.of(context).textTheme.headline6,
                           ),
                         ),
@@ -61,7 +62,7 @@ class _SourcesDialogState extends State<SourcesDialog> {
                       TableCell(
                         child: Center(
                           child: Text(
-                            'Source',
+                            AppLocalizations.of(context)!.source,
                             style: Theme.of(context).textTheme.headline6,
                           ),
                         ),
@@ -85,7 +86,8 @@ class _SourcesDialogState extends State<SourcesDialog> {
                           child: Center(
                             child: Padding(
                               padding: EdgeInsets.all(15),
-                              child: Text(image.title),
+                              child: Text(AppLocalizations.of(context)!
+                                  .json(image.title)),
                             ),
                           ),
                         ),
@@ -113,7 +115,7 @@ class _SourcesDialogState extends State<SourcesDialog> {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('Close'),
+                  child: Text(AppLocalizations.of(context)!.close),
                 ),
               ),
             ),

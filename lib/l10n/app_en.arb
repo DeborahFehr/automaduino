@@ -1,18 +1,54 @@
 {
-    "automaduinoEditor": "Automaduino Editor",
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    "helloWorld": "Hello World!"
+  "automaduinoEditor": "Automaduino Editor",
+  "openDocs": "Open Documentation",
+  "openWebsite": "Open Website",
+  "imageSources": "Image Sources",
+  "sensors": "Sensors",
+  "userInput": "User Input",
+  "output": "Output",
+  "stateBlocks": "S\nt\na\nt\ne\n \nB\nl\no\nc\nk\ns",
+  "enterCondition": "Enter Condition",
+  "delayInMs": "Delay in ms",
+  "elseCond": "else",
+  "goToNextState": "Go to next State",
+  "deleteState": "Delete State",
+  "deleteTransition": "Delete Transition",
+  "end": "End",
+  "start": "Start",
+  "pin": "Pin",
+  "unassigned": "unassigned",
+  "pinWarning": "Warning! Pins need to be set",
+  "codeEditor": "C\no\nd\ne\n \nE\nd\ni\nt\no\nr",
+  "initPins": "Init Pins",
+  "copyCode": "Copy Code",
+  "codeCopied": "Code copied!",
+  "component": "Component",
+  "states": "States",
+  "fieldRequired": "Field required",
+  "addComponent": "Add Component",
+  "leftToAssign": "Left to assign",
+  "cancel": "Cancel",
+  "submit": "Submit",
+  "pinsSuccessfullyInitiated": "Pins successfully initiated!",
+  "icon": "Icon",
+  "use": "Use",
+  "source": "Source",
+  "close": "Close",
+  "english": "English",
+  "german": "German",
+  "json": "{json, select, motionSensor {Motion Sensor} temperatureSensor {Temperature Sensor} humiditySensor {Humidity Sensor} vibrationSensor {Vibration Sensor} loudnessSensor {Loudness Sensor} ultrasonicRanger {Ultrasonic Ranger} button {Button} switch {Switch} keypad {Keypad} tilt {Tilt} led {LED} buzzer {Buzzer} vibrationMotor {Vibration Motor} relay {Relay} readDigital {Read Digital} readAnalog {Read Analog} awaitInput {Await Input} on {On} off {Off} defaultBlockIcon {Default Block Icon} flashInRelayOn {Flash in Relay on} languageIconGerman {Language Icon German} languageIconEnglish {Language Icon English} other {jsonData}}",
+  "@json": {
+    "description": "Data in Json Files",
+    "placeholders": {
+      "json": {}
+    }
+  },
+  "transitions": "{transitions, select, then {then} if {if} ifelse {if else} cond {cond} time {time} other {transition}}",
+  "@transitions": {
+    "description": "Variable types for Transitions",
+    "placeholders": {
+      "transitions": {}
+    }
+  },
+  "helloWorld": "Hello World!"
 }

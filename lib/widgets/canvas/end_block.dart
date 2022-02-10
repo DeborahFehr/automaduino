@@ -3,6 +3,7 @@ import 'package:arduino_statemachines/resources/state.dart';
 import 'package:flutter/material.dart';
 import '../../resources/state.dart';
 import 'package:contextmenu/contextmenu.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EndBlock extends StatelessWidget {
   final Key key;
@@ -24,7 +25,7 @@ class EndBlock extends StatelessWidget {
         items: [
           ListTile(
             leading: Icon(Icons.highlight_remove),
-            title: Text('Delete State'),
+            title: Text(AppLocalizations.of(context)!.deleteState),
             onTap: () {
               hideEnd(null, end: true);
               Navigator.of(context).pop();
@@ -42,7 +43,7 @@ class EndBlock extends StatelessWidget {
                   return Column(
                     children: [
                       Text(
-                        "End",
+                        AppLocalizations.of(context)!.end,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
@@ -79,7 +80,7 @@ class EndBlock extends StatelessWidget {
             feedback: Column(
               children: [
                 Text(
-                  "End",
+                  AppLocalizations.of(context)!.end,
                   style: TextStyle(
                     fontFamily: 'Open Sans',
                     color: Colors.black,

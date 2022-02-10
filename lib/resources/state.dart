@@ -12,8 +12,7 @@ class StateSettings {
   final Key? key;
   String variableName;
 
-  StateSettings(
-      this.name,
+  StateSettings(this.name,
       this.selectedOption,
       this.pin,
       this.newBlock,
@@ -23,9 +22,17 @@ class StateSettings {
       this.key,
       this.variableName);
 
-  StateSettings added() {
-    return StateSettings(this.name, this.selectedOption, this.pin, false, false,
-        false, false, this.key, this.variableName);
+  StateSettings added(String name) {
+    return StateSettings(
+        name,
+        this.selectedOption,
+        this.pin,
+        false,
+        false,
+        false,
+        false,
+        this.key,
+        this.variableName);
   }
 }
 

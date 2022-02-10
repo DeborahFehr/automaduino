@@ -9,32 +9,31 @@ class StateFunction {
 }
 
 List<StateFunction> sensorFunctions = [
-  StateFunction("Motion Sensor", "Read Digital", digitalRead),
-  // returns true or false
-  StateFunction("Temperature Sensor", "Read Data", () => print("todo")),
-  StateFunction("Humidity Sensor", "Read Analog", analogRead),
-  StateFunction("Vibration Sensor", "Read Digital", digitalRead),
-  StateFunction("Loudness Sensor", "Read Analog", analogRead),
-  StateFunction("Ultrasonic Ranger", "Read Data", () => print("todo")),
+  StateFunction("motionSensor", "readDigital", digitalRead),
+  StateFunction("temperatureSensor", "readDigital", () => print("todo")),
+  StateFunction("humiditySensor", "readAnalog", analogRead),
+  StateFunction("vibrationSensor", "readDigital", digitalRead),
+  StateFunction("loudnessSensor", "readAnalog", analogRead),
+  StateFunction("ultrasonicRanger", "readAnalog", () => print("todo")),
 ];
 
 List<StateFunction> userInputFunctions = [
-  StateFunction("Button", "Await Input", digitalRead),
-  StateFunction("Switch", "Await Input", digitalRead),
-  StateFunction("Keypad", "Await Input", () => print("todo")),
-  StateFunction("Tilt", "Await Input", digitalRead),
-  StateFunction("RFID", "Await Input", () => print("todo")),
+  StateFunction("button", "awaitInput", digitalRead),
+  StateFunction("switch", "awaitInput", digitalRead),
+  StateFunction("keypad", "awaitInput", () => print("todo")),
+  StateFunction("tilt", "awaitInput", digitalRead),
+  StateFunction("RFID", "awaitInput", () => print("todo")),
 ];
 
 List<StateFunction> outputFunctions = [
-  StateFunction("LED", "On", outputOn),
-  StateFunction("LED", "Off", outputOff),
-  StateFunction("Buzzer", "On", outputOn),
-  StateFunction("Buzzer", "Off", outputOff),
-  StateFunction("Vibration Motor", "On", outputOn),
-  StateFunction("Vibration Motor", "Off", outputOff),
-  StateFunction("Relay", "On", outputOn),
-  StateFunction("Relay", "Off", outputOff),
+  StateFunction("led", "on", outputOn),
+  StateFunction("led", "off", outputOff),
+  StateFunction("buzzer", "on", outputOn),
+  StateFunction("buzzer", "off", outputOff),
+  StateFunction("vibrationMotor", "on", outputOn),
+  StateFunction("vibrationMotor", "off", outputOff),
+  StateFunction("relay", "on", outputOn),
+  StateFunction("relay", "off", outputOff),
 ];
 
 /// Sensors

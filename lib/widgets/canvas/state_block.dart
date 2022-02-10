@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class StateBlock extends StatelessWidget {
   final String name;
@@ -66,7 +67,7 @@ class StateBlock extends StatelessWidget {
                   Container(
                     height: 20,
                     child: Text(
-                      option,
+                      AppLocalizations.of(context)!.json(option),
                       style: TextStyle(
                         fontSize: 13.0,
                         fontWeight: FontWeight.bold,
@@ -78,8 +79,11 @@ class StateBlock extends StatelessWidget {
                       child: Align(
                         alignment: Alignment.bottomRight,
                         child: Text(
-                          "Pin: " +
-                              (pin == null ? "unassigned" : pin.toString()),
+                          AppLocalizations.of(context)!.pin +
+                              ": " +
+                              (pin == null
+                                  ? AppLocalizations.of(context)!.unassigned
+                                  : pin.toString()),
                           style: TextStyle(
                             fontSize: 11.0,
                           ),

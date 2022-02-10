@@ -4,6 +4,7 @@ import 'state_block.dart';
 import '../../resources/canvas_layout.dart';
 import 'add_connection_button.dart';
 import 'package:contextmenu/contextmenu.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DraggableBlock extends StatelessWidget {
   final PositionedState block;
@@ -46,7 +47,7 @@ class DraggableBlock extends StatelessWidget {
             items: [
               ListTile(
                 leading: Icon(Icons.highlight_remove),
-                title: Text('Delete State'),
+                title: Text(AppLocalizations.of(context)!.deleteState),
                 onTap: () {
                   deleteBlock(block);
                   Navigator.of(context).pop();

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../resources/transition.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ConditionInput extends StatefulWidget {
   final Condition condition;
@@ -50,13 +51,15 @@ class _ConditionField extends State<ConditionInput> {
     switch (widget.condition.type) {
       case "if":
         {
-          child = addTextField("Enter Value", widget.condition.values.first, 0);
+          child = addTextField(AppLocalizations.of(context)!.enterCondition,
+              widget.condition.values.first, 0);
         }
         break;
 
       case "time":
         {
-          child = addTextField("Delay in ms", widget.condition.values.first, 0);
+          child = addTextField(AppLocalizations.of(context)!.delayInMs,
+              widget.condition.values.first, 0);
         }
         break;
 
@@ -64,7 +67,11 @@ class _ConditionField extends State<ConditionInput> {
         {
           child = Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [addTextField("Enter Value", widget.condition.values.first, 0), Text("else")],
+            children: [
+              addTextField(AppLocalizations.of(context)!.enterCondition,
+                  widget.condition.values.first, 0),
+              Text(AppLocalizations.of(context)!.elseCond)
+            ],
           );
         }
         break;
@@ -102,7 +109,10 @@ class _ConditionField extends State<ConditionInput> {
                       SizedBox(
                         height: 20.0,
                         width: 85.0,
-                        child: addTextField("Enter Value", widget.condition.values[i], i),
+                        child: addTextField(
+                            AppLocalizations.of(context)!.enterCondition,
+                            widget.condition.values[i],
+                            i),
                       ),
                     ],
                   ),
@@ -135,7 +145,7 @@ class _ConditionField extends State<ConditionInput> {
       default:
         {
           child = Text(
-            "Go to next state",
+            AppLocalizations.of(context)!.goToNextState,
             style: TextStyle(
               fontSize: 12.0,
             ),

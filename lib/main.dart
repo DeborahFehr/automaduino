@@ -19,11 +19,28 @@ void main() {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<MyApp> createState() => _MyAppState();
+
+  static _MyAppState? of(BuildContext context) =>
+      context.findAncestorStateOfType<_MyAppState>();
+}
+
+class _MyAppState extends State<MyApp> {
+  Locale _locale = Locale.fromSubtags(languageCode: 'en');
+
+  void setLocale(Locale value) {
+    setState(() {
+      _locale = value;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Automaduino Editor',
+      locale: _locale,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       theme: ThemeData(
@@ -105,22 +122,48 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               child: Image(image: AssetImage('graphics/logo.png')),
             ),
+            Container(
+              padding: EdgeInsets.all(10),
+              child: DropdownButton<String>(
+                isExpanded: true,
+                underline: Container(
+                  height: 0,
+                ),
+                style: TextStyle(fontFamily: 'Open Sans', fontSize: 14),
+                value: Localizations.localeOf(context).languageCode,
+                items:
+                    ["en", "de"].map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Text(value == "en"
+                            ? AppLocalizations.of(context)!.english
+                            : AppLocalizations.of(context)!.german)),
+                  );
+                }).toList(),
+                onChanged: (String? languageCode) {
+                  MyApp.of(context)?.setLocale(
+                      Locale.fromSubtags(languageCode: languageCode!));
+                },
+              ),
+            ),
             ListTile(
-              title: const Text('Open Docs'),
+              title: Text(AppLocalizations.of(context)!.openDocs),
               onTap: () {
                 launch('https://automaduino-docs.vercel.app/docs/');
                 Navigator.pop(context);
               },
             ),
             ListTile(
-              title: const Text('Open Website'),
+              title: Text(AppLocalizations.of(context)!.openWebsite),
               onTap: () {
                 launch('https://automaduino-docs.vercel.app/');
                 Navigator.pop(context);
               },
             ),
             ListTile(
-              title: const Text('Image Sources'),
+              title: Text(AppLocalizations.of(context)!.imageSources),
               onTap: () {
                 showDialog(context: context, builder: (_) => SourcesDialog());
                 //Navigator.pop(context);

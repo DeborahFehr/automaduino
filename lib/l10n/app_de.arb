@@ -1,4 +1,54 @@
 {
-    "automaduinoEditor": "Automaduino Editor",
-    "helloWorld": "Hello World!"
+  "automaduinoEditor": "Automaduino Editor",
+  "openDocs": "Dokumentation öffnen",
+  "openWebsite": "Website öffnen",
+  "imageSources": "Bildnachweise",
+  "sensors": "Sensoren",
+  "userInput": "Nutzer Interaktion",
+  "output": "Ausgabe",
+  "stateBlocks": "Z\nu\ns\nt\na\nn\nd\ns\nb\nl\nö\nc\nk\ne",
+  "enterCondition": "Bedingung",
+  "delayInMs": "Verzögering in ms",
+  "elseCond": "sonst",
+  "goToNextState": "Zum nächsten Zustand",
+  "deleteState": "Zustand löschen",
+  "deleteTransition": "Übergang löschen",
+  "end": "Ende",
+  "start": "Start",
+  "pin": "Pin",
+  "unassigned": "unbelegt",
+  "pinWarning": "Achtung! Die Pins müssen noch zugewiesen werden",
+  "codeEditor": "C\no\nd\ne\n \nE\nd\ni\nt\no\nr",
+  "initPins": "Pins zuweisen",
+  "copyCode": "Code kopieren",
+  "codeCopied": "Code kopiert!",
+  "component": "Komponente",
+  "states": "Zustände",
+  "fieldRequired": "Pflichtfeld",
+  "addComponent": "Komponente hinzufügen",
+  "leftToAssign": "Noch zuzuweisen",
+  "cancel": "Abbrechen",
+  "submit": "Absenden",
+  "pinsSuccessfullyInitiated": "Pins erfolgreich zugewiesen!",
+  "icon": "Icon",
+  "use": "Verwendung",
+  "source": "Quelle",
+  "close": "Schließen",
+  "english": "Englisch",
+  "german": "Deutsch",
+  "json": "{json, select, motionSensor {Bewegungssensor} temperatureSensor {Temperatursensor} humiditySensor {Feuchtigkeitssensor} vibrationSensor {Vibrationssensor} loudnessSensor {Lautstärkesensor} ultrasonicRanger {Ultraschallmesser} button {Button} switch {Schalter} keypad {Tastenfeld} tilt {Kippschalter} led {LED} buzzer {Lautsprecher} vibrationMotor {Vibrationsmotor} relay {Relais} readDigital {Digitale Eingabe} readAnalog {Analoge Eingabe} awaitInput {Warte auf Eingabe} on {An} off {Aus} defaultBlockIcon {Standard Block Icon} flashInRelayOn {Blitz in Relais an} languageIconGerman {Icon Sprache Deutsch} languageIconEnglish {Icon Sprache Englisch} other {jsonData}}",
+  "@jsonData": {
+    "description": "Daten in Json Dateien",
+    "placeholders": {
+      "json": {}
+    }
+  },
+  "transitions": "{transitions, select, then {dann} if {falls} ifelse {oder} cond {wenn} time {Zeit} other {transition}}",
+  "@transitions": {
+    "description": "Variablen Benennung für Übergänge",
+    "placeholders": {
+      "transitions": {}
+    }
+  },
+  "helloWorld": "Hallo Welt!"
 }

@@ -5,7 +5,7 @@ import '../../resources/pin_assignment.dart';
 import '../../resources/automaduino_state.dart';
 import '../../resources/states_data.dart';
 import 'package:provider/provider.dart';
-import '../canvas/state_block.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class InitDialog extends StatefulWidget {
   InitDialog({Key? key}) : super(key: key);
@@ -62,9 +62,15 @@ class _InitDialogState extends State<InitDialog> {
                             TableRow(
                               children: <Widget>[
                                 Container(),
-                                Center(child: Text("Component")),
-                                Center(child: Text("Pin")),
-                                Center(child: Text("States")),
+                                Center(
+                                    child: Text(AppLocalizations.of(context)!
+                                        .component)),
+                                Center(
+                                    child: Text(
+                                        AppLocalizations.of(context)!.pin)),
+                                Center(
+                                    child: Text(
+                                        AppLocalizations.of(context)!.states)),
                               ],
                             ),
                             for (var assignment in assignments)
@@ -127,7 +133,8 @@ class _InitDialogState extends State<InitDialog> {
                                       },
                                       validator: (dynamic value) {
                                         if (value == null) {
-                                          return 'Field required';
+                                          return AppLocalizations.of(context)!
+                                              .fieldRequired;
                                         }
                                         return null;
                                       },
@@ -164,7 +171,8 @@ class _InitDialogState extends State<InitDialog> {
                                               SizedBox(
                                                 width: 10,
                                               ),
-                                              Text(value),
+                                              Text(AppLocalizations.of(context)!
+                                                  .json(value)),
                                             ],
                                           )),
                                         );
@@ -185,7 +193,8 @@ class _InitDialogState extends State<InitDialog> {
                                       },
                                       validator: (dynamic value) {
                                         if (value == null) {
-                                          return 'Field required';
+                                          return AppLocalizations.of(context)!
+                                              .fieldRequired;
                                         }
                                         return null;
                                       },
@@ -278,7 +287,8 @@ class _InitDialogState extends State<InitDialog> {
                           height: 10,
                         ),
                         ElevatedButton.icon(
-                          label: Text('Add Component'),
+                          label:
+                              Text(AppLocalizations.of(context)!.addComponent),
                           icon: Icon(Icons.add),
                           onPressed: () {
                             setState(() {
@@ -302,7 +312,7 @@ class _InitDialogState extends State<InitDialog> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "Left to Assign:",
+                                    AppLocalizations.of(context)!.leftToAssign,
                                     style:
                                         Theme.of(context).textTheme.headline6,
                                   ),
@@ -369,7 +379,7 @@ class _InitDialogState extends State<InitDialog> {
                           onPressed: () {
                             Navigator.pop(context, null);
                           },
-                          child: Text('Cancel'),
+                          child: Text(AppLocalizations.of(context)!.cancel),
                         ),
                         SizedBox(width: 10),
                         ElevatedButton(
@@ -397,13 +407,13 @@ class _InitDialogState extends State<InitDialog> {
                               });
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                    content:
-                                        Text('Pins successfully initiated!')),
+                                    content: Text(AppLocalizations.of(context)!
+                                        .pinsSuccessfullyInitiated)),
                               );
                               Navigator.pop(context, "test");
                             }
                           },
-                          child: Text('Submit'),
+                          child: Text(AppLocalizations.of(context)!.submit),
                         ),
                       ],
                     ),

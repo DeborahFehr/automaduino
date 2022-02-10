@@ -4,6 +4,7 @@ import '../../resources/state.dart';
 import '../../resources/transition.dart';
 import 'add_connection_button.dart';
 import 'package:contextmenu/contextmenu.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class StartBlock extends StatelessWidget {
   final StartData startPoint;
@@ -26,7 +27,7 @@ class StartBlock extends StatelessWidget {
         items: [
           ListTile(
             leading: Icon(Icons.highlight_remove),
-            title: Text('Delete Transition'),
+            title: Text(AppLocalizations.of(context)!.deleteTransition),
             onTap: () {
               deleteConnection(null, start: true);
               Navigator.of(context).pop();
@@ -39,7 +40,7 @@ class StartBlock extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  "Start",
+                  AppLocalizations.of(context)!.start,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
@@ -66,7 +67,7 @@ class StartBlock extends StatelessWidget {
             feedback: Column(
               children: [
                 Text(
-                  "Start",
+                  AppLocalizations.of(context)!.start,
                   style: TextStyle(
                     fontFamily: 'Open Sans',
                     color: Colors.black,
