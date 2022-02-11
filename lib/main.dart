@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'widgets/block_drawer.dart';
 import 'package:multi_split_view/multi_split_view.dart';
@@ -7,6 +9,7 @@ import '../resources/automaduino_state.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../resources/color_map.dart';
+import '../resources/settings.dart';
 import 'widgets/dialog_sources.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -28,7 +31,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Locale _locale = Locale.fromSubtags(languageCode: 'en');
+  Locale _locale = window.locale;
 
   void setLocale(Locale value) {
     setState(() {
@@ -50,9 +53,9 @@ class _MyAppState extends State<MyApp> {
         ),
         fontFamily: 'Open Sans',
         textTheme: const TextTheme(
-            //headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
-            //headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
-            ),
+          //headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+          //headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+        ),
       ),
       home: MyHomePage(title: 'Automaduino Editor'),
     );
@@ -132,14 +135,25 @@ class _MyHomePageState extends State<MyHomePage> {
                 style: TextStyle(fontFamily: 'Open Sans', fontSize: 14),
                 value: Localizations.localeOf(context).languageCode,
                 items:
-                    ["en", "de"].map<DropdownMenuItem<String>>((String value) {
+                ["en", "de"].map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Padding(
                         padding: EdgeInsets.all(10),
-                        child: Text(value == "en"
-                            ? AppLocalizations.of(context)!.english
-                            : AppLocalizations.of(context)!.german)),
+                        child: Row(
+                          children: [
+                            Image(
+                                image: AssetImage(value == "de"
+                                    ? 'graphics/german.png'
+                                    : 'graphics/english.png')),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(value == "en"
+                                ? AppLocalizations.of(context)!.english
+                                : AppLocalizations.of(context)!.german),
+                          ],
+                        )),
                   );
                 }).toList(),
                 onChanged: (String? languageCode) {
@@ -151,14 +165,18 @@ class _MyHomePageState extends State<MyHomePage> {
             ListTile(
               title: Text(AppLocalizations.of(context)!.openDocs),
               onTap: () {
-                launch('https://automaduino-docs.vercel.app/docs/');
+                launch(Localizations.localeOf(context).languageCode == 'de'
+                    ? baseURL + '/de/docs/'
+                    : baseURL + '/docs/');
                 Navigator.pop(context);
               },
             ),
             ListTile(
               title: Text(AppLocalizations.of(context)!.openWebsite),
               onTap: () {
-                launch('https://automaduino-docs.vercel.app/');
+                launch(Localizations.localeOf(context).languageCode == 'de'
+                    ? baseURL + '/de/'
+                    : baseURL);
                 Navigator.pop(context);
               },
             ),

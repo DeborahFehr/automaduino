@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../resources/settings.dart';
 
 class BlockPreview extends StatelessWidget {
   final String name;
@@ -66,7 +67,13 @@ class BlockPreview extends StatelessWidget {
                             child: IconButton(
                               splashRadius: 15,
                               splashColor: color,
-                              onPressed: () => {launch(link)},
+                              onPressed: () => {
+                                launch(Localizations.localeOf(context)
+                                            .languageCode ==
+                                        'de'
+                                    ? baseURL + '/de' + link
+                                    : baseURL + link)
+                              },
                               icon: Icon(Icons.open_in_new),
                             ),
                           )
