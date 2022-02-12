@@ -53,9 +53,9 @@ class _MyAppState extends State<MyApp> {
         ),
         fontFamily: 'Open Sans',
         textTheme: const TextTheme(
-          //headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
-          //headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
-        ),
+            //headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+            //headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+            ),
       ),
       home: MyHomePage(title: 'Automaduino Editor'),
     );
@@ -184,7 +184,40 @@ class _MyHomePageState extends State<MyHomePage> {
               title: Text(AppLocalizations.of(context)!.imageSources),
               onTap: () {
                 showDialog(context: context, builder: (_) => SourcesDialog());
-                //Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: Text(AppLocalizations.of(context)!.resetEditor),
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text(AppLocalizations.of(context)!.resetEditor),
+                      content: Text(
+                          AppLocalizations.of(context)!.resetEditorWarning),
+                      actions: [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(primary: Colors.grey),
+                          child: Text(AppLocalizations.of(context)!.cancel),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(primary: Colors.red),
+                          child: Text(AppLocalizations.of(context)!.reset),
+                          onPressed: () {
+                            Provider.of<AutomaduinoState>(context,
+                                    listen: false)
+                                .reset();
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
               },
             ),
           ],

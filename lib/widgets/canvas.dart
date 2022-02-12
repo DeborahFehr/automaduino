@@ -1,3 +1,4 @@
+import 'package:arduino_statemachines/resources/settings.dart';
 import 'package:arduino_statemachines/resources/state.dart';
 import 'package:flutter/material.dart';
 import 'canvas/draggable_block.dart';
@@ -25,24 +26,31 @@ class BuildingArea extends StatefulWidget {
 class _BuildingAreaState extends State<BuildingArea> {
   DraggableConnection? drag;
 
-  void updateStartPosition(StartData startPoint, Offset end) {
+  void updateStartPosition(StartData startPoint, Offset end, bool dragEnd) {
     //Provider.of<AutomaduinoState>(context, listen: false)
     //    .updateStartPosition(startPoint.position + end);
-    startPoint.position = startPoint.position + end;
+    startPoint.position = dragEnd
+        ? keepInCanvas(startPoint.position + end)
+        : startPoint.position + end;
     setState(() {});
   }
 
-  void updateEndPosition(EndData endPoint, Offset end) {
+  void updateEndPosition(EndData endPoint, Offset end, bool dragEnd) {
     //Provider.of<AutomaduinoState>(context, listen: false)
     //    .updateEndPosition(endPoint.position + end);
-    endPoint.position = endPoint.position + end;
+    endPoint.position = dragEnd
+        ? keepInCanvas(endPoint.position + end)
+        : endPoint.position + end;
     setState(() {});
   }
 
-  void updateBlockPosition(PositionedState block, Offset position) {
+  void updateBlockPosition(
+      PositionedState block, Offset position, bool dragEnd) {
     // ToDo: We actually dont update the position in the datastructure
     // needed to correctly determine position during drag
-    block.position = block.position + position;
+    block.position = dragEnd
+        ? keepInCanvas(block.position + position)
+        : block.position + position;
     setState(() {});
   }
 
@@ -50,11 +58,10 @@ class _BuildingAreaState extends State<BuildingArea> {
     end
         ? Provider.of<AutomaduinoState>(context, listen: false).hideEndPoint()
         : Provider.of<AutomaduinoState>(context, listen: false)
-            .deleteBlock(block!);
+        .deleteBlock(block!);
   }
 
-  void updateDragPosition(
-      bool active, bool point, bool addition, Offset start, Offset end) {
+  void updateDragPosition(bool active, bool point, bool addition, Offset start, Offset end) {
     if (drag == null) {
       drag = DraggableConnection(start, end, point, addition);
     } else {
@@ -90,14 +97,14 @@ class _BuildingAreaState extends State<BuildingArea> {
 
     Offset endPoint;
     endPoint = end ==
-            Provider.of<AutomaduinoState>(context, listen: false).endPoint.key
+        Provider.of<AutomaduinoState>(context, listen: false).endPoint.key
         ? Provider.of<AutomaduinoState>(context, listen: false)
-            .endPoint
-            .position
+        .endPoint
+        .position
         : Provider.of<AutomaduinoState>(context, listen: false)
-            .blocks
-            .firstWhere((el) => el.key == end)
-            .position;
+        .blocks
+        .firstWhere((el) => el.key == end)
+        .position;
 
     return (startPoint + endPoint) / 2;
   }
@@ -109,7 +116,7 @@ class _BuildingAreaState extends State<BuildingArea> {
             .addAdditionalConnection(start, end);
       } else {
         Offset transitionPosition =
-            startPoint ? Offset(0, 0) : calculateMidpoint(start, end);
+        startPoint ? Offset(0, 0) : calculateMidpoint(start, end);
         if (startPoint) {
           Provider.of<AutomaduinoState>(context, listen: false)
               .startPointConnected();
@@ -126,12 +133,12 @@ class _BuildingAreaState extends State<BuildingArea> {
   void deleteTransition(Transition? connection, {start: false}) {
     start
         ? Provider.of<AutomaduinoState>(context, listen: false)
-            .deleteConnection(
-                Provider.of<AutomaduinoState>(context, listen: false)
-                    .connections
-                    .firstWhere((element) => element.startPoint))
+        .deleteConnection(
+        Provider.of<AutomaduinoState>(context, listen: false)
+            .connections
+            .firstWhere((element) => element.startPoint))
         : Provider.of<AutomaduinoState>(context, listen: false)
-            .deleteConnection(connection!);
+        .deleteConnection(connection!);
   }
 
   void deleteSingleCond(Transition connection, int position) {
@@ -157,7 +164,8 @@ class _BuildingAreaState extends State<BuildingArea> {
           minScale: 0.5,
           constrained: false,
           child: ConstrainedBox(
-            constraints: BoxConstraints.tightFor(width: 1000, height: 1000),
+            constraints: BoxConstraints.tightFor(
+                width: canvasWidth, height: canvasHeight),
             child: DragTarget(
               builder: (BuildContext context, List<dynamic> candidateData,
                   List<dynamic> rejectedData) {
@@ -173,11 +181,11 @@ class _BuildingAreaState extends State<BuildingArea> {
                         updateDragPosition, deleteTransition),
                     state.endPoint.available
                         ? EndBlock(
-                            state.endPoint.key,
-                            state.endPoint,
-                            updateEndPosition,
-                            deleteState,
-                            addConnection(state.endPoint.key, true))
+                        state.endPoint.key,
+                        state.endPoint,
+                        updateEndPosition,
+                        deleteState,
+                        addConnection(state.endPoint.key, true))
                         : SizedBox.shrink(),
                     for (var connection in state.connections
                         .where((element) => !element.startPoint))
@@ -185,7 +193,7 @@ class _BuildingAreaState extends State<BuildingArea> {
                           connection.condition.key,
                           connection,
                           state.blocks.firstWhereOrNull(
-                              (element) => element.key == connection.start),
+                                  (element) => element.key == connection.start),
                           connection.position,
                           updateConnectionPosition,
                           updateConnectionDetails,
@@ -213,7 +221,7 @@ class _BuildingAreaState extends State<BuildingArea> {
                     (state.blocks.length.toString() + "_" + data.name)
                         .replaceAll(" ", "_");
                 StateData blockData =
-                    returnDataByNameAndOption(data.name, data.selectedOption);
+                returnDataByNameAndOption(data.name, data.selectedOption);
                 Key key = UniqueKey();
                 state.addBlock(
                   PositionedState(

@@ -8,7 +8,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class EndBlock extends StatelessWidget {
   final Key key;
   final EndData endPoint;
-  final Function(EndData position, Offset delta) updatePosition;
+  final Function(EndData position, Offset delta, bool dragEnd) updatePosition;
   final Function(PositionedState? state, {bool end}) hideEnd;
   final Function(Key target, bool startPoint, bool addition) addConnection;
 
@@ -106,11 +106,12 @@ class EndBlock extends StatelessWidget {
             ),
             childWhenDragging: Container(),
             onDragUpdate: (details) {
-              updatePosition(endPoint, details.delta);
+              updatePosition(endPoint, details.delta, false);
             },
             onDragEnd: (details) {
               RenderBox renderBox = context.findRenderObject() as RenderBox;
-              updatePosition(endPoint, renderBox.globalToLocal(details.offset));
+              updatePosition(
+                  endPoint, renderBox.globalToLocal(details.offset), true);
             }),
       ),
     );

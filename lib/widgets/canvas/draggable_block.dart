@@ -10,7 +10,8 @@ class DraggableBlock extends StatelessWidget {
   final PositionedState block;
   final Function(Key key) updateStateName;
   final Function(PositionedState? state, {bool end}) deleteBlock;
-  final Function(PositionedState block, Offset position) updatePosition;
+  final Function(PositionedState block, Offset position, bool dragEnd)
+      updatePosition;
   final Function(
           bool active, bool point, bool adition, Offset start, Offset end)
       updateDrag;
@@ -75,12 +76,12 @@ class DraggableBlock extends StatelessWidget {
                 feedback: blockWidget,
                 childWhenDragging: Container(),
                 onDragUpdate: (details) {
-                  updatePosition(block, details.delta);
+                  updatePosition(block, details.delta, false);
                 },
                 onDragEnd: (details) {
                   RenderBox renderBox = context.findRenderObject() as RenderBox;
                   updatePosition(
-                      block, renderBox.globalToLocal(details.offset));
+                      block, renderBox.globalToLocal(details.offset), true);
                 }),
           ),
           block.outgoingConnection

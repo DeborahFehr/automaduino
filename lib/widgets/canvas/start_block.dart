@@ -8,7 +8,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class StartBlock extends StatelessWidget {
   final StartData startPoint;
-  final Function(StartData position, Offset delta) updatePosition;
+  final Function(StartData position, Offset delta, bool dragEnd) updatePosition;
   final Function(
           bool active, bool point, bool adition, Offset start, Offset end)
       updateDrag;
@@ -93,12 +93,12 @@ class StartBlock extends StatelessWidget {
             ),
             childWhenDragging: Container(),
             onDragUpdate: (details) {
-              updatePosition(startPoint, details.delta);
+              updatePosition(startPoint, details.delta, false);
             },
             onDragEnd: (details) {
               RenderBox renderBox = context.findRenderObject() as RenderBox;
               updatePosition(
-                  startPoint, renderBox.globalToLocal(details.offset));
+                  startPoint, renderBox.globalToLocal(details.offset), true);
             }),
       ),
     );

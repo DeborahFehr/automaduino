@@ -55,7 +55,8 @@ class _CodeAreaState extends State<CodeArea> {
             codeTranspiler = CodeTranspiler(state.blocks, state.connections,
                 state.pinAssignments, state.startPoint, state.endPoint);
             code = codeTranspiler.getCode();
-            pinWarning = state.pinAssignments.length == 0 ? true : false;
+            pinWarning = Provider.of<AutomaduinoState>(context, listen: false)
+                .unassignedPin();
             return Stack(
               children: [
                 Scrollbar(

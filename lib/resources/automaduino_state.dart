@@ -107,8 +107,8 @@ class AutomaduinoState extends ChangeNotifier {
   }
 
   void deleteCondValue(Transition transition, int position) {
-    Transition connection = _connections
-        .firstWhere((element) => element.start == transition.start);
+    Transition connection =
+        _connections.firstWhere((element) => element.start == transition.start);
     connection.end.removeAt(position);
     connection.condition.values.removeAt(position);
     notifyListeners();
@@ -134,6 +134,10 @@ class AutomaduinoState extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool unassignedPin() {
+    return _blocks.any((element) => element.settings.pin == null);
+  }
+
   void updateStartPosition(Offset position) {
     _startPoint.position = position;
     notifyListeners();
@@ -150,15 +154,26 @@ class AutomaduinoState extends ChangeNotifier {
     notifyListeners();
   }
 
+  void showEndPoint() {
+    _endPoint.position = Offset(140, 140);
+    endPoint.available = true;
+    notifyListeners();
+  }
+
   void startPointConnected() {
     _startPoint.connected = true;
     notifyListeners();
   }
 
   /// Removes all blocks and connections.
-  void clear() {
+  void reset() {
     _blocks.clear();
     _connections.clear();
+    _pinAssignments.clear();
+    _startPoint.connected = false;
+    _startPoint.position = Offset(40, 40);
+    _endPoint.available = true;
+    _endPoint.position = Offset(140, 140);
     notifyListeners();
   }
 }
