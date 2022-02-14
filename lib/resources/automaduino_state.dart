@@ -12,6 +12,7 @@ class AutomaduinoState extends ChangeNotifier {
   List<PinAssignment> _pinAssignments = [];
   final StartData _startPoint = StartData(false, UniqueKey(), Offset(40, 40));
   final EndData _endPoint = EndData(true, UniqueKey(), Offset(140, 140));
+  Map<String, String?>? _highlight;
 
   List<Transition> get connections => _connections;
 
@@ -22,6 +23,8 @@ class AutomaduinoState extends ChangeNotifier {
   StartData get startPoint => _startPoint;
 
   EndData get endPoint => _endPoint;
+
+  Map<String, String?>? get highlight => _highlight;
 
   /// Adds [block] to building area.
   void addBlock(PositionedState block) {
@@ -162,6 +165,15 @@ class AutomaduinoState extends ChangeNotifier {
 
   void startPointConnected() {
     _startPoint.connected = true;
+    notifyListeners();
+  }
+
+  void setHighlight(String mapName, String variableName, {String? type}) {
+    _highlight = {
+      "mapName": mapName,
+      "variableName": variableName,
+      "type": type
+    };
     notifyListeners();
   }
 

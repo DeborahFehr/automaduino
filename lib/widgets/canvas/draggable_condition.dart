@@ -86,6 +86,13 @@ class _ConditionField extends State<DraggableCondition> {
               Navigator.of(context).pop();
             },
           ),
+          ListTile(
+            leading: Icon(Icons.lightbulb),
+            title: Text(AppLocalizations.of(context)!.highlightTransition),
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+          ),
         ],
         child: Draggable(
             data: StateSettings(

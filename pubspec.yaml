@@ -32,10 +32,10 @@ dependencies:
   url_launcher: ^6.0.18
   collection: ^1.15.0
   contextmenu: ^2.0.1
-
   flutter_localizations:
     sdk: flutter
   intl: ^0.17.0
+
 
 
 dev_dependencies:
@@ -88,6 +88,9 @@ flutter:
           style: italic
         - asset: fonts/OpenSans-Bold.ttf
           weight: 700
+    - family: Monaco
+      fonts:
+        - asset: fonts/Monaco.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

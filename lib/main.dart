@@ -247,6 +247,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   )
                 ],
                 minimalWeight: 0.2,
+                onSizeChange: (prev, curr) {},
                 controller: MultiSplitViewController(
                     weights: [1 - _weightCodeArea, _weightCodeArea]),
               ),

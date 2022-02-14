@@ -5,6 +5,7 @@ import 'transition.dart';
 import 'pin_assignment.dart';
 import 'arduino_functions.dart';
 import 'states_data.dart';
+import 'code_map.dart';
 
 class CodeTranspiler {
   List<PositionedState>? blocks = [];
@@ -22,80 +23,76 @@ class CodeTranspiler {
     this.endPoint = endPoint;
   }
 
-  String getCode() {
-    return (connections == null) ? _defaultCode() : _generateCode();
+  CodeMap map = CodeMap({}, {}, {}, {}, {});
+
+  CodeMap? getMap() {
+    if (connections == null) return null;
+    _generateCodeMap();
+    return map;
   }
 
-  String _generateCode() {
-    String result = "";
-    result += _pinList(pins!);
-
+  void _generateCodeMap() {
+    _pinList();
     bool end = connections!.any((element) => element.endPoint);
-    if (end) {
-      result += "bool end = false;\n\n";
-    }
-
-    result += _generateSetup(pins!);
+    _generateSetup(end);
 
     Transition? start =
         connections!.firstWhereOrNull((element) => element.startPoint);
     if (start != null) {
       PositionedState startState =
           blocks!.firstWhere((element) => element.key == start.end.first);
-      result += _generateLoop(startState, end);
+      _generateLoop(startState, end);
     }
 
     if (blocks!.length > 0) {
-      blocks!.asMap().forEach(
-          (index, block) => result += _generateStateFunction(index, block));
-    } else {
-      result = _defaultCode();
+      blocks!
+          .asMap()
+          .forEach((index, block) => _generateStateFunction(index, block));
     }
-    return result;
   }
 
-  String _pinList(List<PinAssignment> pins) {
-    String initPins = "//Pins:\n";
-    pins.forEach((element) {
+  void _pinList() {
+    pins!.forEach((element) {
       if (element.variableName != null) {
-        initPins += "int " +
+        map.pins[element.variableName!] = "int " +
             element.variableName! +
             " = " +
             element.pin.toString() +
             ";\n";
       }
     });
-    return initPins + "\n";
   }
 
-  String _generateSetup(List<PinAssignment> pins) {
-    String setup = "";
-    pins.forEach((element) {
+  void _generateSetup(bool end) {
+    if (end) {
+      map.setup["end"] = "bool end = false;\n\n";
+    }
+    pins!.forEach((element) {
       if (element.variableName != null) {
         String type = returnDataByName(element.component!).type == "output"
             ? "OUTPUT"
             : "INPUT";
-        setup += "pinMode(" + element.variableName! + ", " + type + ");\n";
+        map.setup[element.variableName!] =
+            "pinMode(" + element.variableName! + ", " + type + ");\n";
       }
     });
-    return "void setup() { \n" +
-        setup
-        +
-        "}\n\n";
   }
 
-  String _generateLoop(PositionedState state, bool end) {
+  void _generateLoop(PositionedState state, bool end) {
     String loop = state.settings.variableName + "();\n";
+    map.loop["start"] = loop;
 
     if (end) {
-      loop = "if(!end){\n" + loop + "}\n";
+      map.loop["end"] = "if(!end){\n" + loop + "}\n";
     }
-
-    return "void loop() {\n" + loop + "}\n\n";
   }
 
-  String _generateStateFunction(int index, PositionedState state) {
-    String stateFunctions = "void " + state.settings.variableName + "(){\n";
+  void _generateStateFunction(int index, PositionedState state) {
+    if (map.states[state.settings.variableName] == null) {
+      map.states[state.settings.variableName] = StateMap("", "", "");
+    }
+    map.states[state.settings.variableName]!.functionName =
+        state.settings.variableName;
 
     StateFunction arduinoFunction = returnFunctionByNameAndOption(
         state.data.component, state.settings.selectedOption);
@@ -109,21 +106,20 @@ class CodeTranspiler {
             .variableName!;
 
     if (state.data.type == "output") {
-      stateFunctions += arduinoFunction.function(pinVariable);
+      map.states[state.settings.variableName]!.action =
+          arduinoFunction.function(pinVariable);
     } else {
-      stateFunctions += arduinoFunction.function("value", pinVariable);
+      map.states[state.settings.variableName]!.action =
+          arduinoFunction.function("value", pinVariable);
     }
-
-    stateFunctions += "\n";
 
     Transition? connection =
         connections!.firstWhereOrNull((element) => element.start == state.key);
 
     if (connection != null) {
-      stateFunctions += _generateTransition(connection) + "\n";
+      map.states[state.settings.variableName]!.transition =
+          _generateTransition(connection) + "\n";
     }
-
-    return stateFunctions + "}\n\n";
   }
 
   String _generateTransition(Transition connection) {
@@ -178,17 +174,5 @@ class CodeTranspiler {
     }
 
     return transitionFunction;
-  }
-
-  String _defaultCode() {
-    return '''void setup() {
-      // put your setup code here, to run once:
-
-    }
-
-    void loop() {
-      // put your main code here, to run repeatedly:
-
-    }''';
   }
 }

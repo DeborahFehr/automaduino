@@ -5,6 +5,8 @@ import '../../resources/canvas_layout.dart';
 import 'add_connection_button.dart';
 import 'package:contextmenu/contextmenu.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
+import '../../resources/automaduino_state.dart';
 
 class DraggableBlock extends StatelessWidget {
   final PositionedState block;
@@ -54,6 +56,32 @@ class DraggableBlock extends StatelessWidget {
                   Navigator.of(context).pop();
                 },
               ),
+              ListTile(
+                leading: Icon(Icons.lightbulb),
+                title: Text(AppLocalizations.of(context)!.highlightState),
+                onTap: () {
+                  Provider.of<AutomaduinoState>(context, listen: false)
+                      .setHighlight("states", block.settings.variableName,
+                          type: "state");
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.lightbulb),
+                title: Text(AppLocalizations.of(context)!.highlightAction),
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              block.settings.pin == null
+                  ? SizedBox.shrink()
+                  : ListTile(
+                      leading: Icon(Icons.lightbulb),
+                      title: Text(AppLocalizations.of(context)!.highlightPin),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
             ],
             child: Draggable(
                 data: block.settings,

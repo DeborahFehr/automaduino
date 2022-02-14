@@ -3,6 +3,8 @@ import 'code_area/code_editor.dart';
 import '../resources/transition.dart';
 import 'code_area/init_dialog.dart';
 import '../resources/code_transpiler.dart';
+import '../../resources/code_map.dart';
+import '../../resources/settings.dart';
 import 'package:provider/provider.dart';
 import '../resources/automaduino_state.dart';
 import 'package:flutter/services.dart';
@@ -28,17 +30,12 @@ class _CodeAreaState extends State<CodeArea> {
   double _width = 0;
   bool closed = false;
   ScrollController _scrollController = ScrollController();
-  String code = "";
+  CodeMap? map;
+  String code = getDefaultCode();
   bool pinWarning = false;
 
   CodeTranspiler codeTranspiler =
       new CodeTranspiler(null, null, null, null, null);
-
-  @override
-  void initState() {
-    super.initState();
-    code = codeTranspiler.getCode();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,9 +51,24 @@ class _CodeAreaState extends State<CodeArea> {
           child: Consumer<AutomaduinoState>(builder: (context, state, child) {
             codeTranspiler = CodeTranspiler(state.blocks, state.connections,
                 state.pinAssignments, state.startPoint, state.endPoint);
-            code = codeTranspiler.getCode();
+            map = codeTranspiler.getMap();
+            String? highlight = "";
+            if (map == null) {
+              code = getDefaultCode();
+            } else {
+              code = map!.getCode();
+              print(state.highlight);
+              if (state.highlight != null) {
+                highlight = codeTranspiler.map.returnHighlightString(
+                    state.highlight!["mapName"],
+                    state.highlight!["variableName"],
+                    type: state.highlight!["type"]);
+              }
+              print(highlight);
+            }
             pinWarning = Provider.of<AutomaduinoState>(context, listen: false)
                 .unassignedPin();
+
             return Stack(
               children: [
                 Scrollbar(
@@ -64,7 +76,13 @@ class _CodeAreaState extends State<CodeArea> {
                   controller: _scrollController,
                   child: SingleChildScrollView(
                     controller: _scrollController,
-                    child: CodeEditor(code: code, pinWarning: pinWarning),
+                    child: CodeEditor(
+                      map: map,
+                      code: code,
+                      pinWarning: pinWarning,
+                      closed: closed,
+                      highlight: highlight,
+                    ),
                   ),
                 ),
                 SizedBox(
