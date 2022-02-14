@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import '../../resources/state.dart';
 import 'package:contextmenu/contextmenu.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
+import '../../resources/automaduino_state.dart';
 
 class EndBlock extends StatelessWidget {
   final Key key;
@@ -28,6 +30,15 @@ class EndBlock extends StatelessWidget {
             title: Text(AppLocalizations.of(context)!.deleteState),
             onTap: () {
               hideEnd(null, end: true);
+              Navigator.of(context).pop();
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.lightbulb),
+            title: Text(AppLocalizations.of(context)!.highlightState),
+            onTap: () {
+              Provider.of<AutomaduinoState>(context, listen: false)
+                  .setHighlight("loop", "end");
               Navigator.of(context).pop();
             },
           ),

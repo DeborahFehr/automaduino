@@ -58,7 +58,7 @@ class CodeMap {
         result = this.setup[variableName]!;
         break;
       case "loop":
-        result = this.loop[variableName]!;
+        result = this.loop[variableName] ?? "";
         break;
       case "states":
         switch (type!) {

@@ -6,6 +6,8 @@ import 'condition_field.dart';
 import 'add_connection_button.dart';
 import 'package:contextmenu/contextmenu.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
+import '../../resources/automaduino_state.dart';
 
 class DraggableCondition extends StatefulWidget {
   final Key key;
@@ -90,6 +92,12 @@ class _ConditionField extends State<DraggableCondition> {
             leading: Icon(Icons.lightbulb),
             title: Text(AppLocalizations.of(context)!.highlightTransition),
             onTap: () {
+              Provider.of<AutomaduinoState>(context, listen: false)
+                  .setHighlight(
+                      "states",
+                      Provider.of<AutomaduinoState>(context, listen: false)
+                          .getVariableName(widget.connection.start),
+                      type: "transition");
               Navigator.of(context).pop();
             },
           ),

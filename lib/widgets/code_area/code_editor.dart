@@ -31,7 +31,7 @@ class CodeEditor extends StatefulWidget {
 
 class _CodeEditorState extends State<CodeEditor> {
   GlobalKey textFieldKey = GlobalKey();
-  Map<String, TextStyle> highlighter = syntaxHighlighter;
+  Map<String, TextStyle> highlighter = {...syntaxHighlighter};
   late EditorHighlighter codeController;
   List<int> lineHeights = List<int>.filled(9, 1, growable: true);
   int highlightLine = 0;
@@ -72,18 +72,22 @@ class _CodeEditorState extends State<CodeEditor> {
 
   void lineUpdater() {
     lineHeightsUpdater();
+    clearHighlight();
     setState(() {
       highlightLine = highlightedLine() + 1;
     });
   }
 
+  void clearHighlight() {
+    highlighter.clear();
+    highlighter.addAll({...syntaxHighlighter});
+  }
+
   void updateHighlight(String part) {
-    highlighter = syntaxHighlighter;
-    if (widget.highlight != null) {
-      highlighter[widget.highlight!] =
-          TextStyle(backgroundColor: arduinoSelection);
-      codeController.updateMap(highlighter);
-    }
+    highlighter.clear();
+    highlighter[part] = TextStyle(backgroundColor: arduinoSelection);
+    highlighter.addAll({...syntaxHighlighter});
+    codeController.updateMap(highlighter);
   }
 
   @override
@@ -99,6 +103,7 @@ class _CodeEditorState extends State<CodeEditor> {
     super.didUpdateWidget(oldWidget);
     if (widget.code != oldWidget.code) {
       codeController.text = widget.code;
+      clearHighlight();
     }
     if (widget.highlight != oldWidget.highlight) {
       updateHighlight(widget.highlight!);
@@ -128,11 +133,11 @@ class _CodeEditorState extends State<CodeEditor> {
                 padding: EdgeInsets.all(10),
                 width: double.infinity,
                 decoration: BoxDecoration(
-            color: Colors.grey[200],
-            borderRadius: BorderRadius.all(Radius.circular(10.0)),
-          ),
-          child: Text(AppLocalizations.of(context)!.pinWarning),
-        )
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                ),
+                child: Text(AppLocalizations.of(context)!.pinWarning),
+              )
             : SizedBox.shrink(),
         widget.pinWarning ? SizedBox(height: 10) : SizedBox.shrink(),
         Container(
@@ -216,9 +221,9 @@ class _CodeEditorState extends State<CodeEditor> {
             children: [
               ElevatedButton(
                   onPressed: () => {
-                    showDialog(
-                        context: context, builder: (_) => InitDialog()),
-                  },
+                        showDialog(
+                            context: context, builder: (_) => InitDialog()),
+                      },
                   child: Text(AppLocalizations.of(context)!.initPins)),
               ElevatedButton(
                   onPressed: () {
@@ -232,13 +237,13 @@ class _CodeEditorState extends State<CodeEditor> {
                   child: Text(AppLocalizations.of(context)!.copyCode)),
               ElevatedButton(
                   onPressed: Provider.of<AutomaduinoState>(context,
-                      listen: false)
-                      .endPoint
-                      .available
+                              listen: false)
+                          .endPoint
+                          .available
                       ? null
                       : () =>
-                      Provider.of<AutomaduinoState>(context, listen: false)
-                          .showEndPoint(),
+                          Provider.of<AutomaduinoState>(context, listen: false)
+                              .showEndPoint(),
                   child: Text(AppLocalizations.of(context)!.showEnd,
                       style: TextStyle(
                         color: Colors.white,

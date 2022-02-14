@@ -70,6 +70,9 @@ class DraggableBlock extends StatelessWidget {
                 leading: Icon(Icons.lightbulb),
                 title: Text(AppLocalizations.of(context)!.highlightAction),
                 onTap: () {
+                  Provider.of<AutomaduinoState>(context, listen: false)
+                      .setHighlight("states", block.settings.variableName,
+                          type: "action");
                   Navigator.of(context).pop();
                 },
               ),
@@ -79,6 +82,13 @@ class DraggableBlock extends StatelessWidget {
                       leading: Icon(Icons.lightbulb),
                       title: Text(AppLocalizations.of(context)!.highlightPin),
                       onTap: () {
+                        Provider.of<AutomaduinoState>(context, listen: false)
+                            .setHighlight(
+                                "pins",
+                                Provider.of<AutomaduinoState>(context,
+                                        listen: false)
+                                    .getPinName(block.settings.pin!,
+                                        block.data.component));
                         Navigator.of(context).pop();
                       },
                     ),

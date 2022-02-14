@@ -57,14 +57,12 @@ class _CodeAreaState extends State<CodeArea> {
               code = getDefaultCode();
             } else {
               code = map!.getCode();
-              print(state.highlight);
               if (state.highlight != null) {
                 highlight = codeTranspiler.map.returnHighlightString(
                     state.highlight!["mapName"],
                     state.highlight!["variableName"],
                     type: state.highlight!["type"]);
               }
-              print(highlight);
             }
             pinWarning = Provider.of<AutomaduinoState>(context, listen: false)
                 .unassignedPin();

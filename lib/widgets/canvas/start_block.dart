@@ -5,6 +5,8 @@ import '../../resources/transition.dart';
 import 'add_connection_button.dart';
 import 'package:contextmenu/contextmenu.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
+import '../../resources/automaduino_state.dart';
 
 class StartBlock extends StatelessWidget {
   final StartData startPoint;
@@ -30,6 +32,15 @@ class StartBlock extends StatelessWidget {
             title: Text(AppLocalizations.of(context)!.deleteTransition),
             onTap: () {
               deleteConnection(null, start: true);
+              Navigator.of(context).pop();
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.lightbulb),
+            title: Text(AppLocalizations.of(context)!.highlightTransition),
+            onTap: () {
+              Provider.of<AutomaduinoState>(context, listen: false)
+                  .setHighlight("loop", "start");
               Navigator.of(context).pop();
             },
           ),

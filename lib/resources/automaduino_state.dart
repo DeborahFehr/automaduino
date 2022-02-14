@@ -117,6 +117,13 @@ class AutomaduinoState extends ChangeNotifier {
     notifyListeners();
   }
 
+  String getVariableName(Key key) {
+    return _blocks
+        .firstWhere((element) => element.key == key)
+        .settings
+        .variableName;
+  }
+
   void updateStateName(Key key, String name) {
     PositionedState state = _blocks.firstWhere((element) => element.key == key);
     state.settings.name = name;
@@ -139,6 +146,13 @@ class AutomaduinoState extends ChangeNotifier {
 
   bool unassignedPin() {
     return _blocks.any((element) => element.settings.pin == null);
+  }
+
+  String getPinName(int pin, String component) {
+    return _pinAssignments
+        .firstWhere(
+            (element) => element.pin == pin && element.component == component)
+        .variableName!;
   }
 
   void updateStartPosition(Offset position) {
