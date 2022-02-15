@@ -16,6 +16,23 @@ class PositionedState {
 
   PositionedState(this.key, this.settings, this.data, this.position,
       this.outgoingConnection);
+
+  Map toJson() => {
+        'key': key.toString(),
+        'settings': settings.toJson(),
+        'data': data.toJson(),
+        'position_dx': position.dx,
+        'position_dy': position.dy,
+        'outgoingConnection': outgoingConnection,
+      };
+
+  PositionedState.fromJson(Map<String, dynamic> json)
+      : key = Key(json['key']),
+        settings = StateSettings.fromJson(json['settings']),
+        data = StateData.fromJson(json['data']),
+        position = Offset(
+            json['position_dx'] as double, json['position_dy'] as double),
+        outgoingConnection = json['outgoingConnection'];
 }
 
 /// Draggable Connection is used to draw a line while making a transition

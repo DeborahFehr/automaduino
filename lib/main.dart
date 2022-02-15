@@ -1,5 +1,6 @@
+import 'dart:convert';
 import 'dart:ui';
-
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'widgets/block_drawer.dart';
 import 'package:multi_split_view/multi_split_view.dart';
@@ -12,6 +13,8 @@ import '../resources/color_map.dart';
 import '../resources/settings.dart';
 import 'widgets/dialog_sources.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'dart:typed_data';
+import 'package:file_saver/file_saver.dart';
 
 void main() {
   runApp(
@@ -53,9 +56,9 @@ class _MyAppState extends State<MyApp> {
         ),
         fontFamily: 'Open Sans',
         textTheme: const TextTheme(
-            //headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
-            //headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
-            ),
+          //headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+          //headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+        ),
       ),
       home: MyHomePage(title: 'Automaduino Editor'),
     );
@@ -181,9 +184,41 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             ListTile(
-              title: Text(AppLocalizations.of(context)!.imageSources),
-              onTap: () {
-                showDialog(context: context, builder: (_) => SourcesDialog());
+              title: Text(AppLocalizations.of(context)!.importData),
+              onTap: () async {
+                FilePickerResult? result = await FilePicker.platform.pickFiles(
+                  type: FileType.custom,
+                  allowedExtensions: ['json'],
+                );
+
+                if (result != null) {
+                  Uint8List fileBytes = result.files.first.bytes!;
+                  final utf8Decoder = utf8.decoder;
+                  String json = utf8Decoder.convert(fileBytes);
+                  JsonDecoder decoder = JsonDecoder();
+                  Map<String, dynamic> map = decoder.convert(json);
+                  Provider.of<AutomaduinoState>(context, listen: false)
+                      .mapToState(map);
+                }
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: Text(AppLocalizations.of(context)!.exportData),
+              onTap: () async {
+                JsonUtf8Encoder encoder = JsonUtf8Encoder();
+                Map<String, dynamic> test =
+                    Provider.of<AutomaduinoState>(context, listen: false)
+                        .stateToMap();
+
+                List<int> jsonBytes = encoder.convert(test);
+                Uint8List json = Uint8List.fromList(jsonBytes);
+                MimeType type = MimeType.JSON;
+
+                await FileSaver.instance.saveFile(
+                    "automaduino_state", json, "json",
+                    mimeType: type);
+                Navigator.pop(context);
               },
             ),
             ListTile(
@@ -209,7 +244,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: Text(AppLocalizations.of(context)!.reset),
                           onPressed: () {
                             Provider.of<AutomaduinoState>(context,
-                                    listen: false)
+                                listen: false)
                                 .reset();
                             Navigator.pop(context);
                           },
@@ -218,6 +253,12 @@ class _MyHomePageState extends State<MyHomePage> {
                     );
                   },
                 );
+              },
+            ),
+            ListTile(
+              title: Text(AppLocalizations.of(context)!.imageSources),
+              onTap: () {
+                showDialog(context: context, builder: (_) => SourcesDialog());
               },
             ),
           ],

@@ -58,7 +58,7 @@ class CodeTranspiler {
             element.variableName! +
             " = " +
             element.pin.toString() +
-            ";\n";
+            ";";
       }
     });
   }
@@ -73,7 +73,7 @@ class CodeTranspiler {
             ? "OUTPUT"
             : "INPUT";
         map.setup[element.variableName!] =
-            "pinMode(" + element.variableName! + ", " + type + ");\n";
+            "pinMode(" + element.variableName! + ", " + type + ");";
       }
     });
   }

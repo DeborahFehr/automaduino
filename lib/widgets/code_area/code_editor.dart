@@ -8,6 +8,9 @@ import '../../resources/automaduino_state.dart';
 import '../../resources/settings.dart';
 import 'editor_highlighter.dart';
 import '../../resources/code_map.dart';
+import 'dart:convert';
+import 'dart:typed_data';
+import 'package:file_saver/file_saver.dart';
 
 class CodeEditor extends StatefulWidget {
   final CodeMap? map;
@@ -236,18 +239,38 @@ class _CodeEditorState extends State<CodeEditor> {
                   },
                   child: Text(AppLocalizations.of(context)!.copyCode)),
               ElevatedButton(
-                  onPressed: Provider.of<AutomaduinoState>(context,
-                              listen: false)
-                          .endPoint
-                          .available
-                      ? null
-                      : () =>
-                          Provider.of<AutomaduinoState>(context, listen: false)
-                              .showEndPoint(),
-                  child: Text(AppLocalizations.of(context)!.showEnd,
-                      style: TextStyle(
-                        color: Colors.white,
-                      ))),
+                onPressed: Provider.of<AutomaduinoState>(context, listen: false)
+                        .endPoint
+                        .available
+                    ? null
+                    : () =>
+                        Provider.of<AutomaduinoState>(context, listen: false)
+                            .showEndPoint(),
+                child: Text(
+                  AppLocalizations.of(context)!.showEnd,
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              /*
+              // download as .ino currently not possible because MIME type is missing
+              ElevatedButton(
+                onPressed: () async {
+                  Uint8List bytes =
+                      Uint8List.fromList(utf8.encode(widget.code));
+
+                  await FileSaver.instance
+                      .saveFile("arduino_code", bytes, "ino");
+                },
+                child: Text(
+                  AppLocalizations.of(context)!.exportIno,
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+               */
             ],
           ),
         ),

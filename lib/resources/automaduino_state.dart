@@ -191,6 +191,64 @@ class AutomaduinoState extends ChangeNotifier {
     notifyListeners();
   }
 
+  Map<String, dynamic> stateToMap() {
+    Map<String, dynamic> result = {};
+
+    List<Map> blockList = [];
+    _blocks.forEach((element) {
+      blockList.add(element.toJson());
+    });
+    List<Map> connectionsList = [];
+    _connections.forEach((element) {
+      connectionsList.add(element.toJson());
+    });
+    List<Map> pinList = [];
+    _pinAssignments.forEach((element) {
+      pinList.add(element.toJson());
+    });
+    result["_blocks"] = blockList;
+    result["_connections"] = connectionsList;
+    result["_pinAssignments"] = pinList;
+    result["_startPoint"] = _startPoint.toJson();
+    result["_endPoint"] = _endPoint.toJson();
+
+    return result;
+  }
+
+  void mapToState(Map<String, dynamic> map) {
+    List<dynamic> blockList = map["_blocks"];
+    _blocks.clear();
+    blockList.forEach((element) {
+      _blocks.add(PositionedState.fromJson(element));
+    });
+
+    List<dynamic> connectionsList = map["_connections"];
+    _connections.clear();
+    connectionsList.forEach((element) {
+      _connections.add(Transition.fromJson(element));
+    });
+
+    List<dynamic> pinList = map["_pinAssignments"];
+    _pinAssignments.clear();
+    pinList.forEach((element) {
+      _pinAssignments.add(PinAssignment.fromJson(element));
+    });
+
+    Map startJson = map["_startPoint"];
+    _startPoint.connected = startJson['connected'];
+    Offset startPosition = Offset(
+        startJson['position_dx'] as double, startJson['position_dy'] as double);
+    _startPoint.position = startPosition;
+
+    Map endJson = map["_endPoint"];
+    _endPoint.available = endJson['available'];
+    Offset endPosition = Offset(
+        endJson['position_dx'] as double, endJson['position_dy'] as double);
+    _endPoint.position = endPosition;
+
+    notifyListeners();
+  }
+
   /// Removes all blocks and connections.
   void reset() {
     _blocks.clear();

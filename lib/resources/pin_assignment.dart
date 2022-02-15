@@ -20,4 +20,16 @@ class PinAssignment {
         ", variableName: " +
         varVal;
   }
+
+  Map toJson() => {
+        'pin': pin == null ? "" : pin.toString(),
+        'component': component == null ? "" : component.toString(),
+        'variableName': variableName == null ? "" : variableName.toString(),
+      };
+
+  PinAssignment.fromJson(Map<String, dynamic> json)
+      : pin = json['pin'].isEmpty ? null : int.parse(json['pin']),
+        component = json['component'].isEmpty ? null : json['component'],
+        variableName =
+            json['variableName'].isEmpty ? null : json['variableName'];
 }
