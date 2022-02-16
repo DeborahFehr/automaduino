@@ -23,12 +23,19 @@ class _InitDialogState extends State<InitDialog> {
   final List<String> componentOptions =
       returnAllData().map((e) => e.component).toSet().toList();
 
-  List<PinAssignment> assignments = [];
+  late List<PinAssignment> assignments;
+
+  @override
+  void initState() {
+    super.initState();
+    assignments = [
+      ...Provider.of<AutomaduinoState>(context, listen: false).pinAssignments
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<AutomaduinoState>(builder: (context, state, child) {
-      assignments = state.pinAssignments;
       return Dialog(
         insetPadding: EdgeInsets.fromLTRB(150, 50, 150, 50),
         child: Container(
@@ -294,6 +301,7 @@ class _InitDialogState extends State<InitDialog> {
                             setState(() {
                               assignments.add(PinAssignment(null, null, null));
                             });
+                            print(assignments.length);
                           },
                         ),
                         DragTarget(

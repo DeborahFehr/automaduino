@@ -38,7 +38,7 @@ class EndBlock extends StatelessWidget {
             title: Text(AppLocalizations.of(context)!.highlightState),
             onTap: () {
               Provider.of<AutomaduinoState>(context, listen: false)
-                  .setHighlight("loop", "end");
+                  .setHighlight("loop", "endActivated");
               Navigator.of(context).pop();
             },
           ),

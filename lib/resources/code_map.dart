@@ -11,39 +11,93 @@ class CodeMap {
   String setupWrapper() {
     String result = "void setup() { \n";
     setup.forEach((key, value) {
-      result += value + "\n";
+      if (key != "end") {
+        result += value + "\n";
+      }
     });
     result += "}\n\n";
     return result;
   }
 
-  String loopWrapper() {
-    String result = "void loop() {\n";
-    loop.forEach((key, value) {
-      result += value + "\n";
-    });
-    result += "}\n\n";
+  String loopWrapper(String content) {
+    String result = "void loop() {\n" + content + "}\n\n";
     return result;
   }
 
-  String getCode() {
-    String result = "";
-    result += "//Pins:\n";
+  String getCode(String mode) {
+    String result = "//Imports:\n";
     import.forEach((key, value) {
       result += value + "\n";
     });
+    result += "\n";
+    result += "//Pins:\n";
     pins.forEach((key, value) {
       result += value + "\n";
     });
+    result += "\n";
+    if (setup.containsKey("end")) {
+      result += setup["end"] ?? "" + "\n";
+    }
     result += setupWrapper() + "\n";
-    result += loopWrapper() + "\n";
-    states.forEach((key, value) {
-      result += value.stateCode() + "\n";
-    });
+    switch (mode) {
+      case "functions":
+        result += _getFunctionsCode();
+        break;
+      case "abridged":
+        result += _getAbridgedCode();
+        break;
+      case "switch":
+        result += _getSwitchCode();
+        break;
+    }
     return result;
   }
 
-  String returnHighlightString(String? mapName, String? variableName,
+  String _getFunctionsCode() {
+    String result = "";
+    String loopContent = "";
+    if (loop.containsKey("end")) {
+      loopContent += loop["end"] ?? "" + "\n";
+    } else {
+      loopContent += loop["start"] ?? "" + "\n";
+    }
+    result += loopWrapper(loopContent) + "\n";
+    states.forEach((key, value) {
+      result += value.stateFunctionCode() + "\n";
+    });
+
+    return result;
+  }
+
+  String _getAbridgedCode() {
+    String result = "";
+    String loopContent = "";
+    if (loop.containsKey("end")) {
+      loopContent += loop["end"] ?? "" + "\n";
+    } else {
+      loopContent += loop["start"] ?? "" + "\n";
+    }
+    result += loopWrapper(loopContent) + "\n";
+
+    return result;
+  }
+
+  String _getSwitchCode() {
+    String result = "";
+    String loopContent = "";
+    loop.forEach((key, value) {
+      loopContent += value + "\n";
+    });
+    result += loopWrapper(loopContent) + "\n";
+    states.forEach((key, value) {
+      result += value.stateFunctionCode() + "\n";
+    });
+
+    return result;
+  }
+
+  String returnHighlightString(
+      String? mapName, String? variableName, String mode,
       {String? type}) {
     String result = "";
     if (mapName == null || variableName == null) return result;
@@ -61,16 +115,20 @@ class CodeMap {
         result = this.loop[variableName] ?? "";
         break;
       case "states":
-        switch (type!) {
-          case "state":
-            result = this.states[variableName]!.stateCode();
-            break;
-          case "action":
-            result = this.states[variableName]!.action;
-            break;
-          case "transition":
-            result = this.states[variableName]!.transition;
-            break;
+        if (this.states.containsKey(variableName)) {
+          switch (type!) {
+            case "state":
+              result = mode == "abridged"
+                  ? this.states[variableName]!.stateAbridgedCode()
+                  : this.states[variableName]!.stateFunctionCode();
+              break;
+            case "action":
+              result = this.states[variableName]!.action;
+              break;
+            case "transition":
+              result = this.states[variableName]!.transition;
+              break;
+          }
         }
         break;
     }
@@ -84,11 +142,27 @@ class StateMap {
   String action;
   String transition;
 
-  String stateCode() {
+  @override
+  String toString() {
+    return "functionName: " +
+        functionName +
+        ", action: " +
+        action +
+        ", transition: " +
+        transition;
+  }
+
+  String stateFunctionCode() {
     String result = "void " + functionName + "(){\n";
     result += action + "\n";
     result += transition + "\n";
     result += "}\n\n";
+    return result;
+  }
+
+  String stateAbridgedCode() {
+    String result = action + "\n";
+    result += transition;
     return result;
   }
 

@@ -15,7 +15,6 @@ import 'package:file_saver/file_saver.dart';
 class CodeEditor extends StatefulWidget {
   final CodeMap? map;
   final String code;
-  final bool pinWarning;
   final bool closed;
   final String? highlight;
 
@@ -23,7 +22,6 @@ class CodeEditor extends StatefulWidget {
       {Key? key,
       required this.map,
       required this.code,
-      required this.pinWarning,
       required this.closed,
       required this.highlight})
       : super(key: key);
@@ -88,7 +86,9 @@ class _CodeEditorState extends State<CodeEditor> {
 
   void updateHighlight(String part) {
     highlighter.clear();
-    highlighter[part] = TextStyle(backgroundColor: arduinoSelection);
+    if (part != "") {
+      highlighter[part] = TextStyle(backgroundColor: arduinoSelection);
+    }
     highlighter.addAll({...syntaxHighlighter});
     codeController.updateMap(highlighter);
   }
@@ -126,97 +126,11 @@ class _CodeEditorState extends State<CodeEditor> {
           .addPostFrameCallback((_) => lineHeightsUpdater());
     }
     return Container(
-      margin: EdgeInsets.all(15.0),
+      margin: EdgeInsets.fromLTRB(15, 5, 15, 15),
       padding: EdgeInsets.all(15.0),
       decoration: BoxDecoration(
           border: new Border.all(color: Colors.grey), color: Colors.white),
       child: Column(children: [
-        widget.pinWarning
-            ? Container(
-                padding: EdgeInsets.all(10),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                ),
-                child: Text(AppLocalizations.of(context)!.pinWarning),
-              )
-            : SizedBox.shrink(),
-        widget.pinWarning ? SizedBox(height: 10) : SizedBox.shrink(),
-        Container(
-          color: Colors.grey[200],
-          child: Row(
-            children: [
-              Expanded(
-                child: Card(
-                  color: Theme.of(context).colorScheme.primary,
-                  child: InkWell(
-                    onTap: () => {},
-                    child: Padding(
-                      padding: EdgeInsets.all(5),
-                      child: Center(
-                        child: Text(
-                          AppLocalizations.of(context)!.abridgedMode,
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Card(
-                  color: Theme.of(context).colorScheme.secondary,
-                  child: InkWell(
-                    onTap: () => {},
-                    child: Padding(
-                      padding: EdgeInsets.all(5),
-                      child: Center(
-                        child: Text(
-                          AppLocalizations.of(context)!.functionsMode,
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Card(
-                  color: Theme.of(context).colorScheme.secondary,
-                  child: InkWell(
-                    onTap: () => {},
-                    child: Padding(
-                      padding: EdgeInsets.all(5),
-                      child: Center(
-                        child: Text(
-                          AppLocalizations.of(context)!.switchMode,
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Tooltip(
-                message: AppLocalizations.of(context)!.openDocs,
-                child: IconButton(
-                  splashRadius: 15,
-                  onPressed: () {
-                    /*
-                    launch(Localizations.localeOf(context)
-                        .languageCode ==
-                        'de'
-                        ? baseURL + '/de' + link
-                        : baseURL + link)
-                        */
-                  },
-                  icon: Icon(Icons.open_in_new),
-                ),
-              )
-            ],
-          ),
-        ),
         Container(
           width: double.infinity,
           color: Theme.of(context).colorScheme.secondary,
