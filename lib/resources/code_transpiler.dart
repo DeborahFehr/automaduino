@@ -323,12 +323,14 @@ class CodeTranspiler {
   /// SWITCH TRANSPILER
 
   void _generateCodeMapSwitch(bool end) {
+    map.setup["switch"] = "int state = 0;\n\n";
+
     Transition? start =
         connections.firstWhereOrNull((element) => element.startPoint);
     if (start != null) {
       PositionedState startState =
           blocks.firstWhere((element) => element.key == start.end.first);
-      _generateLoopSwitch(startState, end);
+      _generateLoopSwitch(end);
     }
 
     if (blocks.length > 0) {
@@ -338,8 +340,19 @@ class CodeTranspiler {
     }
   }
 
-  void _generateLoopSwitch(PositionedState state, bool end) {
-    String loop = state.settings.variableName + "();\n";
+  void _generateLoopSwitch(bool end) {
+    String loop = "switch(state){\n";
+
+    if (blocks.length > 0) {
+      blocks.asMap().forEach((index, block) => loop += "case " +
+          index.toString() +
+          ":\n" +
+          block.settings.variableName +
+          "();\nbreak;\n");
+    }
+
+    loop += "default:\n break;\n}\n";
+
     map.loop["start"] = loop;
 
     if (end) {
@@ -388,30 +401,31 @@ class CodeTranspiler {
 
     String nextFunction = "";
 
+    int stateId = 0;
+
     if (connection.endPoint) {
       transitionFunction += "end = true;\n";
-      nextFunction = "loop";
     } else {
-      PositionedState endState =
-          blocks.firstWhere((element) => element.key == connection.end.first);
-      nextFunction = endState.settings.variableName;
+      stateId =
+          blocks.indexWhere((element) => element.key == connection.end.first);
+      nextFunction = "state = " + stateId.toString() + ";\n";
     }
 
     switch (connection.condition.type) {
       case "then":
-        transitionFunction += nextFunction + "();";
+        transitionFunction += nextFunction;
         break;
       case "if":
         transitionFunction += transitionIf(
             "value", nextFunction, connection.condition.values.first);
         break;
       case "ifelse":
-        String elseFunction = "";
+        String elseFunction = "state = ";
         if (connection.end.length > 1) {
-          elseFunction = blocks
-              .firstWhere((element) => element.key == connection.end[1])
-              .settings
-              .variableName;
+          elseFunction += blocks
+                  .indexWhere((element) => element.key == connection.end[1])
+                  .toString() +
+              ";\n";
         }
         transitionFunction += transitionIfElse("value", nextFunction,
             elseFunction, connection.condition.values.first);
@@ -420,10 +434,9 @@ class CodeTranspiler {
         List<String> functionNames = [];
         List<String> conditionValues = [];
         for (int i = 0; i < connection.end.length; i++) {
-          StateSettings settings = blocks
-              .firstWhere((element) => element.key == connection.end[i])
-              .settings;
-          functionNames.add(settings.variableName);
+          int id =
+              blocks.indexWhere((element) => element.key == connection.end[i]);
+          functionNames.add("state = " + id.toString() + ";\n");
           conditionValues.add(connection.condition.values[i]);
         }
         transitionFunction += transitionCond(functionNames, conditionValues);
@@ -446,7 +459,7 @@ String transitionIf(String variable, String function, String value) {
 String transitionIfElse(
     String variable, String function, String elseFunction, String value) {
   String result =
-      "if(" + variable + " == " + value + "){\n" + function + "\n}\nelse{\n";
+      "if(" + variable + " " + value + "){\n" + function + "\n}\nelse{\n";
   if (elseFunction != "") {
     result += elseFunction + "\n";
   }

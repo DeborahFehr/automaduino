@@ -85,9 +85,11 @@ class CodeMap {
   String _getSwitchCode() {
     String result = "";
     String loopContent = "";
-    loop.forEach((key, value) {
-      loopContent += value + "\n";
-    });
+    if (loop.containsKey("end")) {
+      loopContent += loop["end"] ?? "" + "\n";
+    } else {
+      loopContent += loop["start"] ?? "" + "\n";
+    }
     result += loopWrapper(loopContent) + "\n";
     states.forEach((key, value) {
       result += value.stateFunctionCode() + "\n";
