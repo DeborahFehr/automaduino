@@ -15,9 +15,10 @@ class StartBlock extends StatelessWidget {
           bool active, bool point, bool adition, Offset start, Offset end)
       updateDrag;
   final Function(Transition? connection, {bool start}) deleteConnection;
+  final double scale;
 
   const StartBlock(this.startPoint, this.updatePosition, this.updateDrag,
-      this.deleteConnection);
+      this.deleteConnection, this.scale);
 
   @override
   Widget build(BuildContext context) {
@@ -27,14 +28,16 @@ class StartBlock extends StatelessWidget {
       child: ContextMenuArea(
         width: 250,
         items: [
-          ListTile(
-            leading: Icon(Icons.highlight_remove),
-            title: Text(AppLocalizations.of(context)!.deleteTransition),
-            onTap: () {
-              deleteConnection(null, start: true);
-              Navigator.of(context).pop();
-            },
-          ),
+          !startPoint.connected
+              ? SizedBox.shrink()
+              : ListTile(
+                  leading: Icon(Icons.highlight_remove),
+                  title: Text(AppLocalizations.of(context)!.deleteTransition),
+                  onTap: () {
+                    deleteConnection(null, start: true);
+                    Navigator.of(context).pop();
+                  },
+                ),
           ListTile(
             leading: Icon(Icons.lightbulb),
             title: Text(AppLocalizations.of(context)!.highlightTransition),
@@ -104,7 +107,7 @@ class StartBlock extends StatelessWidget {
             ),
             childWhenDragging: Container(),
             onDragUpdate: (details) {
-              updatePosition(startPoint, details.delta, false);
+              updatePosition(startPoint, details.delta * (1 / scale), false);
             },
             onDragEnd: (details) {
               RenderBox renderBox = context.findRenderObject() as RenderBox;

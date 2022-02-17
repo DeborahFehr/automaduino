@@ -25,6 +25,21 @@ class BuildingArea extends StatefulWidget {
 
 class _BuildingAreaState extends State<BuildingArea> {
   DraggableConnection? drag;
+  final TransformationController _scaleController = TransformationController();
+  double _scale = 1.0;
+  double maxScale = 2.0;
+  double minScale = 0.5;
+
+  void setScale(double scale) {
+    if (!(scale > maxScale) && !(scale < minScale)) {
+      setState(() {
+        _scale = scale;
+        _scaleController.value.setEntry(0, 0, scale);
+        _scaleController.value.setEntry(1, 1, scale);
+        _scaleController.value.setEntry(2, 2, scale);
+      });
+    }
+  }
 
   void updateStartPosition(StartData startPoint, Offset end, bool dragEnd) {
     //Provider.of<AutomaduinoState>(context, listen: false)
@@ -58,15 +73,17 @@ class _BuildingAreaState extends State<BuildingArea> {
     end
         ? Provider.of<AutomaduinoState>(context, listen: false).hideEndPoint()
         : Provider.of<AutomaduinoState>(context, listen: false)
-        .deleteBlock(block!);
+            .deleteBlock(block!);
   }
 
-  void updateDragPosition(bool active, bool point, bool addition, Offset start, Offset end) {
+  void updateDragPosition(
+      bool active, bool point, bool addition, Offset start, Offset end) {
     if (drag == null) {
       drag = DraggableConnection(start, end, point, addition);
     } else {
       drag = active
-          ? DraggableConnection(start, drag!.end + end, point, addition)
+          ? DraggableConnection(
+              start, drag!.end + (end * (1 / _scale)), point, addition)
           : null;
     }
     setState(() {});
@@ -97,14 +114,14 @@ class _BuildingAreaState extends State<BuildingArea> {
 
     Offset endPoint;
     endPoint = end ==
-        Provider.of<AutomaduinoState>(context, listen: false).endPoint.key
+            Provider.of<AutomaduinoState>(context, listen: false).endPoint.key
         ? Provider.of<AutomaduinoState>(context, listen: false)
-        .endPoint
-        .position
+            .endPoint
+            .position
         : Provider.of<AutomaduinoState>(context, listen: false)
-        .blocks
-        .firstWhere((el) => el.key == end)
-        .position;
+            .blocks
+            .firstWhere((el) => el.key == end)
+            .position;
 
     return (startPoint + endPoint) / 2;
   }
@@ -116,7 +133,7 @@ class _BuildingAreaState extends State<BuildingArea> {
             .addAdditionalConnection(start, end);
       } else {
         Offset transitionPosition =
-        startPoint ? Offset(0, 0) : calculateMidpoint(start, end);
+            startPoint ? Offset(0, 0) : calculateMidpoint(start, end);
         if (startPoint) {
           Provider.of<AutomaduinoState>(context, listen: false)
               .startPointConnected();
@@ -133,12 +150,12 @@ class _BuildingAreaState extends State<BuildingArea> {
   void deleteTransition(Transition? connection, {start: false}) {
     start
         ? Provider.of<AutomaduinoState>(context, listen: false)
-        .deleteConnection(
-        Provider.of<AutomaduinoState>(context, listen: false)
-            .connections
-            .firstWhere((element) => element.startPoint))
+            .deleteConnection(
+                Provider.of<AutomaduinoState>(context, listen: false)
+                    .connections
+                    .firstWhere((element) => element.startPoint))
         : Provider.of<AutomaduinoState>(context, listen: false)
-        .deleteConnection(connection!);
+            .deleteConnection(connection!);
   }
 
   void deleteSingleCond(Transition connection, int position) {
@@ -159,81 +176,156 @@ class _BuildingAreaState extends State<BuildingArea> {
   Widget build(BuildContext context) {
     return Consumer<AutomaduinoState>(
       builder: (context, state, child) {
-        return InteractiveViewer(
-          maxScale: 2.0,
-          minScale: 0.5,
-          constrained: false,
-          child: ConstrainedBox(
-            constraints: BoxConstraints.tightFor(
-                width: canvasWidth, height: canvasHeight),
-            child: DragTarget(
-              builder: (BuildContext context, List<dynamic> candidateData,
-                  List<dynamic> rejectedData) {
-                return Stack(
-                  clipBehavior: Clip.none,
-                  fit: StackFit.passthrough,
-                  children: <Widget>[
-                    CustomPaint(
-                      painter: LinePainter(state.blocks, state.connections,
-                          state.startPoint, state.endPoint, drag),
-                    ),
-                    StartBlock(state.startPoint, updateStartPosition,
-                        updateDragPosition, deleteTransition),
-                    state.endPoint.available
-                        ? EndBlock(
-                        state.endPoint.key,
-                        state.endPoint,
-                        updateEndPosition,
-                        deleteState,
-                        addConnection(state.endPoint.key, true))
-                        : SizedBox.shrink(),
-                    for (var connection in state.connections
-                        .where((element) => !element.startPoint))
-                      DraggableCondition(
-                          connection.condition.key,
-                          connection,
-                          state.blocks.firstWhereOrNull(
+        return Stack(
+          children: [
+            InteractiveViewer(
+              maxScale: maxScale,
+              minScale: minScale,
+              constrained: false,
+              transformationController: _scaleController,
+              onInteractionEnd: (details) =>
+                  _scale = _scaleController.value.entry(0, 0),
+              child: ConstrainedBox(
+                constraints: BoxConstraints.tightFor(
+                    width: canvasWidth, height: canvasHeight),
+                child: DragTarget(
+                  builder: (BuildContext context, List<dynamic> candidateData,
+                      List<dynamic> rejectedData) {
+                    return Stack(
+                      clipBehavior: Clip.none,
+                      fit: StackFit.passthrough,
+                      children: <Widget>[
+                        CustomPaint(
+                          painter: LinePainter(state.blocks, state.connections,
+                              state.startPoint, state.endPoint, drag),
+                        ),
+                        StartBlock(state.startPoint, updateStartPosition,
+                            updateDragPosition, deleteTransition, _scale),
+                        state.endPoint.available
+                            ? EndBlock(
+                                state.endPoint.key,
+                                state.endPoint,
+                                updateEndPosition,
+                                deleteState,
+                                addConnection(state.endPoint.key, true),
+                                _scale)
+                            : SizedBox.shrink(),
+                        for (var connection in state.connections
+                            .where((element) => !element.startPoint))
+                          DraggableCondition(
+                              connection.condition.key,
+                              connection,
+                              state.blocks.firstWhereOrNull(
                                   (element) => element.key == connection.start),
-                          connection.position,
-                          updateConnectionPosition,
-                          updateConnectionDetails,
-                          deleteTransition,
-                          deleteSingleCond,
-                          updateDragPosition),
-                    for (var block in state.blocks)
-                      DraggableBlock(
-                          block,
-                          updateStateName,
-                          deleteState,
-                          updateBlockPosition,
-                          updateDragPosition,
-                          addConnection(block.key, false)),
-                  ],
-                );
-              },
-              onWillAccept: (data) {
-                return (data! as StateSettings).newBlock;
-              },
-              onAcceptWithDetails: (drag) {
-                RenderBox renderBox = context.findRenderObject() as RenderBox;
-                StateSettings data = drag.data as StateSettings;
-                data.variableName =
-                    (state.blocks.length.toString() + "_" + data.name)
-                        .replaceAll(" ", "_");
-                StateData blockData =
-                returnDataByNameAndOption(data.name, data.selectedOption);
-                Key key = UniqueKey();
-                state.addBlock(
-                  PositionedState(
-                      key,
-                      data.added(AppLocalizations.of(context)!.json(data.name)),
-                      blockData,
-                      renderBox.globalToLocal(drag.offset),
-                      false),
-                );
-              },
+                              connection.position,
+                              updateConnectionPosition,
+                              updateConnectionDetails,
+                              deleteTransition,
+                              deleteSingleCond,
+                              updateDragPosition,
+                              _scale),
+                        for (var block in state.blocks)
+                          DraggableBlock(
+                              block,
+                              updateStateName,
+                              deleteState,
+                              updateBlockPosition,
+                              updateDragPosition,
+                              addConnection(block.key, false),
+                              _scale),
+                      ],
+                    );
+                  },
+                  onWillAccept: (data) {
+                    return (data! as StateSettings).newBlock;
+                  },
+                  onAcceptWithDetails: (drag) {
+                    RenderBox renderBox =
+                        context.findRenderObject() as RenderBox;
+                    StateSettings data = drag.data as StateSettings;
+                    data.variableName =
+                        (state.blocks.length.toString() + "_" + data.name)
+                            .replaceAll(" ", "_");
+                    StateData blockData = returnDataByNameAndOption(
+                        data.name, data.selectedOption);
+                    Key key = UniqueKey();
+                    state.addBlock(
+                      PositionedState(
+                          key,
+                          data.added(
+                              AppLocalizations.of(context)!.json(data.name)),
+                          blockData,
+                          (renderBox.globalToLocal(drag.offset +
+                                  Offset(
+                                      -_scaleController.value
+                                          .getTranslation()
+                                          .x,
+                                      -_scaleController.value
+                                          .getTranslation()
+                                          .y)) *
+                              (1 / _scale)),
+                          false),
+                    );
+                  },
+                ),
+              ),
             ),
-          ),
+            Align(
+                alignment: Alignment.bottomRight,
+                child: Container(
+                  height: 70,
+                  width: 30,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Center(
+                        child: Ink(
+                          width: 30,
+                          height: 30,
+                          decoration: ShapeDecoration(
+                            color: Colors.grey,
+                            shape: CircleBorder(),
+                          ),
+                          child: IconButton(
+                            padding: EdgeInsets.zero,
+                            splashRadius: 20,
+                            icon: Icon(
+                              Icons.add,
+                              size: 20,
+                            ),
+                            color: Colors.white,
+                            onPressed: () {
+                              setScale(_scale + 0.1);
+                            },
+                          ),
+                        ),
+                      ),
+                      Center(
+                        child: Ink(
+                          width: 30,
+                          height: 30,
+                          decoration: ShapeDecoration(
+                            color: Colors.grey,
+                            shape: CircleBorder(),
+                          ),
+                          child: IconButton(
+                            padding: EdgeInsets.zero,
+                            splashRadius: 20,
+                            icon: Icon(
+                              Icons.remove,
+                              size: 20,
+                            ),
+                            color: Colors.white,
+                            onPressed: () {
+                              setScale(_scale - 0.1);
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ))
+          ],
         );
       },
     );

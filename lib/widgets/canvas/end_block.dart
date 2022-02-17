@@ -13,9 +13,10 @@ class EndBlock extends StatelessWidget {
   final Function(EndData position, Offset delta, bool dragEnd) updatePosition;
   final Function(PositionedState? state, {bool end}) hideEnd;
   final Function(Key target, bool startPoint, bool addition) addConnection;
+  final double scale;
 
   const EndBlock(this.key, this.endPoint, this.updatePosition, this.hideEnd,
-      this.addConnection);
+      this.addConnection, this.scale);
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +118,7 @@ class EndBlock extends StatelessWidget {
             ),
             childWhenDragging: Container(),
             onDragUpdate: (details) {
-              updatePosition(endPoint, details.delta, false);
+              updatePosition(endPoint, details.delta * (1 / scale), false);
             },
             onDragEnd: (details) {
               RenderBox renderBox = context.findRenderObject() as RenderBox;

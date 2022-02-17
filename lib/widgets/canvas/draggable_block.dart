@@ -18,9 +18,10 @@ class DraggableBlock extends StatelessWidget {
           bool active, bool point, bool adition, Offset start, Offset end)
       updateDrag;
   final Function(Key target, bool startPoint, bool addition) addConnection;
+  final double scale;
 
   const DraggableBlock(this.block, this.updateStateName, this.deleteBlock,
-      this.updatePosition, this.updateDrag, this.addConnection);
+      this.updatePosition, this.updateDrag, this.addConnection, this.scale);
 
   @override
   Widget build(BuildContext context) {
@@ -111,10 +112,10 @@ class DraggableBlock extends StatelessWidget {
                         data.startConnection, data.additionalConnection);
                   },
                 ),
-                feedback: blockWidget,
+                feedback: Transform.scale(scale: scale, child: blockWidget),
                 childWhenDragging: Container(),
                 onDragUpdate: (details) {
-                  updatePosition(block, details.delta, false);
+                  updatePosition(block, details.delta * (1 / scale), false);
                 },
                 onDragEnd: (details) {
                   RenderBox renderBox = context.findRenderObject() as RenderBox;

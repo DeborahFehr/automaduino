@@ -22,6 +22,7 @@ class DraggableCondition extends StatefulWidget {
   final Function(
           bool active, bool point, bool adition, Offset start, Offset end)
       updateDrag;
+  final double scale;
 
   DraggableCondition(
       this.key,
@@ -32,7 +33,8 @@ class DraggableCondition extends StatefulWidget {
       this.updateConnectionDetails,
       this.deleteConnection,
       this.deleteSingleCond,
-      this.updateDrag);
+      this.updateDrag,
+      this.scale);
 
   @override
   State<StatefulWidget> createState() {
@@ -150,10 +152,12 @@ class _ConditionField extends State<DraggableCondition> {
                         ],
                       )
                     : conditionField,
-            feedback: conditionField,
+            feedback:
+                Transform.scale(scale: widget.scale, child: conditionField),
             childWhenDragging: Container(),
             onDragUpdate: (details) {
-              widget.updatePosition(widget.connection, details.delta);
+              widget.updatePosition(
+                  widget.connection, details.delta * (1 / widget.scale));
             },
             onDragEnd: (details) {
               RenderBox renderBox = context.findRenderObject() as RenderBox;
