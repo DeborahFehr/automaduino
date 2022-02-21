@@ -45,8 +45,7 @@ class EndBlock extends StatelessWidget {
           ),
         ],
         child: Draggable(
-            data: StateSettings(
-                "", "", null, false, true, false, false, null, ""),
+            data: DragData(null, "", "", false, true, false, false),
             child: DragTarget(builder: (BuildContext context,
                 List<dynamic> candidateData, List<dynamic> rejectedData) {
               return DragTarget(
@@ -77,14 +76,14 @@ class EndBlock extends StatelessWidget {
                   );
                 },
                 onWillAccept: (candidate) {
-                  StateSettings data = (candidate as StateSettings);
+                  DragData data = candidate as DragData;
                   return !data.newBlock &&
                       data.newConnection &&
                       data.key != key &&
                       !data.startConnection;
                 },
                 onAccept: (data) {
-                  addConnection((data as StateSettings).key as Key,
+                  addConnection((data as DragData).key as Key,
                       data.startConnection, data.additionalConnection);
                 },
               );

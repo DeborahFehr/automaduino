@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'transition.dart';
 import 'canvas_layout.dart';
 import 'pin_assignment.dart';
+import 'settings.dart';
 
 /// describes the state of the application
 /// implements Provider
@@ -10,8 +11,8 @@ class AutomaduinoState extends ChangeNotifier {
   final List<PositionedState> _blocks = [];
   final List<Transition> _connections = [];
   final List<PinAssignment> _pinAssignments = [];
-  final StartData _startPoint = StartData(false, UniqueKey(), Offset(40, 40));
-  final EndData _endPoint = EndData(true, UniqueKey(), Offset(140, 140));
+  final StartData _startPoint = StartData(false, UniqueKey(), startPosition);
+  final EndData _endPoint = EndData(false, UniqueKey(), endPosition);
   Map<String, String?>? _highlight;
 
   List<Transition> get connections => _connections;
@@ -49,9 +50,11 @@ class AutomaduinoState extends ChangeNotifier {
         element.start == block.key || element.end.contains(block.key));
     _blocks.removeWhere((element) => element == block);
     _blocks.forEach((element) {
-      element.settings.variableName =
-          (blocks.indexOf(element).toString() + "_" + element.settings.name)
-              .replaceAll(" ", "_");
+      element.settings.variableName = ("function_" +
+              blocks.indexOf(element).toString() +
+              "_" +
+              element.settings.name)
+          .replaceAll(RegExp(' |ü|ä|ö|ß'), "_");
     });
     notifyListeners();
   }
@@ -128,7 +131,8 @@ class AutomaduinoState extends ChangeNotifier {
     PositionedState state = _blocks.firstWhere((element) => element.key == key);
     state.settings.name = name;
     state.settings.variableName =
-        (blocks.indexOf(state).toString() + "_" + name).replaceAll(" ", "_");
+        ("function_" + blocks.indexOf(state).toString() + "_" + name)
+            .replaceAll(RegExp(' |ü|ä|ö|ß'), "_");
 
     notifyListeners();
   }
@@ -175,7 +179,7 @@ class AutomaduinoState extends ChangeNotifier {
   }
 
   void showEndPoint() {
-    _endPoint.position = Offset(140, 140);
+    _endPoint.position = endPosition;
     endPoint.available = true;
     notifyListeners();
   }
@@ -258,9 +262,9 @@ class AutomaduinoState extends ChangeNotifier {
     _connections.clear();
     _pinAssignments.clear();
     _startPoint.connected = false;
-    _startPoint.position = Offset(40, 40);
+    _startPoint.position = startPosition;
     _endPoint.available = true;
-    _endPoint.position = Offset(140, 140);
+    _endPoint.position = endPosition;
     notifyListeners();
   }
 }

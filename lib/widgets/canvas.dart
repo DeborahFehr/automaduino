@@ -237,23 +237,28 @@ class _BuildingAreaState extends State<BuildingArea> {
                     );
                   },
                   onWillAccept: (data) {
-                    return (data! as StateSettings).newBlock;
+                    return (data! as DragData).newBlock;
                   },
                   onAcceptWithDetails: (drag) {
                     RenderBox renderBox =
                         context.findRenderObject() as RenderBox;
-                    StateSettings data = drag.data as StateSettings;
-                    data.variableName =
-                        (state.blocks.length.toString() + "_" + data.name)
-                            .replaceAll(" ", "_");
+                    DragData data = drag.data as DragData;
+                    StateSettings settings = StateSettings(
+                        AppLocalizations.of(context)!.json(data.name),
+                        data.selectedOption,
+                        null,
+                        ("function_" +
+                                state.blocks.length.toString() +
+                                "_" +
+                                data.name)
+                            .replaceAll(" ", "_"));
                     StateData blockData = returnDataByNameAndOption(
                         data.name, data.selectedOption);
                     Key key = UniqueKey();
                     state.addBlock(
                       PositionedState(
                           key,
-                          data.added(
-                              AppLocalizations.of(context)!.json(data.name)),
+                          settings,
                           blockData,
                           (renderBox.globalToLocal(drag.offset +
                                   Offset(

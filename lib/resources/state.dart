@@ -5,38 +5,18 @@ class StateSettings {
   String name;
   String selectedOption;
   int? pin;
-  final bool newBlock;
-  final bool newConnection;
-  final bool additionalConnection;
-  final bool startConnection;
-  final Key? key;
   String variableName;
 
   StateSettings(
       this.name,
       this.selectedOption,
       this.pin,
-      this.newBlock,
-      this.newConnection,
-      this.additionalConnection,
-      this.startConnection,
-      this.key,
       this.variableName);
-
-  StateSettings added(String name) {
-    return StateSettings(name, this.selectedOption, this.pin, false, false,
-        false, false, this.key, this.variableName);
-  }
 
   Map toJson() => {
         'name': name,
         'selectedOption': selectedOption,
         'pin': pin == null ? "" : pin.toString(),
-        'newBlock': newBlock,
-        'newConnection': newConnection,
-        'additionalConnection': additionalConnection,
-        'startConnection': startConnection,
-        'key': key == null ? "" : key.toString(),
         'variableName': variableName,
       };
 
@@ -44,11 +24,6 @@ class StateSettings {
       : name = json['name'],
         selectedOption = json['selectedOption'],
         pin = json['pin'].isEmpty ? null : int.parse(json['pin']),
-        newBlock = json['newBlock'],
-        newConnection = json['newConnection'],
-        additionalConnection = json['additionalConnection'],
-        startConnection = json['startConnection'],
-        key = json['key'].isEmpty ? null : Key(json['key']),
         variableName = json['variableName'];
 }
 

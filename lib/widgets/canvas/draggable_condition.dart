@@ -105,8 +105,7 @@ class _ConditionField extends State<DraggableCondition> {
           ),
         ],
         child: Draggable(
-            data: StateSettings(
-                "", "then", null, false, false, false, false, null, ""),
+            data: DragData(null, "", "then", false, false, false, false),
             child: widget.connection.condition.type == "ifelse"
                 ? Row(
                     children: [

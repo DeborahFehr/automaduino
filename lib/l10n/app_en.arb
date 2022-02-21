@@ -50,7 +50,7 @@
   "close": "Close",
   "english": "English",
   "german": "German",
-  "json": "{json, select, motionSensor {Motion Sensor} temperatureSensor {Temperature Sensor} humiditySensor {Humidity Sensor} vibrationSensor {Vibration Sensor} loudnessSensor {Loudness Sensor} ultrasonicRanger {Ultrasonic Ranger} button {Button} switch {Switch} keypad {Keypad} tilt {Tilt} led {LED} buzzer {Buzzer} vibrationMotor {Vibration Motor} relay {Relay} readDigital {Read Digital} readAnalog {Read Analog} awaitInput {Await Input} on {On} off {Off} defaultBlockIcon {Default Block Icon} flashInRelayOn {Flash in Relay on} languageIconGerman {Language Icon German} languageIconEnglish {Language Icon English} other {jsonData}}",
+  "json": "{json, select, motionSensor {Motion Sensor} temperatureSensor {Temperature Sensor} humiditySensor {Humidity Sensor} vibrationSensor {Vibration Sensor} loudnessSensor {Loudness Sensor} ultrasonicRanger {Ultrasonic Ranger} button {Button} switch {Switch} keypad {Keypad} potentiometer {Potentiometer} tilt {Tilt} led {LED} buzzer {Buzzer} vibrationMotor {Vibration Motor} relay {Relay} readDigital {Read Digital} readAnalog {Read Analog} readCelsius {Read in Celsius} sendWave {Send Wave} receiveWave {Receive Wave} awaitInput {Await Input} on {On} off {Off} defaultBlockIcon {Default Block Icon} flashInRelayOn {Flash in Relay on} languageIconGerman {Language Icon German} languageIconEnglish {Language Icon English} other {jsonData}}",
   "@json": {
     "description": "Data in Json Files",
     "placeholders": {

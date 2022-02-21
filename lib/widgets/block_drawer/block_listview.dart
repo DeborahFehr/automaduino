@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../resources/state.dart';
+import '../../resources/canvas_layout.dart';
 import 'block_preview.dart';
 
 class BlockListView extends StatelessWidget {
@@ -30,16 +31,8 @@ class BlockListView extends StatelessWidget {
               children: [
                 Container(height: 5),
                 Draggable(
-                  data: StateSettings(
-                      list[index].component,
-                      list[index].option,
-                      null,
-                      true,
-                      false,
-                      false,
-                      false,
-                      null,
-                      list[index].component),
+                  data: DragData(null, list[index].component,
+                      list[index].option, true, false, false, false),
                   child: buildingBlock,
                   feedback: BlockPreview(
                       list[index].component,

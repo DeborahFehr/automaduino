@@ -8,9 +8,6 @@ import '../../resources/automaduino_state.dart';
 import '../../resources/settings.dart';
 import 'editor_highlighter.dart';
 import '../../resources/code_map.dart';
-import 'dart:convert';
-import 'dart:typed_data';
-import 'package:file_saver/file_saver.dart';
 
 class CodeEditor extends StatefulWidget {
   final CodeMap? map;
@@ -134,58 +131,49 @@ class _CodeEditorState extends State<CodeEditor> {
         Container(
           width: double.infinity,
           color: Theme.of(context).colorScheme.secondary,
-          child: Wrap(
-            children: [
-              ElevatedButton(
-                  onPressed: () => {
-                        showDialog(
-                            context: context, builder: (_) => InitDialog()),
-                      },
-                  child: Text(AppLocalizations.of(context)!.initPins)),
-              ElevatedButton(
-                  onPressed: () {
-                    Clipboard.setData(ClipboardData(text: codeController.text));
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(AppLocalizations.of(context)!.codeCopied),
-                      ),
-                    );
-                  },
-                  child: Text(AppLocalizations.of(context)!.copyCode)),
-              ElevatedButton(
-                onPressed: Provider.of<AutomaduinoState>(context, listen: false)
-                        .endPoint
-                        .available
-                    ? null
-                    : () =>
-                        Provider.of<AutomaduinoState>(context, listen: false)
-                            .showEndPoint(),
-                child: Text(
-                  AppLocalizations.of(context)!.showEnd,
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: PopupMenuButton(
+                icon: Icon(
+                  Icons.more_horiz,
+                  color: Colors.white,
                 ),
-              ),
-              /*
-              // download as .ino currently not possible because MIME type is missing
-              ElevatedButton(
-                onPressed: () async {
-                  Uint8List bytes =
-                      Uint8List.fromList(utf8.encode(widget.code));
-
-                  await FileSaver.instance
-                      .saveFile("arduino_code", bytes, "ino");
+                onSelected: (value) {
+                  switch (value) {
+                    case 1:
+                      showDialog(
+                          context: context, builder: (_) => InitDialog());
+                      break;
+                    case 2:
+                      Clipboard.setData(
+                          ClipboardData(text: codeController.text));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content:
+                              Text(AppLocalizations.of(context)!.codeCopied),
+                        ),
+                      );
+                      break;
+                    case 3:
+                      Provider.of<AutomaduinoState>(context, listen: false)
+                          .showEndPoint();
+                      break;
+                  }
                 },
-                child: Text(
-                  AppLocalizations.of(context)!.exportIno,
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-               */
-            ],
+                itemBuilder: (context) => [
+                      PopupMenuItem(
+                        child: Text(AppLocalizations.of(context)!.initPins),
+                        value: 1,
+                      ),
+                      PopupMenuItem(
+                        child: Text(AppLocalizations.of(context)!.copyCode),
+                        value: 2,
+                      ),
+                      PopupMenuItem(
+                        child: Text(AppLocalizations.of(context)!.showEnd),
+                        value: 3,
+                      )
+                    ]),
           ),
         ),
         IntrinsicHeight(
@@ -212,11 +200,6 @@ class _CodeEditorState extends State<CodeEditor> {
                     maxLines: null,
                     minLines: 10,
                     controller: codeController,
-
-                    //FruitColorizer({
-                    //  'loop': TextStyle(color: Colors.green, decoration: TextDecoration.underline),
-                    //  'setup': TextStyle(color: Colors.orange, shadows: kElevationToShadow[2]),
-                    //               }),//
                   ),
                 ),
               ),

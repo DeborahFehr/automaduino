@@ -14,24 +14,26 @@ class InitChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-        color: Colors.transparent,
-        child: Padding(
-            padding: EdgeInsets.all(3),
-            child: Chip(
-              backgroundColor: Colors.white70,
-              elevation: 6.0,
-              padding: EdgeInsets.all(5),
-              avatar: CircleAvatar(
-                backgroundColor: color,
-                child: Padding(
-                  padding: EdgeInsets.all(4),
-                  child: Image(
-                    image: AssetImage(imagePath),
-                    fit: BoxFit.contain,
-                  ),
-                ),
+      color: Colors.transparent,
+      child: Padding(
+        padding: EdgeInsets.all(3),
+        child: Chip(
+          backgroundColor: Colors.white70,
+          elevation: 6.0,
+          padding: EdgeInsets.all(5),
+          avatar: CircleAvatar(
+            backgroundColor: color,
+            child: Padding(
+              padding: EdgeInsets.all(4),
+              child: Image(
+                image: AssetImage(imagePath),
+                fit: BoxFit.contain,
               ),
-              label: Text(name),
-            )));
+            ),
+          ),
+          label: Text(name),
+        ),
+      ),
+    );
   }
 }

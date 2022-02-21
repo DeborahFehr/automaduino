@@ -29,6 +29,8 @@ List<ImageSource> images = [
       "https://www.flaticon.com/premium-icon/turn-on_3256132"),
   ImageSource("graphics/state_icons/keypad.png", "keypad",
       "https://www.flaticon.com/free-icon/password_1672575"),
+  ImageSource("graphics/state_icons/potentiometer.png", "potentiometer",
+      "https://www.flaticon.com/premium-icon/dial_4115969"),
   ImageSource("graphics/state_icons/tilt.png", "tilt",
       "https://www.flaticon.com/free-icon/button_5169082"),
   ImageSource("graphics/state_icons/led_on.png", "led",

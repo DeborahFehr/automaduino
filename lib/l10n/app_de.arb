@@ -50,7 +50,7 @@
   "close": "Schließen",
   "english": "Englisch",
   "german": "Deutsch",
-  "json": "{json, select, motionSensor {Bewegungs sensor} temperatureSensor {Temperatur sensor} humiditySensor {Nässe sensor} vibrationSensor {Vibrations sensor} loudnessSensor {Lautstärke sensor} ultrasonicRanger {Ultraschall messer} button {Knopf} switch {Schalter} keypad {Tastenfeld} tilt {Neigungs schalter} led {LED} buzzer {Summer} vibrationMotor {Vibrations motor} relay {Relais} readDigital {Digital Messen} readAnalog {Analog Messen} awaitInput {Erwarte Eingabe} on {An} off {Aus} defaultBlockIcon {Standard Block Icon} flashInRelayOn {Blitz in Relais an} languageIconGerman {Icon Sprache Deutsch} languageIconEnglish {Icon Sprache Englisch} other {jsonData}}",
+  "json": "{json, select, motionSensor {Bewegungs sensor} temperatureSensor {Temperatur sensor} humiditySensor {Nässe sensor} vibrationSensor {Vibrations sensor} loudnessSensor {Lautstärke sensor} ultrasonicRanger {Ultraschall messer} button {Knopf} switch {Schalter} keypad {Tastenfeld} potentiometer {Potentiometer} tilt {Neigungs schalter} led {LED} buzzer {Summer} vibrationMotor {Vibrations motor} relay {Relais} readDigital {Digital Messen} readAnalog {Analog Messen} readCelsius {Celsius Messen} sendWave {Welle senden} receiveWave {Welle lesen} awaitInput {Erwarte Eingabe} on {An} off {Aus} defaultBlockIcon {Standard Block Icon} flashInRelayOn {Blitz in Relais an} languageIconGerman {Icon Sprache Deutsch} languageIconEnglish {Icon Sprache Englisch} other {jsonData}}",
   "@jsonData": {
     "description": "Daten in Json Dateien",
     "placeholders": {

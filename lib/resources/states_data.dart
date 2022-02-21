@@ -3,8 +3,12 @@ import 'state.dart';
 List<StateData> sensorBlocks = [
   StateData("sensor", "motionSensor", "graphics/state_icons/motion-sensor.png",
       "/docs/overview/", "readDigital"),
-  //StateData("sensor", "Temperature Sensor", "graphics/state_icons/temperature-sensor.png",
-  //    "/docs/overview/", "Read Data"),
+  StateData(
+      "sensor",
+      "temperatureSensor",
+      "graphics/state_icons/temperature-sensor.png",
+      "/docs/overview/",
+      "readCelsius"),
   StateData(
       "sensor",
       "humiditySensor",
@@ -23,8 +27,18 @@ List<StateData> sensorBlocks = [
       "graphics/state_icons/loudness-sensor.png",
       "/docs/overview/",
       "readAnalog"),
-  //StateData("sensor", "Ultrasonic Ranger", "graphics/state_icons/ultrasonic-ranger.png",
-  //    "/docs/overview/", "Read Data")
+  StateData(
+      "sensor",
+      "ultrasonicRanger",
+      "graphics/state_icons/ultrasonic-ranger.png",
+      "/docs/overview/",
+      "sendWave"),
+  StateData(
+      "sensor",
+      "ultrasonicRanger",
+      "graphics/state_icons/ultrasonic-ranger.png",
+      "/docs/overview/",
+      "receiveWave")
 ];
 
 List<StateData> userInputBlocks = [
@@ -32,12 +46,16 @@ List<StateData> userInputBlocks = [
       "/docs/overview/", "awaitInput"),
   StateData("userInput", "switch", "graphics/state_icons/switch.png",
       "/docs/overview/", "awaitInput"),
-  StateData("userInput", "keypad", "graphics/state_icons/keypad.png",
-      "/docs/overview/", "awaitInput"),
+  //StateData("userInput", "keypad", "graphics/state_icons/keypad.png",
+  //    "/docs/overview/", "awaitInput"),
   StateData("userInput", "tilt", "graphics/state_icons/tilt.png",
       "/docs/overview/", "awaitInput"),
-  //StateData("userInput", "RFID", "graphics/state_icons/demo.png",
-  //    "/docs/overview/", "Await Input")
+  StateData(
+      "userInput",
+      "potentiometer",
+      "graphics/state_icons/potentiometer.png",
+      "/docs/overview/",
+      "awaitInput"),
 ];
 
 List<StateData> outputBlocks = [
@@ -58,7 +76,7 @@ List<StateData> outputBlocks = [
   StateData("output", "relay", "graphics/state_icons/relay_off.png",
       "/docs/overview/", "off"),
   //StateData("output", "Servo", "graphics/state_icons/demo.png",
-  //    "/docs/overview/", "90 degree")
+  //    "/docs/overview/", "90")
 ];
 
 List<StateData> returnAllData() {

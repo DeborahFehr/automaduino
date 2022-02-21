@@ -1,6 +1,5 @@
-import 'package:arduino_statemachines/resources/state.dart';
 import 'package:flutter/material.dart';
-import '../../resources/state.dart';
+import '../../resources/canvas_layout.dart';
 
 class AddConnectionButton extends StatelessWidget {
   final Key blockKey;
@@ -17,8 +16,7 @@ class AddConnectionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Draggable(
-        data: StateSettings(
-            "", "", null, false, true, condition, point, blockKey, ""),
+        data: DragData(blockKey, "", "", false, true, condition, point),
         child: SizedBox(
           height: 20,
           child: TextButton(

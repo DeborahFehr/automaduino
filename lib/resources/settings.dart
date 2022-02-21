@@ -20,9 +20,20 @@ Offset keepInCanvas(Offset position) {
   return result;
 }
 
-// Color setter
+Color sensorColor = Colors.redAccent;
+Color userInputColor = Colors.blueAccent;
+Color outputColor = Colors.greenAccent;
 
-// Start and Endpoint initial Position
+Color getBlockColorByType(String type) {
+  return type == "sensor"
+      ? sensorColor
+      : type == "userInput"
+          ? userInputColor
+          : outputColor;
+}
+
+Offset startPosition = Offset(40, 40);
+Offset endPosition = Offset(240, 40);
 
 String getDefaultCode() {
   return '''void setup() {

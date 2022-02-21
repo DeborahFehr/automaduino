@@ -10,19 +10,19 @@ class StateFunction {
 
 List<StateFunction> sensorFunctions = [
   StateFunction("motionSensor", "readDigital", digitalRead),
-  StateFunction("temperatureSensor", "readDigital", () => print("todo")),
+  StateFunction("temperatureSensor", "readCelsius", temperatureRead),
   StateFunction("humiditySensor", "readAnalog", analogRead),
   StateFunction("vibrationSensor", "readDigital", digitalRead),
   StateFunction("loudnessSensor", "readAnalog", analogRead),
-  StateFunction("ultrasonicRanger", "readAnalog", () => print("todo")),
+  StateFunction("ultrasonicRanger", "sendWave", sendWave),
+  StateFunction("ultrasonicRanger", "receiveWave", receiveWave),
 ];
 
 List<StateFunction> userInputFunctions = [
   StateFunction("button", "awaitInput", digitalRead),
   StateFunction("switch", "awaitInput", digitalRead),
-  StateFunction("keypad", "awaitInput", () => print("todo")),
   StateFunction("tilt", "awaitInput", digitalRead),
-  StateFunction("RFID", "awaitInput", () => print("todo")),
+  StateFunction("potentiometer", "awaitInput", analogRead),
 ];
 
 List<StateFunction> outputFunctions = [
@@ -39,6 +39,22 @@ List<StateFunction> outputFunctions = [
 /// Sensors
 String analogRead(String varName, String pin) {
   return varName + " = analogRead(" + pin + ");";
+}
+
+String temperatureRead(String varName, String pin) {
+  return varName + " = map(analogRead(" + pin + "), 0, 410, -50, 150);";
+}
+
+String sendWave(String varName, String pin) {
+  return "digitalWrite(trigger, LOW);\ndelay(5);\ndigitalWrite(" +
+      pin +
+      ", HIGH);\ndelay(10);\ndigitalWrite(" +
+      pin +
+      ", LOW);";
+}
+
+String receiveWave(String varName, String pin) {
+  return varName + " = (pulseIn(" + pin + ", HIGH)/2) * 0.03432;";
 }
 
 /// User Input

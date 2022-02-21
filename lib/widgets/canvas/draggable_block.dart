@@ -95,20 +95,21 @@ class DraggableBlock extends StatelessWidget {
                     ),
             ],
             child: Draggable(
-                data: block.settings,
+                data: DragData(null, block.settings.name,
+                    block.settings.selectedOption, false, false, false, false),
                 child: DragTarget(
                   builder: (context, List<dynamic> candidateData,
                       List<dynamic> rejectedData) {
                     return blockWidget;
                   },
                   onWillAccept: (candidate) {
-                    StateSettings data = (candidate as StateSettings);
+                    DragData data = (candidate as DragData);
                     return !data.newBlock &&
                         data.newConnection &&
                         data.key != block.key;
                   },
                   onAccept: (data) {
-                    addConnection((data as StateSettings).key as Key,
+                    addConnection((data as DragData).key as Key,
                         data.startConnection, data.additionalConnection);
                   },
                 ),

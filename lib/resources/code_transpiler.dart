@@ -1,6 +1,5 @@
 import 'package:arduino_statemachines/resources/state.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter/cupertino.dart';
 import 'canvas_layout.dart';
 import 'transition.dart';
 import 'pin_assignment.dart';
@@ -67,7 +66,7 @@ class CodeTranspiler {
 
   void _generateSetup(bool end) {
     if (end) {
-      map.setup["end"] = "bool end = false;\n\n";
+      map.setup["end"] = "bool end = false;\n";
     }
     pins.forEach((element) {
       if (element.variableName != null) {
@@ -104,7 +103,7 @@ class CodeTranspiler {
 
     if (end) {
       map.loop["end"] = "if(!end){\n" + loop + "}\n";
-      map.loop["endActivated"] = "end = true;\n";
+      map.loop["endActivated"] = "end = true;";
     }
   }
 
@@ -139,7 +138,10 @@ class CodeTranspiler {
 
     if (connection != null) {
       map.states[state.settings.variableName]!.transition =
-          _generateTransitionFunctions(connection) + "\n";
+          _generateTransitionFunctions(connection);
+    } else {
+      map.states[state.settings.variableName]!.transition =
+          state.settings.variableName + "();";
     }
   }
 
@@ -216,7 +218,7 @@ class CodeTranspiler {
 
     if (end) {
       map.loop["end"] = "if(!end){\n" + loop + "}\n";
-      map.loop["endActivated"] = "end = true;\n";
+      map.loop["endActivated"] = "end = true;";
     }
   }
 
@@ -254,10 +256,10 @@ class CodeTranspiler {
     if (connection != null) {
       result += action + "\n";
       String nextAction = _generateTransitionAbridged(connection);
-      map.states[state.settings.variableName]!.transition = nextAction + "\n";
-      result += nextAction + "\n";
+      map.states[state.settings.variableName]!.transition = nextAction;
+      result += nextAction;
     } else {
-      action = "while(true)\n" + action + "\n}\n";
+      action = "while(true){\n" + action + "\n}\n";
       result += action;
       map.states[state.settings.variableName]!.action = action;
     }
@@ -270,7 +272,7 @@ class CodeTranspiler {
     PositionedState? nextState;
 
     if (connection.endPoint) {
-      transitionFunction += "end = true;\n";
+      transitionFunction += "end = true;";
     } else {
       PositionedState endState =
           blocks.firstWhere((element) => element.key == connection.end.first);
@@ -323,13 +325,13 @@ class CodeTranspiler {
   /// SWITCH TRANSPILER
 
   void _generateCodeMapSwitch(bool end) {
-    map.setup["switch"] = "int state = 0;\n\n";
-
     Transition? start =
         connections.firstWhereOrNull((element) => element.startPoint);
     if (start != null) {
-      PositionedState startState =
-          blocks.firstWhere((element) => element.key == start.end.first);
+      int startState =
+          blocks.indexWhere((element) => element.key == start.end.first);
+
+      map.setup["switch"] = "int state = " + startState.toString() + ";\n";
       _generateLoopSwitch(end);
     }
 
@@ -392,7 +394,7 @@ class CodeTranspiler {
 
     if (connection != null) {
       map.states[state.settings.variableName]!.transition =
-          _generateTransitionSwitch(connection) + "\n";
+          _generateTransitionSwitch(connection);
     }
   }
 
@@ -404,11 +406,11 @@ class CodeTranspiler {
     int stateId = 0;
 
     if (connection.endPoint) {
-      transitionFunction += "end = true;\n";
+      transitionFunction += "end = true;";
     } else {
       stateId =
           blocks.indexWhere((element) => element.key == connection.end.first);
-      nextFunction = "state = " + stateId.toString() + ";\n";
+      nextFunction = "state = " + stateId.toString() + ";";
     }
 
     switch (connection.condition.type) {
@@ -425,7 +427,7 @@ class CodeTranspiler {
           elseFunction += blocks
                   .indexWhere((element) => element.key == connection.end[1])
                   .toString() +
-              ";\n";
+              ";";
         }
         transitionFunction += transitionIfElse("value", nextFunction,
             elseFunction, connection.condition.values.first);
@@ -436,7 +438,7 @@ class CodeTranspiler {
         for (int i = 0; i < connection.end.length; i++) {
           int id =
               blocks.indexWhere((element) => element.key == connection.end[i]);
-          functionNames.add("state = " + id.toString() + ";\n");
+          functionNames.add("state = " + id.toString() + ";");
           conditionValues.add(connection.condition.values[i]);
         }
         transitionFunction += transitionCond(functionNames, conditionValues);

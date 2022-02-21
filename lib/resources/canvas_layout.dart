@@ -36,6 +36,20 @@ class PositionedState {
 }
 
 /// Draggable Connection is used to draw a line while making a transition
+class DragData {
+  final Key? key;
+  final String name;
+  final String selectedOption;
+  final bool newBlock;
+  final bool newConnection;
+  final bool additionalConnection;
+  final bool startConnection;
+
+  DragData(this.key, this.name, this.selectedOption, this.newBlock,
+      this.newConnection, this.additionalConnection, this.startConnection);
+}
+
+/// Draggable Connection is used to draw a line while making a transition
 class DraggableConnection {
   final Offset start;
   Offset end;

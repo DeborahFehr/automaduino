@@ -1,4 +1,5 @@
 import 'package:arduino_statemachines/resources/canvas_layout.dart';
+import 'package:arduino_statemachines/resources/settings.dart';
 import 'package:flutter/material.dart';
 import 'init_chip.dart';
 import '../../resources/pin_assignment.dart';
@@ -6,6 +7,8 @@ import '../../resources/automaduino_state.dart';
 import '../../resources/states_data.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'init_delete_button.dart';
+import 'init_dropdown.dart';
 
 class InitDialog extends StatefulWidget {
   InitDialog({Key? key}) : super(key: key);
@@ -14,7 +17,6 @@ class InitDialog extends StatefulWidget {
   _InitDialogState createState() => _InitDialogState();
 }
 
-/// This should srsly be refactored
 class _InitDialogState extends State<InitDialog> {
   final _formKey = GlobalKey<FormState>();
 
@@ -31,6 +33,39 @@ class _InitDialogState extends State<InitDialog> {
     assignments = [
       ...Provider.of<AutomaduinoState>(context, listen: false).pinAssignments
     ];
+  }
+
+  Function deleteAssignment(
+      PinAssignment assignment, List<PositionedState> blocks) {
+    return () {
+      setState(() {
+        assignments.removeWhere((item) =>
+            item.pin == assignment.pin &&
+            item.component == assignment.component);
+        blocks.forEach((block) {
+          if (block.settings.pin == assignment.pin &&
+              block.data.component == assignment.component) {
+            block.settings.pin = null;
+          }
+        });
+      });
+    };
+  }
+
+  Function(dynamic comp) assignComponent(PinAssignment assignment) {
+    return (dynamic comp) {
+      setState(() {
+        assignment.component = comp;
+      });
+    };
+  }
+
+  Function(dynamic comp) assignPin(PinAssignment assignment) {
+    return (dynamic pin) {
+      setState(() {
+        assignment.pin = pin;
+      });
+    };
   }
 
   @override
@@ -83,142 +118,19 @@ class _InitDialogState extends State<InitDialog> {
                             for (var assignment in assignments)
                               TableRow(
                                 children: <Widget>[
-                                  TableCell(
-                                    verticalAlignment:
-                                        TableCellVerticalAlignment.middle,
-                                    child: Center(
-                                      child: SizedBox(
-                                        height: 20.0,
-                                        width: 20.0,
-                                        child: Ink(
-                                          decoration: const ShapeDecoration(
-                                            color: Colors.red,
-                                            shape: CircleBorder(),
-                                          ),
-                                          child: IconButton(
-                                            padding: EdgeInsets.zero,
-                                            splashRadius: 15,
-                                            icon: Icon(Icons.highlight_remove,
-                                                size: 15.0),
-                                            color: Colors.white,
-                                            onPressed: () {
-                                              setState(() {
-                                                assignments.removeWhere(
-                                                    (item) =>
-                                                        item.pin ==
-                                                            assignment.pin &&
-                                                        item.component ==
-                                                            assignment
-                                                                .component);
-                                                state.blocks.forEach((block) {
-                                                  if (block.settings.pin ==
-                                                          assignment.pin &&
-                                                      block.data.component ==
-                                                          assignment
-                                                              .component) {
-                                                    block.settings.pin = null;
-                                                  }
-                                                });
-                                              });
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 10),
-                                    child: DropdownButtonFormField(
-                                      isExpanded: true,
+                                  InitDeleteButton(
+                                      deleteAssigment: deleteAssignment(
+                                          assignment, state.blocks)),
+                                  InitDropdown(
+                                      component: true,
                                       value: assignment.component,
-                                      style: const TextStyle(fontSize: 12),
-                                      onChanged: (dynamic comp) {
-                                        setState(() {
-                                          assignment.component = comp;
-                                        });
-                                      },
-                                      validator: (dynamic value) {
-                                        if (value == null) {
-                                          return AppLocalizations.of(context)!
-                                              .fieldRequired;
-                                        }
-                                        return null;
-                                      },
-                                      items: componentOptions
-                                          .map<DropdownMenuItem>(
-                                              (String value) {
-                                        return DropdownMenuItem(
-                                          value: value,
-                                          child: Center(
-                                              child: Row(
-                                            children: [
-                                              Container(
-                                                width: 25.0,
-                                                height: 25.0,
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  color: returnDataByName(value)
-                                                              .type ==
-                                                          "sensor"
-                                                      ? Colors.redAccent
-                                                      : returnDataByName(value)
-                                                                  .type ==
-                                                              "userInput"
-                                                          ? Colors.blueAccent
-                                                          : Colors.greenAccent,
-                                                  image: DecorationImage(
-                                                    fit: BoxFit.contain,
-                                                    image: AssetImage(
-                                                        returnDataByName(value)
-                                                            .imagePath),
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
-                                              Text(AppLocalizations.of(context)!
-                                                  .json(value)),
-                                            ],
-                                          )),
-                                        );
-                                      }).toList(),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 10),
-                                    child: DropdownButtonFormField(
-                                      isExpanded: true,
+                                      valueOnChanged:
+                                          assignComponent(assignment),
+                                      options: componentOptions),
+                                  InitDropdown(
                                       value: assignment.pin,
-                                      style: const TextStyle(fontSize: 12),
-                                      onChanged: (dynamic pin) {
-                                        setState(() {
-                                          assignment.pin = pin;
-                                        });
-                                      },
-                                      validator: (dynamic value) {
-                                        if (value == null) {
-                                          return AppLocalizations.of(context)!
-                                              .fieldRequired;
-                                        }
-                                        return null;
-                                      },
-                                      items: pinOptions
-                                          .map<DropdownMenuItem>((int value) {
-                                        return DropdownMenuItem(
-                                          value: value,
-                                          child: Center(
-                                            child: Text(
-                                              value.toString(),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ),
-                                        );
-                                      }).toList(),
-                                    ),
-                                  ),
+                                      valueOnChanged: assignPin(assignment),
+                                      options: pinOptions),
                                   Padding(
                                     padding: EdgeInsets.all(5),
                                     child: DragTarget(
@@ -242,27 +154,13 @@ class _InitDialogState extends State<InitDialog> {
                                                   data: block,
                                                   child: InitChip(
                                                       block.settings.name,
-                                                      block.data.type ==
-                                                              "sensor"
-                                                          ? Colors.redAccent
-                                                          : block.data.type ==
-                                                                  "userInput"
-                                                              ? Colors
-                                                                  .blueAccent
-                                                              : Colors
-                                                                  .greenAccent,
+                                                      getBlockColorByType(
+                                                          block.data.type),
                                                       block.data.imagePath),
                                                   feedback: InitChip(
                                                       block.settings.name,
-                                                      block.data.type ==
-                                                              "sensor"
-                                                          ? Colors.redAccent
-                                                          : block.data.type ==
-                                                                  "userInput"
-                                                              ? Colors
-                                                                  .blueAccent
-                                                              : Colors
-                                                                  .greenAccent,
+                                                      getBlockColorByType(
+                                                          block.data.type),
                                                       block.data.imagePath),
                                                   childWhenDragging:
                                                       Container(),
@@ -301,7 +199,6 @@ class _InitDialogState extends State<InitDialog> {
                             setState(() {
                               assignments.add(PinAssignment(null, null, null));
                             });
-                            print(assignments.length);
                           },
                         ),
                         DragTarget(
@@ -334,21 +231,13 @@ class _InitDialogState extends State<InitDialog> {
                                           data: block,
                                           child: InitChip(
                                               block.settings.name,
-                                              block.data.type == "sensor"
-                                                  ? Colors.redAccent
-                                                  : block.data.type ==
-                                                          "userInput"
-                                                      ? Colors.blueAccent
-                                                      : Colors.greenAccent,
+                                              getBlockColorByType(
+                                                  block.data.type),
                                               block.data.imagePath),
                                           feedback: InitChip(
                                               block.settings.name,
-                                              block.data.type == "sensor"
-                                                  ? Colors.redAccent
-                                                  : block.data.type ==
-                                                          "userInput"
-                                                      ? Colors.blueAccent
-                                                      : Colors.greenAccent,
+                                              getBlockColorByType(
+                                                  block.data.type),
                                               block.data.imagePath),
                                           childWhenDragging: Container(),
                                         ),
@@ -401,7 +290,6 @@ class _InitDialogState extends State<InitDialog> {
                                         .component!
                                         .replaceAll(" ", "_");
                               }
-
                               Provider.of<AutomaduinoState>(context,
                                       listen: false)
                                   .addPinList(assignments);
@@ -418,7 +306,7 @@ class _InitDialogState extends State<InitDialog> {
                                     content: Text(AppLocalizations.of(context)!
                                         .pinsSuccessfullyInitiated)),
                               );
-                              Navigator.pop(context, "test");
+                              Navigator.pop(context);
                             }
                           },
                           child: Text(AppLocalizations.of(context)!.submit),

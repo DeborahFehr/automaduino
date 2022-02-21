@@ -9,13 +9,15 @@ class CodeMap {
   CodeMap(this.import, this.pins, this.setup, this.loop, this.states);
 
   String setupWrapper() {
-    String result = "void setup() { \n";
+    String result = setup.containsKey("switch") ? setup["switch"]! : "";
+    result += "void setup() { \n";
     setup.forEach((key, value) {
-      if (key != "end") {
+      if (key != "end" && key != "switch") {
         result += value + "\n";
       }
     });
-    result += "}\n\n";
+    result += "}\n";
+
     return result;
   }
 
@@ -36,7 +38,7 @@ class CodeMap {
     });
     result += "\n";
     if (setup.containsKey("end")) {
-      result += setup["end"] ?? "" + "\n";
+      result += setup["end"] ?? "" + "";
     }
     result += setupWrapper() + "\n";
     switch (mode) {
@@ -73,11 +75,11 @@ class CodeMap {
     String result = "";
     String loopContent = "";
     if (loop.containsKey("end")) {
-      loopContent += loop["end"] ?? "" + "\n";
+      loopContent += loop["end"] ?? "";
     } else {
-      loopContent += loop["start"] ?? "" + "\n";
+      loopContent += loop["start"] ?? "";
     }
-    result += loopWrapper(loopContent) + "\n";
+    result += loopWrapper(loopContent);
 
     return result;
   }
@@ -158,7 +160,7 @@ class StateMap {
     String result = "void " + functionName + "(){\n";
     result += action + "\n";
     result += transition + "\n";
-    result += "}\n\n";
+    result += "}\n";
     return result;
   }
 

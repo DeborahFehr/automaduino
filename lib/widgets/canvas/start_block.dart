@@ -1,6 +1,7 @@
 import 'package:arduino_statemachines/resources/state.dart';
 import 'package:flutter/material.dart';
 import '../../resources/state.dart';
+import '../../resources/canvas_layout.dart';
 import '../../resources/transition.dart';
 import 'add_connection_button.dart';
 import 'package:contextmenu/contextmenu.dart';
@@ -49,8 +50,7 @@ class StartBlock extends StatelessWidget {
           ),
         ],
         child: Draggable(
-            data:
-                StateSettings("", "", null, false, true, false, false, key, ""),
+            data: DragData(key, "", "", false, true, false, false),
             child: Column(
               children: [
                 Text(
