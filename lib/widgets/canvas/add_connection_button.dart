@@ -3,6 +3,7 @@ import '../../resources/canvas_layout.dart';
 
 class AddConnectionButton extends StatelessWidget {
   final Key blockKey;
+  final String blockOption;
   final bool point;
   final bool condition;
   final Offset blockPosition;
@@ -10,13 +11,14 @@ class AddConnectionButton extends StatelessWidget {
           bool active, bool point, bool adition, Offset start, Offset end)
       updateDrag;
 
-  const AddConnectionButton(this.blockKey, this.point, this.condition,
-      this.blockPosition, this.updateDrag);
+  const AddConnectionButton(this.blockKey, this.blockOption, this.point,
+      this.condition, this.blockPosition, this.updateDrag);
 
   @override
   Widget build(BuildContext context) {
     return Draggable(
-        data: DragData(blockKey, "", "", false, true, condition, point),
+        data:
+            DragData(blockKey, "", blockOption, false, true, condition, point),
         child: SizedBox(
           height: 20,
           child: TextButton(

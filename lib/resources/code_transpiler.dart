@@ -1,10 +1,10 @@
 import 'package:arduino_statemachines/resources/state.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
 import 'canvas_layout.dart';
 import 'transition.dart';
 import 'pin_assignment.dart';
 import 'arduino_functions.dart';
-import 'states_data.dart';
 import 'code_map.dart';
 
 class CodeTranspiler {
@@ -34,6 +34,7 @@ class CodeTranspiler {
 
   CodeMap? getMap() {
     if (blocks.length == 0) return null;
+    _imports();
     _pinList();
     bool end = connections.any((element) => element.endPoint);
     _generateSetup(end);
@@ -52,14 +53,30 @@ class CodeTranspiler {
     return map;
   }
 
+  void _imports() {
+    List<String> components =
+        blocks.map((e) => e.data.component).toSet().toList();
+    components.forEach((element) {
+      StateFunction functionData = returnFunctionByName(element);
+      if (functionData.imports != null) {
+        map.import[element] = functionData.imports!;
+      }
+    });
+  }
+
   void _pinList() {
     pins.forEach((element) {
       if (element.variableName != null) {
-        map.pins[element.variableName!] = "int " +
-            element.variableName! +
-            " = " +
-            element.pin.toString() +
-            ";";
+        if (element.component == "servo") {
+          map.pins[element.variableName!] =
+              "Servo " + element.variableName! + ";";
+        } else {
+          map.pins[element.variableName!] = "int " +
+              element.variableName! +
+              " = " +
+              element.pin.toString() +
+              ";";
+        }
       }
     });
   }
@@ -70,11 +87,10 @@ class CodeTranspiler {
     }
     pins.forEach((element) {
       if (element.variableName != null) {
-        String type = returnDataByName(element.component!).type == "output"
-            ? "OUTPUT"
-            : "INPUT";
-        map.setup[element.variableName!] =
-            "pinMode(" + element.variableName! + ", " + type + ");";
+        StateFunction function = returnFunctionByName(element.component!);
+        map.setup[element.variableName!] = element.component! == "servo"
+            ? function.pinSetup(element.variableName!, element.pin.toString())
+            : function.pinSetup(element.variableName!);
       }
     });
   }
@@ -127,10 +143,10 @@ class CodeTranspiler {
 
     if (state.data.type == "output") {
       map.states[state.settings.variableName]!.action =
-          arduinoFunction.function(pinVariable);
+          arduinoFunction.action(pinVariable);
     } else {
       map.states[state.settings.variableName]!.action =
-          arduinoFunction.function("value", pinVariable);
+          arduinoFunction.action("value", pinVariable);
     }
 
     Transition? connection =
@@ -213,7 +229,7 @@ class CodeTranspiler {
   }
 
   void _generateLoopAbridged(PositionedState state, bool end) {
-    String loop = _generateStateAbridged(state);
+    String loop = _generateStateAbridged(state, null);
     map.loop["start"] = loop;
 
     if (end) {
@@ -222,7 +238,7 @@ class CodeTranspiler {
     }
   }
 
-  String _generateStateAbridged(PositionedState state) {
+  String _generateStateAbridged(PositionedState state, PositionedState? loop) {
     String result = "";
     if (map.states[state.settings.variableName] == null) {
       map.states[state.settings.variableName] = StateMap("", "", "");
@@ -243,9 +259,9 @@ class CodeTranspiler {
 
     String action = "";
     if (state.data.type == "output") {
-      action = arduinoFunction.function(pinVariable);
+      action = arduinoFunction.action(pinVariable);
     } else {
-      action = arduinoFunction.function("value", pinVariable);
+      action = arduinoFunction.action("value", pinVariable);
     }
 
     map.states[state.settings.variableName]!.action = action;
@@ -254,8 +270,18 @@ class CodeTranspiler {
         connections.firstWhereOrNull((element) => element.start == state.key);
 
     if (connection != null) {
+      String nextAction = "";
+      if (loop == null) {
+        if (_findLoop(state, [], connection)) {
+          result += "while(true){\n";
+          nextAction = _generateTransitionAbridged(connection, state);
+        } else {
+          nextAction = _generateTransitionAbridged(connection, null);
+        }
+      } else {
+        nextAction = _generateTransitionAbridged(connection, loop);
+      }
       result += action + "\n";
-      String nextAction = _generateTransitionAbridged(connection);
       map.states[state.settings.variableName]!.transition = nextAction;
       result += nextAction;
     } else {
@@ -266,7 +292,36 @@ class CodeTranspiler {
     return result;
   }
 
-  String _generateTransitionAbridged(Transition connection) {
+  bool _findLoop(
+      PositionedState start, List<Key> visited, Transition? connection) {
+    if (connection == null) {
+      return false;
+    } else {
+      bool result = false;
+      connection.end.forEach((endKey) {
+        PositionedState follower =
+            blocks.firstWhere((element) => element.key == endKey);
+        if (visited.contains(follower.key))
+          result = false;
+        else {
+          if (follower.key == start.key) {
+            result = true;
+          } else {
+            visited.add(follower.key);
+            result = _findLoop(
+                start,
+                visited,
+                connections
+                    .firstWhereOrNull((con) => con.start == follower.key));
+          }
+        }
+      });
+      return result;
+    }
+  }
+
+  String _generateTransitionAbridged(
+      Transition connection, PositionedState? loop) {
     String transitionFunction = "";
 
     PositionedState? nextState;
@@ -279,8 +334,12 @@ class CodeTranspiler {
       nextState = endState;
     }
 
+    if (loop != null && loop.key == nextState!.key) {
+      return "}\n";
+    }
+
     if (nextState != null) {
-      String nestedCode = _generateStateAbridged(nextState);
+      String nestedCode = _generateStateAbridged(nextState, loop);
       switch (connection.condition.type) {
         case "then":
           transitionFunction += nestedCode;
@@ -298,7 +357,7 @@ class CodeTranspiler {
           transitionFunction += transitionIfElse(
               "value",
               nestedCode,
-              elseState != null ? _generateStateAbridged(elseState) : "",
+              elseState != null ? _generateStateAbridged(elseState, loop) : "",
               connection.condition.values.first);
           break;
         case "cond":
@@ -307,7 +366,7 @@ class CodeTranspiler {
           for (int i = 0; i < connection.end.length; i++) {
             PositionedState condState = blocks
                 .firstWhere((element) => element.key == connection.end[i]);
-            nestedCond.add(_generateStateAbridged(condState));
+            nestedCond.add(_generateStateAbridged(condState, loop));
             conditionValues.add(connection.condition.values[i]);
           }
           transitionFunction += transitionCond(nestedCond, conditionValues);
@@ -383,10 +442,10 @@ class CodeTranspiler {
 
     if (state.data.type == "output") {
       map.states[state.settings.variableName]!.action =
-          arduinoFunction.function(pinVariable);
+          arduinoFunction.action(pinVariable);
     } else {
       map.states[state.settings.variableName]!.action =
-          arduinoFunction.function("value", pinVariable);
+          arduinoFunction.action("value", pinVariable);
     }
 
     Transition? connection =

@@ -74,7 +74,7 @@ class StartBlock extends StatelessWidget {
                 ),
                 startPoint.connected
                     ? Container()
-                    : AddConnectionButton(startPoint.key, true, false,
+                    : AddConnectionButton(startPoint.key, "", true, false,
                         startPoint.position, updateDrag),
               ],
             ),

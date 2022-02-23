@@ -43,10 +43,10 @@ List<ImageSource> images = [
       "https://www.flaticon.com/premium-icon/switch_6039126"),
   ImageSource("graphics/state_icons/relay_on.png", "flashInRelayOn",
       "https://www.flaticon.com/free-icon/flash_248053"),
+  ImageSource("graphics/servo.png", "servo",
+      "https://www.flaticon.com/free-icon/servo_6275656"),
   ImageSource("graphics/german.png", "languageIconGerman",
       "https://www.flaticon.com/premium-icon/germany_4628643"),
   ImageSource("graphics/english.png", "languageIconEnglish",
       "https://www.flaticon.com/premium-icon/uk_4628638"),
 ];
-
-// Servo: https://www.flaticon.com/free-icon/servo_6275656?

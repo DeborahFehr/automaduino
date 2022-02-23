@@ -69,7 +69,9 @@ class _ConditionField extends State<DraggableCondition> {
     values = widget.connection.condition.values;
     conditionField = ConditionField(
         widget.connection.condition,
-        widget.block!.data.type,
+        widget.block!.settings.selectedOption == "sendWave"
+            ? "sendWave"
+            : widget.block!.data.type,
         test,
         widget.updateConnectionDetails,
         addCondValue,
@@ -117,6 +119,7 @@ class _ConditionField extends State<DraggableCondition> {
                                 SizedBox(height: 30),
                                 AddConnectionButton(
                                     widget.connection.start,
+                                    widget.block?.settings.selectedOption ?? "",
                                     false,
                                     true,
                                     widget.connection.position,
@@ -138,7 +141,9 @@ class _ConditionField extends State<DraggableCondition> {
                                             values.length) &&
                                         i == values.length - 1
                                     ? AddConnectionButton(
-                                        widget.connection.start,
+                                    widget.connection.start,
+                                        widget.block?.settings.selectedOption ??
+                                            "",
                                         false,
                                         true,
                                         widget.connection.position,

@@ -7,6 +7,7 @@ import 'package:contextmenu/contextmenu.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../../resources/automaduino_state.dart';
+import '../../resources/settings.dart';
 
 class DraggableBlock extends StatelessWidget {
   final PositionedState block;
@@ -25,11 +26,7 @@ class DraggableBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color color = block.data.type == "sensor"
-        ? Colors.redAccent
-        : block.data.type == "userInput"
-            ? Colors.blueAccent
-            : Colors.greenAccent;
+    Color color = getBlockColorByType(block.data.type);
 
     Widget blockWidget = StateBlock(
         block.settings.name,
@@ -104,6 +101,11 @@ class DraggableBlock extends StatelessWidget {
                   },
                   onWillAccept: (candidate) {
                     DragData data = (candidate as DragData);
+                    if (data.selectedOption == "sendWave") {
+                      return !data.newBlock &&
+                          data.newConnection &&
+                          block.settings.selectedOption == "receiveWave";
+                    }
                     return !data.newBlock &&
                         data.newConnection &&
                         data.key != block.key;
@@ -126,8 +128,8 @@ class DraggableBlock extends StatelessWidget {
           ),
           block.outgoingConnection
               ? SizedBox.shrink()
-              : AddConnectionButton(
-                  block.key, false, false, block.position, updateDrag),
+              : AddConnectionButton(block.key, block.settings.selectedOption,
+                  false, false, block.position, updateDrag),
         ],
       ),
     );

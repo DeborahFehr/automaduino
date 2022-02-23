@@ -283,12 +283,15 @@ class _InitDialogState extends State<InitDialog> {
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
                               for (int i = 0; i < assignments.length; i++) {
-                                assignments[i].variableName = "pin_" +
-                                    i.toString() +
-                                    "_" +
-                                    assignments[i]
-                                        .component!
-                                        .replaceAll(" ", "_");
+                                assignments[i].variableName =
+                                    assignments[i].component == "servo"
+                                        ? "servo_" + i.toString()
+                                        : "pin_" +
+                                            i.toString() +
+                                            "_" +
+                                            assignments[i]
+                                                .component!
+                                                .replaceAll(" ", "_");
                               }
                               Provider.of<AutomaduinoState>(context,
                                       listen: false)

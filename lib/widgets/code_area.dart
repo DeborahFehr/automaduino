@@ -105,7 +105,7 @@ class _CodeAreaState extends State<CodeArea> {
                   closed
                       ? SizedBox.shrink()
                       : ModeMenu(mode: mode, setMode: setMode),
-                  pinWarning ? PinWarning() : SizedBox.shrink(),
+                  (pinWarning && !closed) ? PinWarning() : SizedBox.shrink(),
                   Expanded(
                     child: Scrollbar(
                       isAlwaysShown: true,

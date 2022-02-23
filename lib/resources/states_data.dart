@@ -30,13 +30,13 @@ List<StateData> sensorBlocks = [
   StateData(
       "sensor",
       "ultrasonicRanger",
-      "graphics/state_icons/ultrasonic-ranger.png",
+      "graphics/state_icons/ultrasonic-ranger_send.png",
       "/docs/overview/",
       "sendWave"),
   StateData(
       "sensor",
       "ultrasonicRanger",
-      "graphics/state_icons/ultrasonic-ranger.png",
+      "graphics/state_icons/ultrasonic-ranger_receive.png",
       "/docs/overview/",
       "receiveWave")
 ];
@@ -46,8 +46,6 @@ List<StateData> userInputBlocks = [
       "/docs/overview/", "awaitInput"),
   StateData("userInput", "switch", "graphics/state_icons/switch.png",
       "/docs/overview/", "awaitInput"),
-  //StateData("userInput", "keypad", "graphics/state_icons/keypad.png",
-  //    "/docs/overview/", "awaitInput"),
   StateData("userInput", "tilt", "graphics/state_icons/tilt.png",
       "/docs/overview/", "awaitInput"),
   StateData(
@@ -75,8 +73,16 @@ List<StateData> outputBlocks = [
       "/docs/overview/", "on"),
   StateData("output", "relay", "graphics/state_icons/relay_off.png",
       "/docs/overview/", "off"),
-  //StateData("output", "Servo", "graphics/state_icons/demo.png",
-  //    "/docs/overview/", "90")
+  StateData("output", "servo", "graphics/state_icons/servo_0.png",
+      "/docs/overview/", "0degree"),
+  StateData("output", "servo", "graphics/state_icons/servo_45.png",
+      "/docs/overview/", "45degree"),
+  StateData("output", "servo", "graphics/state_icons/servo_90.png",
+      "/docs/overview/", "90degree"),
+  StateData("output", "servo", "graphics/state_icons/servo_135.png",
+      "/docs/overview/", "135degree"),
+  StateData("output", "servo", "graphics/state_icons/servo_180.png",
+      "/docs/overview/", "180degree"),
 ];
 
 List<StateData> returnAllData() {

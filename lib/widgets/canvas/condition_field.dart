@@ -33,6 +33,9 @@ class _ConditionField extends State<ConditionField> {
     if (widget.type == "output") {
       items = restrictedConditionTypes;
     }
+    if (widget.type == "sendWave") {
+      items = ["then"];
+    }
     return Container(
       width: 200,
       height: dropdownValue == "cond"
