@@ -43,8 +43,6 @@ class DraggableCondition extends StatefulWidget {
 }
 
 class _ConditionField extends State<DraggableCondition> {
-  void test(Transition connection, Offset position) {}
-
   List<String> values = [];
   Widget conditionField = Container();
 
@@ -72,7 +70,6 @@ class _ConditionField extends State<DraggableCondition> {
         widget.block!.settings.selectedOption == "sendWave"
             ? "sendWave"
             : widget.block!.data.type,
-        test,
         widget.updateConnectionDetails,
         addCondValue,
         deleteCondValue,
@@ -97,17 +94,17 @@ class _ConditionField extends State<DraggableCondition> {
             title: Text(AppLocalizations.of(context)!.highlightTransition),
             onTap: () {
               Provider.of<AutomaduinoState>(context, listen: false)
-                  .setHighlight(
+                  .setHighlightMap(
                       "states",
                       Provider.of<AutomaduinoState>(context, listen: false)
-                          .getVariableName(widget.connection.start),
+                          .getBlockVariableNameFromKey(widget.connection.start),
                       type: "transition");
               Navigator.of(context).pop();
             },
           ),
         ],
         child: Draggable(
-            data: DragData(null, "", "then", false, false, false, false),
+            data: DragData(null, "", "", false, false, false, false),
             child: widget.connection.condition.type == "ifelse"
                 ? Row(
                     children: [

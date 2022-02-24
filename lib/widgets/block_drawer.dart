@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../resources/states_data.dart';
+import '../resources/settings.dart';
 import 'block_drawer/block_listview.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -25,7 +26,7 @@ class _BuildingElementsDrawerState extends State<BuildingElementsDrawer> {
     return Stack(
       children: [
         closed
-            ? Container()
+            ? SizedBox.shrink()
             : Padding(
                 padding: const EdgeInsets.all(8),
                 child: DefaultTabController(
@@ -37,42 +38,42 @@ class _BuildingElementsDrawerState extends State<BuildingElementsDrawer> {
                         children: [
                           TabBar(
                             tabs: [
-                        Tab(
-                          child: Tooltip(
-                            message:
+                              Tab(
+                                child: Tooltip(
+                                  message:
                                       AppLocalizations.of(context)!.sensors,
                                   child: Icon(Icons.input),
                                 ),
-                        ),
-                        Tab(
-                            child: Tooltip(
-                              message:
+                              ),
+                              Tab(
+                                  child: Tooltip(
+                                message:
                                     AppLocalizations.of(context)!.userInput,
                                 child: Icon(Icons.touch_app),
                               )),
-                        Tab(
-                            child: Tooltip(
-                              message: AppLocalizations.of(context)!.output,
+                              Tab(
+                                  child: Tooltip(
+                                message: AppLocalizations.of(context)!.output,
                                 child: Icon(Icons.lightbulb_outline),
                               )),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    body: TabBarView(
+                      children: [
+                        BlockListView(
+                            sensorBlocks, sensorColor, ScrollController()),
+                        BlockListView(userInputBlocks, userInputColor,
+                            ScrollController()),
+                        BlockListView(
+                            outputBlocks, outputColor, ScrollController()),
                       ],
                     ),
-                  ],
+                  ),
                 ),
               ),
-              body: TabBarView(
-                children: [
-                  BlockListView(
-                      sensorBlocks, Colors.redAccent, ScrollController()),
-                  BlockListView(
-                      userInputBlocks, Colors.blueAccent, ScrollController()),
-                  BlockListView(
-                      outputBlocks, Colors.greenAccent, ScrollController()),
-                ],
-              ),
-            ),
-          ),
-        ),
         Stack(
           children: [
             IgnorePointer(

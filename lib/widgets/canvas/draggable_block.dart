@@ -59,7 +59,7 @@ class DraggableBlock extends StatelessWidget {
                 title: Text(AppLocalizations.of(context)!.highlightState),
                 onTap: () {
                   Provider.of<AutomaduinoState>(context, listen: false)
-                      .setHighlight("states", block.settings.variableName,
+                      .setHighlightMap("states", block.settings.variableName,
                           type: "state");
                   Navigator.of(context).pop();
                 },
@@ -69,7 +69,7 @@ class DraggableBlock extends StatelessWidget {
                 title: Text(AppLocalizations.of(context)!.highlightAction),
                 onTap: () {
                   Provider.of<AutomaduinoState>(context, listen: false)
-                      .setHighlight("states", block.settings.variableName,
+                      .setHighlightMap("states", block.settings.variableName,
                           type: "action");
                   Navigator.of(context).pop();
                 },
@@ -81,11 +81,12 @@ class DraggableBlock extends StatelessWidget {
                       title: Text(AppLocalizations.of(context)!.highlightPin),
                       onTap: () {
                         Provider.of<AutomaduinoState>(context, listen: false)
-                            .setHighlight(
+                            .setHighlightMap(
                                 "pins",
                                 Provider.of<AutomaduinoState>(context,
                                         listen: false)
-                                    .getPinName(block.settings.pin!,
+                                    .getVariableNameByPinAndComponent(
+                                        block.settings.pin!,
                                         block.data.component));
                         Navigator.of(context).pop();
                       },
@@ -110,9 +111,10 @@ class DraggableBlock extends StatelessWidget {
                         data.newConnection &&
                         data.key != block.key;
                   },
-                  onAccept: (data) {
-                    addConnection((data as DragData).key as Key,
-                        data.startConnection, data.additionalConnection);
+                  onAccept: (candidate) {
+                    DragData data = (candidate as DragData);
+                    addConnection(data.key as Key, data.startConnection,
+                        data.additionalConnection);
                   },
                 ),
                 feedback: Transform.scale(scale: scale, child: blockWidget),

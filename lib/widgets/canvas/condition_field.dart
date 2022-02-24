@@ -6,15 +6,14 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class ConditionField extends StatefulWidget {
   final Condition condition;
   final String type;
-  final Function(Transition connection, Offset position) updateConditionType;
   final Function(Condition condition, {String? type, List<String>? values})
       updateConnectionDetails;
   final Function() addCondValue;
   final Function(int position) deleteCondValue;
   final bool condButtonActive;
 
-  ConditionField(this.condition, this.type, this.updateConditionType,
-      this.updateConnectionDetails, this.addCondValue, this.deleteCondValue, this.condButtonActive);
+  ConditionField(this.condition, this.type, this.updateConnectionDetails,
+      this.addCondValue, this.deleteCondValue, this.condButtonActive);
 
   @override
   State<StatefulWidget> createState() {
@@ -87,8 +86,12 @@ class _ConditionField extends State<ConditionField> {
                 endIndent: 0,
                 color: Colors.grey,
               ),
-              ConditionInput(widget.condition, widget.updateConnectionDetails,
-                  widget.addCondValue, widget.deleteCondValue, widget.condButtonActive)
+              ConditionInput(
+                  widget.condition,
+                  widget.updateConnectionDetails,
+                  widget.addCondValue,
+                  widget.deleteCondValue,
+                  widget.condButtonActive)
             ],
           ),
         ),

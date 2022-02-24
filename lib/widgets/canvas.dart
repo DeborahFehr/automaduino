@@ -11,6 +11,7 @@ import '../resources/transition.dart';
 import '../resources/states_data.dart';
 import 'canvas/end_block.dart';
 import 'canvas/start_block.dart';
+import 'canvas/scale_buttons.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -30,7 +31,8 @@ class _BuildingAreaState extends State<BuildingArea> {
   double maxScale = 2.0;
   double minScale = 0.5;
 
-  void setScale(double scale) {
+  void setScale(double scaleChange) {
+    double scale = _scale + scaleChange;
     if (!(scale > maxScale) && !(scale < minScale)) {
       setState(() {
         _scale = scale;
@@ -42,31 +44,28 @@ class _BuildingAreaState extends State<BuildingArea> {
   }
 
   void updateStartPosition(StartData startPoint, Offset end, bool dragEnd) {
-    //Provider.of<AutomaduinoState>(context, listen: false)
-    //    .updateStartPosition(startPoint.position + end);
-    startPoint.position = dragEnd
-        ? keepInCanvas(startPoint.position + end)
-        : startPoint.position + end;
-    setState(() {});
+    setState(() {
+      startPoint.position = dragEnd
+          ? keepInCanvas(startPoint.position + end)
+          : startPoint.position + end;
+    });
   }
 
   void updateEndPosition(EndData endPoint, Offset end, bool dragEnd) {
-    //Provider.of<AutomaduinoState>(context, listen: false)
-    //    .updateEndPosition(endPoint.position + end);
-    endPoint.position = dragEnd
-        ? keepInCanvas(endPoint.position + end)
-        : endPoint.position + end;
-    setState(() {});
+    setState(() {
+      endPoint.position = dragEnd
+          ? keepInCanvas(endPoint.position + end)
+          : endPoint.position + end;
+    });
   }
 
   void updateBlockPosition(
       PositionedState block, Offset position, bool dragEnd) {
-    // ToDo: We actually dont update the position in the datastructure
-    // needed to correctly determine position during drag
-    block.position = dragEnd
-        ? keepInCanvas(block.position + position)
-        : block.position + position;
-    setState(() {});
+    setState(() {
+      block.position = dragEnd
+          ? keepInCanvas(block.position + position)
+          : block.position + position;
+    });
   }
 
   void deleteState(PositionedState? block, {end: false}) {
@@ -78,20 +77,22 @@ class _BuildingAreaState extends State<BuildingArea> {
 
   void updateDragPosition(
       bool active, bool point, bool addition, Offset start, Offset end) {
-    if (drag == null) {
-      drag = DraggableConnection(start, end, point, addition);
-    } else {
-      drag = active
-          ? DraggableConnection(
-              start, drag!.end + (end * (1 / _scale)), point, addition)
-          : null;
-    }
-    setState(() {});
+    setState(() {
+      if (drag == null) {
+        drag = DraggableConnection(start, end, point, addition);
+      } else {
+        drag = active
+            ? DraggableConnection(
+                start, drag!.end + (end * (1 / _scale)), point, addition)
+            : null;
+      }
+    });
   }
 
   void updateConnectionPosition(Transition connection, Offset position) {
-    connection.position = connection.position + position;
-    setState(() {});
+    setState(() {
+      connection.position = connection.position + position;
+    });
   }
 
   void updateConnectionDetails(Condition condition,
@@ -136,7 +137,7 @@ class _BuildingAreaState extends State<BuildingArea> {
             startPoint ? Offset(0, 0) : calculateMidpoint(start, end);
         if (startPoint) {
           Provider.of<AutomaduinoState>(context, listen: false)
-              .startPointConnected();
+              .connectStartPoint();
         }
         Provider.of<AutomaduinoState>(context, listen: false).addConnection(
             Transition(start, Condition(UniqueKey(), "then", [""]), [end],
@@ -148,14 +149,18 @@ class _BuildingAreaState extends State<BuildingArea> {
   }
 
   void deleteTransition(Transition? connection, {start: false}) {
-    start
-        ? Provider.of<AutomaduinoState>(context, listen: false)
-            .deleteConnection(
-                Provider.of<AutomaduinoState>(context, listen: false)
-                    .connections
-                    .firstWhere((element) => element.startPoint))
-        : Provider.of<AutomaduinoState>(context, listen: false)
-            .deleteConnection(connection!);
+    if (start) {
+      Provider.of<AutomaduinoState>(context, listen: false)
+          .startPoint
+          .connected = false;
+      Provider.of<AutomaduinoState>(context, listen: false).deleteConnection(
+          Provider.of<AutomaduinoState>(context, listen: false)
+              .connections
+              .firstWhere((element) => element.startPoint));
+    } else {
+      Provider.of<AutomaduinoState>(context, listen: false)
+          .deleteConnection(connection!);
+    }
   }
 
   void deleteSingleCond(Transition connection, int position) {
@@ -275,61 +280,7 @@ class _BuildingAreaState extends State<BuildingArea> {
                 ),
               ),
             ),
-            Align(
-                alignment: Alignment.bottomRight,
-                child: Container(
-                  height: 70,
-                  width: 30,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Center(
-                        child: Ink(
-                          width: 30,
-                          height: 30,
-                          decoration: ShapeDecoration(
-                            color: Colors.grey,
-                            shape: CircleBorder(),
-                          ),
-                          child: IconButton(
-                            padding: EdgeInsets.zero,
-                            splashRadius: 20,
-                            icon: Icon(
-                              Icons.add,
-                              size: 20,
-                            ),
-                            color: Colors.white,
-                            onPressed: () {
-                              setScale(_scale + 0.1);
-                            },
-                          ),
-                        ),
-                      ),
-                      Center(
-                        child: Ink(
-                          width: 30,
-                          height: 30,
-                          decoration: ShapeDecoration(
-                            color: Colors.grey,
-                            shape: CircleBorder(),
-                          ),
-                          child: IconButton(
-                            padding: EdgeInsets.zero,
-                            splashRadius: 20,
-                            icon: Icon(
-                              Icons.remove,
-                              size: 20,
-                            ),
-                            color: Colors.white,
-                            onPressed: () {
-                              setScale(_scale - 0.1);
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ))
+            ScaleButtons(setScale: setScale),
           ],
         );
       },

@@ -294,11 +294,16 @@ class CodeTranspiler {
 
   bool _findLoop(
       PositionedState start, List<Key> visited, Transition? connection) {
+    // if state doesnt appear in end, it cannot be in a loop
+    if (!connections
+        .map((e) => e.end)
+        .any((element) => element.contains(start.key))) return false;
+
     if (connection == null) {
       return false;
     } else {
       bool result = false;
-      connection.end.forEach((endKey) {
+      for (final endKey in connection.end) {
         PositionedState follower =
             blocks.firstWhere((element) => element.key == endKey);
         if (visited.contains(follower.key))
@@ -306,6 +311,7 @@ class CodeTranspiler {
         else {
           if (follower.key == start.key) {
             result = true;
+            break;
           } else {
             visited.add(follower.key);
             result = _findLoop(
@@ -315,7 +321,7 @@ class CodeTranspiler {
                     .firstWhereOrNull((con) => con.start == follower.key));
           }
         }
-      });
+      }
       return result;
     }
   }

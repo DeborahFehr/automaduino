@@ -96,7 +96,7 @@ class _CodeAreaState extends State<CodeArea> {
             }
           }
           pinWarning = Provider.of<AutomaduinoState>(context, listen: false)
-              .unassignedPin();
+              .unassignedPinsInBlocks();
 
           return Stack(
             children: [

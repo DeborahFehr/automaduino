@@ -44,7 +44,7 @@ class StartBlock extends StatelessWidget {
             title: Text(AppLocalizations.of(context)!.highlightTransition),
             onTap: () {
               Provider.of<AutomaduinoState>(context, listen: false)
-                  .setHighlight("loop", "start");
+                  .setHighlightMap("loop", "start");
               Navigator.of(context).pop();
             },
           ),

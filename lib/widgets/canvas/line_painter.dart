@@ -2,6 +2,7 @@ import 'package:arduino_statemachines/resources/state.dart';
 import 'package:flutter/material.dart';
 import '../../resources/canvas_layout.dart';
 import '../../resources/transition.dart';
+import '../../resources/settings.dart';
 import "dart:math" as math;
 
 class LinePainter extends CustomPainter {
@@ -16,8 +17,7 @@ class LinePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // ToDo: this should be dynamic
-    Offset center = Offset(50, 50);
+    Offset blockCenter = Offset(blockSize / 2, blockSize / 2);
 
     Paint paint = Paint()
       ..color = Colors.black87
@@ -25,13 +25,14 @@ class LinePainter extends CustomPainter {
       ..strokeWidth = 2;
 
     for (var con in connections) {
-      // draw line to condition block
       Offset startPoint;
       startPoint = con.startPoint
           ? startBlockPoint.position + Offset(17, 31)
-          : blocks.firstWhere((el) => el.key == con.start).position + center;
+          : blocks.firstWhere((el) => el.key == con.start).position +
+              blockCenter;
       Offset endPoint = con.startPoint
-          ? blocks.firstWhere((el) => el.key == con.end.first).position + center
+          ? blocks.firstWhere((el) => el.key == con.end.first).position +
+              blockCenter
           : con.position + Offset(100, 25);
       canvas.drawLine(startPoint, endPoint, paint);
 
@@ -65,7 +66,8 @@ class LinePainter extends CustomPainter {
             Offset endPoint;
             endPoint = con.endPoint
                 ? endBlockPoint.position + Offset(17, 31)
-                : blocks.firstWhere((el) => el.key == end).position + center;
+                : blocks.firstWhere((el) => el.key == end).position +
+                    blockCenter;
             canvas.drawLine(startPoint, endPoint, paint);
 
             Offset midPoint = (startPoint + endPoint) / 2;
