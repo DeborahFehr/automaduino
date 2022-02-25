@@ -1,6 +1,5 @@
 import 'package:arduino_statemachines/resources/canvas_layout.dart';
 import 'package:flutter/material.dart';
-import '../../resources/state.dart';
 import '../../resources/transition.dart';
 import 'condition_field.dart';
 import 'add_connection_button.dart';

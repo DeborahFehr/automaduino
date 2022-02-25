@@ -7,7 +7,6 @@ import 'widgets/code_area.dart';
 import '../resources/automaduino_state.dart';
 import 'package:provider/provider.dart';
 import '../resources/color_map.dart';
-import '../resources/settings.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'widgets/main/menu_drawer.dart';
 
@@ -81,13 +80,15 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void updateDrawerWidth(bool closedDrawer) {
-    _closedDrawer = closedDrawer;
-    setState(() {});
+    setState(() {
+      _closedDrawer = closedDrawer;
+    });
   }
 
   void updateSplitWidth(bool closedDrawer) {
-    closedDrawer ? _weightCodeArea = 0.5 : _weightCodeArea = 0.04;
-    setState(() {});
+    setState(() {
+      closedDrawer ? _weightCodeArea = 0.5 : _weightCodeArea = 0.04;
+    });
   }
 
   void changeLocale(String languageCode) {
@@ -102,7 +103,8 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         leading: Padding(
           padding: const EdgeInsets.all(5.0),
-          child: Image.asset('graphics/logo_icon.png', fit: BoxFit.contain),
+          child:
+              Image.asset('graphics/logo_icon_white.png', fit: BoxFit.contain),
         ),
         title: Text(
           AppLocalizations.of(context)!.automaduinoEditor,
@@ -145,7 +147,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   )
                 ],
                 minimalWeight: 0.2,
-                onSizeChange: (prev, curr) {},
                 controller: MultiSplitViewController(
                     weights: [1 - _weightCodeArea, _weightCodeArea]),
               ),

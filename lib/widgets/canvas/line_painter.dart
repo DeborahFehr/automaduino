@@ -62,29 +62,26 @@ class LinePainter extends CustomPainter {
         for (var end in con.end) {
           startPoint += Offset(0, 20);
 
-          if (end != null) {
-            Offset endPoint;
-            endPoint = con.endPoint
-                ? endBlockPoint.position + Offset(17, 31)
-                : blocks.firstWhere((el) => el.key == end).position +
-                    blockCenter;
-            canvas.drawLine(startPoint, endPoint, paint);
+          Offset endPoint;
+          endPoint = con.endPoint
+              ? endBlockPoint.position + Offset(17, 31)
+              : blocks.firstWhere((el) => el.key == end).position + blockCenter;
+          canvas.drawLine(startPoint, endPoint, paint);
 
-            Offset midPoint = (startPoint + endPoint) / 2;
-            double angle = (endPoint - startPoint).direction;
-            canvas.drawLine(
-                midPoint,
-                midPoint -
-                    Offset(10 * math.cos(angle - (math.pi / 6)),
-                        10 * math.sin(angle - (math.pi / 6))),
-                paint);
-            canvas.drawLine(
-                midPoint,
-                midPoint -
-                    Offset(10 * math.cos(angle + (math.pi / 6)),
-                        10 * math.sin(angle + (math.pi / 6))),
-                paint);
-          }
+          Offset midPoint = (startPoint + endPoint) / 2;
+          double angle = (endPoint - startPoint).direction;
+          canvas.drawLine(
+              midPoint,
+              midPoint -
+                  Offset(10 * math.cos(angle - (math.pi / 6)),
+                      10 * math.sin(angle - (math.pi / 6))),
+              paint);
+          canvas.drawLine(
+              midPoint,
+              midPoint -
+                  Offset(10 * math.cos(angle + (math.pi / 6)),
+                      10 * math.sin(angle + (math.pi / 6))),
+              paint);
         }
       }
     }

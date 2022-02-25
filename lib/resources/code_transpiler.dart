@@ -306,9 +306,10 @@ class CodeTranspiler {
       for (final endKey in connection.end) {
         PositionedState follower =
             blocks.firstWhere((element) => element.key == endKey);
-        if (visited.contains(follower.key))
+        if (visited.contains(follower.key)) {
           result = false;
-        else {
+          break;
+        } else {
           if (follower.key == start.key) {
             result = true;
             break;
@@ -345,25 +346,32 @@ class CodeTranspiler {
     }
 
     if (nextState != null) {
-      String nestedCode = _generateStateAbridged(nextState, loop);
       switch (connection.condition.type) {
         case "then":
-          transitionFunction += nestedCode;
+          transitionFunction += _generateStateAbridged(nextState, loop);
           break;
         case "if":
           transitionFunction += transitionIf(
-              "value", nestedCode, connection.condition.values.first);
+              "value",
+              _generateStateAbridged(nextState, loop),
+              connection.condition.values.first);
           break;
         case "ifelse":
           PositionedState? elseState;
+          String elseCode = "";
           if (connection.end.length > 1) {
             elseState = blocks
                 .firstWhere((element) => element.key == connection.end[1]);
           }
+          if (loop != null && loop.key == elseState!.key) {
+            elseCode = "}\n";
+          } else if (elseState != null) {
+            elseCode = _generateStateAbridged(elseState, loop);
+          }
           transitionFunction += transitionIfElse(
               "value",
-              nestedCode,
-              elseState != null ? _generateStateAbridged(elseState, loop) : "",
+              _generateStateAbridged(nextState, loop),
+              elseCode,
               connection.condition.values.first);
           break;
         case "cond":
@@ -372,14 +380,21 @@ class CodeTranspiler {
           for (int i = 0; i < connection.end.length; i++) {
             PositionedState condState = blocks
                 .firstWhere((element) => element.key == connection.end[i]);
-            nestedCond.add(_generateStateAbridged(condState, loop));
+            String condCode = "";
+            if (loop != null && loop.key == condState.key) {
+              condCode = "}\n";
+            } else {
+              condCode = _generateStateAbridged(condState, loop);
+            }
+            nestedCond.add(condCode);
             conditionValues.add(connection.condition.values[i]);
           }
           transitionFunction += transitionCond(nestedCond, conditionValues);
           break;
         case "time":
-          transitionFunction +=
-              transitionTime(nestedCode, connection.condition.values.first);
+          transitionFunction += transitionTime(
+              _generateStateAbridged(nextState, loop),
+              connection.condition.values.first);
           break;
       }
     }

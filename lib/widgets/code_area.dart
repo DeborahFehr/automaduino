@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'code_area/code_editor.dart';
 import '../resources/transition.dart';

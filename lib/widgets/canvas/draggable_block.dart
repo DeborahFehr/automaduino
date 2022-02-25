@@ -1,4 +1,3 @@
-import 'package:arduino_statemachines/resources/state.dart';
 import 'package:flutter/material.dart';
 import 'state_block.dart';
 import '../../resources/canvas_layout.dart';

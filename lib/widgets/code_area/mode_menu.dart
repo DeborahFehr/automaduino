@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../resources/settings.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ModeMenu extends StatelessWidget {
   final String mode;
@@ -87,13 +89,9 @@ class ModeMenu extends StatelessWidget {
               child: IconButton(
                 splashRadius: 15,
                 onPressed: () {
-                  /*
-                    launch(Localizations.localeOf(context)
-                          .languageCode ==
-                          'de'
-                          ? baseURL + '/de' + link
-                          : baseURL + link)
-                          */
+                  launch(Localizations.localeOf(context).languageCode == 'de'
+                      ? baseURL + '/de' + "/docs/concepts/code-style/"
+                      : baseURL + "/docs/concepts/code-style/");
                 },
                 icon: Icon(Icons.open_in_new),
               ),

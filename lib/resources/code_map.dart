@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 /// State Settings describes the data structure of the draggable state
 class CodeMap {
   Map<String, String> import;
@@ -7,6 +9,32 @@ class CodeMap {
   Map<String, StateMap> states;
 
   CodeMap(this.import, this.pins, this.setup, this.loop, this.states);
+
+  @override
+  String toString() {
+    return "import map: " +
+        import.toString() +
+        ", pins map: " +
+        pins.toString() +
+        ", setup map: " +
+        setup.toString() +
+        ", loop map: " +
+        loop.toString() +
+        ", states map: " +
+        states.toString();
+  }
+
+  @override
+  bool operator ==(other) {
+    if (other is! CodeMap) {
+      return false;
+    }
+    return (mapEquals(import, other.import) &&
+        mapEquals(pins, other.pins) &&
+        mapEquals(setup, other.setup) &&
+        mapEquals(loop, other.loop) &&
+        mapEquals(states, other.states));
+  }
 
   String setupWrapper() {
     String result = setup.containsKey("switch") ? setup["switch"]! : "";
@@ -100,8 +128,7 @@ class CodeMap {
     return result;
   }
 
-  String returnHighlightString(
-      String? mapName, String? variableName, String mode,
+  String returnHighlightString(String? mapName, String? variableName, String mode,
       {String? type}) {
     String result = "";
     if (mapName == null || variableName == null) return result;
@@ -139,6 +166,9 @@ class CodeMap {
 
     return result;
   }
+
+  @override
+  int get hashCode => super.hashCode;
 }
 
 class StateMap {
@@ -170,5 +200,18 @@ class StateMap {
     return result;
   }
 
+  @override
+  bool operator ==(other) {
+    if (other is! StateMap) {
+      return false;
+    }
+    return (functionName == other.functionName &&
+        action == other.action &&
+        transition == other.transition);
+  }
+
   StateMap(this.functionName, this.action, this.transition);
+
+  @override
+  int get hashCode => super.hashCode;
 }
