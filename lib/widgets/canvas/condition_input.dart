@@ -56,7 +56,7 @@ class _ConditionField extends State<ConditionInput> {
         }
         break;
 
-      case "time":
+      case "after":
         {
           child = addTextField(AppLocalizations.of(context)!.delayInMs,
               widget.condition.values.first, 0);

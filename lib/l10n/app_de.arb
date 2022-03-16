@@ -13,7 +13,7 @@
   "output": "Ausgabe",
   "stateBlocks": "Z\nu\ns\nt\na\nn\nd\ns\nb\nl\nö\nc\nk\ne",
   "enterCondition": "Bedingung",
-  "delayInMs": "Verzögering in ms",
+  "delayInMs": "Verzögerung in ms",
   "elseCond": "sonst",
   "goToNextState": "Zum nächsten Zustand",
   "deleteState": "Zustand löschen",
@@ -57,7 +57,7 @@
       "json": {}
     }
   },
-  "transitions": "{transitions, select, then {dann} if {falls} ifelse {oder} cond {wenn} time {Zeit} other {transition}}",
+  "transitions": "{transitions, select, then {dann} if {falls} ifelse {oder} cond {wenn} after {nach} other {transition}}",
   "@transitions": {
     "description": "Variablen Benennung für Übergänge",
     "placeholders": {

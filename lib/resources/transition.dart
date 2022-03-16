@@ -42,9 +42,9 @@ class Transition {
         endPoint = json['endPoint'];
 }
 
-List<String> conditionTypes = ["then", "if", "ifelse", "cond", "time"];
+List<String> conditionTypes = ["then", "if", "ifelse", "cond", "after"];
 
-List<String> restrictedConditionTypes = ["then", "time"];
+List<String> restrictedConditionTypes = ["then", "after"];
 
 /// Condition describes the connection
 class Condition {

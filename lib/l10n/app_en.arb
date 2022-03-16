@@ -57,7 +57,7 @@
       "json": {}
     }
   },
-  "transitions": "{transitions, select, then {then} if {if} ifelse {if else} cond {cond} time {time} other {transition}}",
+  "transitions": "{transitions, select, then {then} if {if} ifelse {if else} cond {cond} after {after} other {transition}}",
   "@transitions": {
     "description": "Variable types for Transitions",
     "placeholders": {

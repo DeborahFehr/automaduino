@@ -2,18 +2,18 @@ import 'package:flutter/foundation.dart';
 
 /// State Settings describes the data structure of the draggable state
 class CodeMap {
-  Map<String, String> import;
+  Map<String, String> initializations;
   Map<String, String> pins;
   Map<String, String> setup;
   Map<String, String> loop;
   Map<String, StateMap> states;
 
-  CodeMap(this.import, this.pins, this.setup, this.loop, this.states);
+  CodeMap(this.initializations, this.pins, this.setup, this.loop, this.states);
 
   @override
   String toString() {
-    return "import map: " +
-        import.toString() +
+    return "initializations map: " +
+        initializations.toString() +
         ", pins map: " +
         pins.toString() +
         ", setup map: " +
@@ -29,7 +29,7 @@ class CodeMap {
     if (other is! CodeMap) {
       return false;
     }
-    return (mapEquals(import, other.import) &&
+    return (mapEquals(initializations, other.initializations) &&
         mapEquals(pins, other.pins) &&
         mapEquals(setup, other.setup) &&
         mapEquals(loop, other.loop) &&
@@ -56,7 +56,7 @@ class CodeMap {
 
   String getCode(String mode) {
     String result = "//Imports:\n";
-    import.forEach((key, value) {
+    initializations.forEach((key, value) {
       result += value + "\n";
     });
     result += "\n";
@@ -134,7 +134,7 @@ class CodeMap {
     if (mapName == null || variableName == null) return result;
     switch (mapName) {
       case "import":
-        result = this.import[variableName]!;
+        result = this.initializations[variableName]!;
         break;
       case "pins":
         result = this.pins[variableName]!;

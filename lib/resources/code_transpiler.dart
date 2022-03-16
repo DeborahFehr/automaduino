@@ -34,7 +34,7 @@ class CodeTranspiler {
 
   CodeMap? getMap() {
     if (blocks.length == 0) return null;
-    _imports();
+    _initializations();
     _pinList();
     bool end = connections.any((element) => element.endPoint);
     _generateSetup(end);
@@ -53,13 +53,13 @@ class CodeTranspiler {
     return map;
   }
 
-  void _imports() {
+  void _initializations() {
     List<String> components =
         blocks.map((e) => e.data.component).toSet().toList();
     components.forEach((element) {
       StateFunction functionData = returnFunctionByName(element);
       if (functionData.imports != null) {
-        map.import[element] = functionData.imports!;
+        map.initializations[element] = functionData.imports!;
       }
     });
   }
@@ -207,7 +207,7 @@ class CodeTranspiler {
         }
         transitionFunction += transitionCond(functionNames, conditionValues);
         break;
-      case "time":
+      case "after":
         transitionFunction += transitionTime(
             nextFunction + "();", connection.condition.values.first);
         break;
@@ -391,7 +391,7 @@ class CodeTranspiler {
           }
           transitionFunction += transitionCond(nestedCond, conditionValues);
           break;
-        case "time":
+        case "after":
           transitionFunction += transitionTime(
               _generateStateAbridged(nextState, loop),
               connection.condition.values.first);
@@ -523,7 +523,7 @@ class CodeTranspiler {
         }
         transitionFunction += transitionCond(functionNames, conditionValues);
         break;
-      case "time":
+      case "after":
         transitionFunction +=
             transitionTime(nextFunction, connection.condition.values.first);
         break;
@@ -551,16 +551,17 @@ String transitionIfElse(
 }
 
 String transitionCond(List<String> functions, List<String> conditions) {
-  String result = "";
-  result += "switch (value) {";
+  String result = "if(value " + conditions[0] + "){\n";
+  result += functions[0] + "\n";
+  result += "}\n";
 
-  for (int i = 0; i < functions.length; i++) {
-    result += "case " + conditions[i] + ":\n";
-    result += functions[i] + "\n";
-    result += "break;\n";
+  if (functions.length > 1) {
+    for (int i = 1; i < functions.length; i++) {
+      result += "else if(value " + conditions[i] + "){\n";
+      result += functions[i] + "\n";
+      result += "}\n";
+    }
   }
-
-  result += "default:\nbreak;\n}";
   return result;
 }
 

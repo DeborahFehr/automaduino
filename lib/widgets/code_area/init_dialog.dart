@@ -90,8 +90,8 @@ class _InitDialogState extends State<InitDialog> {
                         Table(
                           columnWidths: {
                             0: FlexColumnWidth(1),
-                            1: FlexColumnWidth(7),
-                            2: FlexColumnWidth(3),
+                            1: FlexColumnWidth(3),
+                            2: FlexColumnWidth(7),
                             3: FlexColumnWidth(9)
                           },
                           border: TableBorder(
@@ -105,11 +105,11 @@ class _InitDialogState extends State<InitDialog> {
                               children: <Widget>[
                                 Container(),
                                 Center(
-                                    child: Text(AppLocalizations.of(context)!
-                                        .component)),
-                                Center(
                                     child: Text(
                                         AppLocalizations.of(context)!.pin)),
+                                Center(
+                                    child: Text(AppLocalizations.of(context)!
+                                        .component)),
                                 Center(
                                     child: Text(
                                         AppLocalizations.of(context)!.states)),
@@ -122,15 +122,15 @@ class _InitDialogState extends State<InitDialog> {
                                       deleteAssigment: deleteAssignment(
                                           assignment, state.blocks)),
                                   InitDropdown(
+                                      value: assignment.pin,
+                                      valueOnChanged: assignPin(assignment),
+                                      options: pinOptions),
+                                  InitDropdown(
                                       component: true,
                                       value: assignment.component,
                                       valueOnChanged:
                                           assignComponent(assignment),
                                       options: componentOptions),
-                                  InitDropdown(
-                                      value: assignment.pin,
-                                      valueOnChanged: assignPin(assignment),
-                                      options: pinOptions),
                                   Padding(
                                     padding: EdgeInsets.all(5),
                                     child: DragTarget(

@@ -40,21 +40,20 @@ class _BuildingElementsDrawerState extends State<BuildingElementsDrawer> {
                             tabs: [
                               Tab(
                                 child: Tooltip(
-                                  message:
-                                      AppLocalizations.of(context)!.sensors,
-                                  child: Icon(Icons.input),
+                                  message: AppLocalizations.of(context)!.output,
+                                  child: Icon(Icons.lightbulb_outline),
                                 ),
                               ),
+                              Tab(
+                                  child: Tooltip(
+                                    message: AppLocalizations.of(context)!.sensors,
+                                child: Icon(Icons.input),
+                              )),
                               Tab(
                                   child: Tooltip(
                                 message:
                                     AppLocalizations.of(context)!.userInput,
                                 child: Icon(Icons.touch_app),
-                              )),
-                              Tab(
-                                  child: Tooltip(
-                                message: AppLocalizations.of(context)!.output,
-                                child: Icon(Icons.lightbulb_outline),
                               )),
                             ],
                           ),
@@ -64,11 +63,11 @@ class _BuildingElementsDrawerState extends State<BuildingElementsDrawer> {
                     body: TabBarView(
                       children: [
                         BlockListView(
+                            outputBlocks, outputColor, ScrollController()),
+                        BlockListView(
                             sensorBlocks, sensorColor, ScrollController()),
                         BlockListView(userInputBlocks, userInputColor,
                             ScrollController()),
-                        BlockListView(
-                            outputBlocks, outputColor, ScrollController()),
                       ],
                     ),
                   ),
