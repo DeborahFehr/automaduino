@@ -118,10 +118,7 @@ class _CodeEditorState extends State<CodeEditor> {
 
   @override
   Widget build(BuildContext context) {
-    if (!widget.closed) {
-      WidgetsBinding.instance!
-          .addPostFrameCallback((_) => lineHeightsUpdater());
-    }
+    WidgetsBinding.instance!.addPostFrameCallback((_) => lineHeightsUpdater());
     return Container(
       margin: EdgeInsets.fromLTRB(15, 5, 15, 15),
       padding: EdgeInsets.all(15.0),

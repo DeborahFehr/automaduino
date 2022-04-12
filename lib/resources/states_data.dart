@@ -46,8 +46,8 @@ List<StateData> userInputBlocks = [
       "/docs/components/user-input/button/", "awaitInput"),
   StateData("userInput", "switch", "graphics/state_icons/switch.png",
       "/docs/components/user-input/switch/", "awaitInput"),
-  StateData("userInput", "tilt", "graphics/state_icons/tilt.png",
-      "/docs/components/user-input/tilt/", "awaitInput"),
+  StateData("userInput", "slider", "graphics/state_icons/tilt.png",
+      "/docs/components/user-input/slider/", "awaitInput"),
   StateData(
       "userInput",
       "potentiometer",
@@ -90,7 +90,7 @@ List<StateData> outputBlocks = [
 ];
 
 List<StateData> returnAllData() {
-  return sensorBlocks + userInputBlocks + outputBlocks;
+  return outputBlocks + sensorBlocks + userInputBlocks;
 }
 
 StateData returnDataByName(String name) {

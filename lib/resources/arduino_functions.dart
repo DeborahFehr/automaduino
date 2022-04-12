@@ -29,12 +29,12 @@ List<StateFunction> sensorFunctions = [
 ];
 
 List<StateFunction> userInputFunctions = [
-  StateFunction(
-      "button", "awaitInput", digitalRead, pinAssignment("INPUT"), null),
+  StateFunction("button", "awaitInput", digitalReadAndDelay,
+      pinAssignment("INPUT"), null),
   StateFunction(
       "switch", "awaitInput", digitalRead, pinAssignment("INPUT"), null),
   StateFunction(
-      "tilt", "awaitInput", digitalRead, pinAssignment("INPUT"), null),
+      "slider", "awaitInput", analogRead, pinAssignment("INPUT"), null),
   StateFunction(
       "potentiometer", "awaitInput", analogRead, pinAssignment("INPUT"), null),
 ];
@@ -64,11 +64,19 @@ List<StateFunction> outputFunctions = [
 
 /// Sensors
 String analogRead(String varName, String pin) {
-  return varName + " = analogRead(" + pin + ");";
+  return "int " + varName + " = analogRead(" + pin + ");";
+}
+
+String digitalRead(String varName, String pin) {
+  return "int " + varName + " = digitalRead(" + pin + ");";
 }
 
 String temperatureRead(String varName, String pin) {
-  return varName + " = map(analogRead(" + pin + "), 0, 410, -50, 150);";
+  return "int " +
+      varName +
+      " = map(analogRead(" +
+      pin +
+      "), 0, 410, -50, 150);";
 }
 
 String sendWave(String varName, String pin) {
@@ -82,12 +90,15 @@ String sendWave(String varName, String pin) {
 }
 
 String receiveWave(String varName, String pin) {
-  return varName + " = (pulseIn(" + pin + ", HIGH)/2) * 0.03432;";
+  String result = "long pulseValueFromWave = pulseIn(" + pin + ", HIGH)";
+  result += "long " + varName + " = (pulseValueFromWave/2) * 0.03432;";
+  return result;
 }
 
 /// User Input
-String digitalRead(String varName, String pin) {
-  return varName + " = digitalRead(" + pin + ");";
+
+String digitalReadAndDelay(String varName, String pin) {
+  return "int " + varName + " = digitalRead(" + pin + ");\ndelay(200);";
 }
 
 /// Output

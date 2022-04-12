@@ -69,7 +69,7 @@ class StateBlock extends StatelessWidget {
                     child: Text(
                       AppLocalizations.of(context)!.json(option),
                       style: TextStyle(
-                        fontSize: 13.0,
+                        fontSize: 11.0,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

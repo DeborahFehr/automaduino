@@ -39,6 +39,8 @@ class LinePainter extends CustomPainter {
       // draw Arrow
       Offset midPoint = (startPoint + endPoint) / 2;
       double angle = (endPoint - startPoint).direction;
+      //midPoint = midPoint + Offset.fromDirection(angle, 50);
+      //midPoint = midPoint + Offset.fromDirection(angle + math.pi, 50);
       canvas.drawLine(
           midPoint,
           midPoint -

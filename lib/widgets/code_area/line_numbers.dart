@@ -22,7 +22,9 @@ class LineNumbers extends StatelessWidget {
           for (var i in List.generate(heights.length, (i) => i + 1))
             Container(
               width: double.infinity,
-              height: lineHeight * heights[i - 1],
+              height: lineHeight * heights[i - 1] < 1
+                  ? lineHeight
+                  : lineHeight * heights[i - 1],
               color: i == highlightLine
                   ? Theme.of(context).colorScheme.primary
                   : null,
