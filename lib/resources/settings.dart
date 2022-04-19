@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 String baseURL = "https://automaduino.com";
 
-double canvasHeight = 1000;
-double canvasWidth = 1000;
+double canvasHeight = 2000;
+double canvasWidth = 3000;
 
 double blockSize = 100;
 
