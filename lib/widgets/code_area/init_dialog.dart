@@ -52,16 +52,28 @@ class _InitDialogState extends State<InitDialog> {
     };
   }
 
-  Function(dynamic comp) assignComponent(PinAssignment assignment) {
+  Function(dynamic comp) assignComponent(
+      PinAssignment assignment, AutomaduinoState state) {
     return (dynamic comp) {
+      for (var block in state.blocks.where((element) =>
+          element.settings.pin == assignment.pin &&
+          assignment.pin != null &&
+          element.data.component == assignment.component))
+        block.settings.pin = null;
       setState(() {
         assignment.component = comp;
       });
     };
   }
 
-  Function(dynamic comp) assignPin(PinAssignment assignment) {
+  Function(dynamic comp) assignPin(
+      PinAssignment assignment, AutomaduinoState state) {
     return (dynamic pin) {
+      for (var block in state.blocks.where((element) =>
+          element.settings.pin == assignment.pin &&
+          assignment.pin != null &&
+          element.data.component == assignment.component))
+        block.settings.pin = pin;
       setState(() {
         assignment.pin = pin;
       });
@@ -123,13 +135,14 @@ class _InitDialogState extends State<InitDialog> {
                                           assignment, state.blocks)),
                                   InitDropdown(
                                       value: assignment.pin,
-                                      valueOnChanged: assignPin(assignment),
+                                      valueOnChanged:
+                                          assignPin(assignment, state),
                                       options: pinOptions),
                                   InitDropdown(
                                       component: true,
                                       value: assignment.component,
                                       valueOnChanged:
-                                          assignComponent(assignment),
+                                          assignComponent(assignment, state),
                                       options: componentOptions),
                                   Padding(
                                     padding: EdgeInsets.all(5),
